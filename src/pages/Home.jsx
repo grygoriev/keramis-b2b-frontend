@@ -1,59 +1,22 @@
+// src/pages/Home.jsx
 import React from 'react';
 import { Button, Layout, Menu } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { HomeOutlined, FireOutlined, GiftOutlined } from '@ant-design/icons';
-import LanguageSwitcher from '../components/LanguageSwitcher';
 import { GlobalHeader } from '../components/GlobalHeader';
-import { Link } from 'react-router-dom';
+import GlobalFooter from '../components/GlobalFooter.jsx';
 
-const { Header, Sider, Content } = Layout;
+const { Header, Sider, Content, Footer } = Layout;
 
 export default function Home() {
 	const { t } = useTranslation();
 
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
-			{/* ---- Верхняя панель с ссылками ---- */}
-			<Header
-				style={{
-					background: '#fff',
-					padding: '0 16px',
-					display: 'flex',
-					justifyContent: 'space-between',
-					alignItems: 'center',
-					height: 50,
-				}}
-			>
-				<div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-					<div style={{ fontWeight: 'bold', marginRight: 20 }}>KERAMIS+B2B</div>
-					<Link to="/help" style={{ color: 'inherit' }}>
-						Допомога
-					</Link>
-					<Link to="/solutions" style={{ color: 'inherit' }}>
-						ГОТОВІ РІШЕННЯ
-					</Link>
-					<Link to="/orders" style={{ color: 'inherit' }}>
-						Замовлення
-					</Link>
-					<Link to="#" style={{ color: 'inherit' }}>
-						Ще
-					</Link>
-				</div>
-				<div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-					{/* Пример: курс валют (примерно) */}
-					<span>$ 42.1 ↑</span>
-					<span>€ 43.85 ↑</span>
-					{/* Переключение языка */}
-					<span>UK | RU</span>
-					{/* Поле поиска (упрощённо) */}
-					<Button>Знайти</Button>
-					{/* Иконка пользователя (id 781), корзина и т.д. –Placeholder */}
-					<div>id 781</div>
-					{/* Можно вставить иконки из antd/icons */}
-				</div>
-			</Header>
+			{/* Глобальная шапка сверху */}
+			<GlobalHeader />
+
 			<Layout>
-				{/* Левое боковое меню категорий */}
 				<Sider width={250}>
 					<div
 						style={{
@@ -75,11 +38,12 @@ export default function Home() {
 						<Menu.Item key="3" icon={<GiftOutlined />}>
 							Кераміка
 						</Menu.Item>
-						{/* и т.д. */}
 					</Menu>
 				</Sider>
 
 				<Layout>
+					{/* Можно убрать второй Header (если не нужен),
+              или оставить как внутренний под-шапку */}
 					<Header
 						style={{
 							background: '#fff',
@@ -89,9 +53,7 @@ export default function Home() {
 							alignItems: 'center',
 						}}
 					>
-						<h2>{t('common.headerTitle')}</h2>
-						<LanguageSwitcher />
-						<GlobalHeader />
+						<h2 style={{ margin: 0 }}>{t('common.headerTitle')}</h2>
 					</Header>
 
 					<Content style={{ margin: '16px', background: '#fff', padding: 16 }}>
@@ -148,7 +110,48 @@ export default function Home() {
 								Товар 3
 							</div>
 						</div>
+						{/* Пример "Акции" товары */}
+						<h2>АКЦИИ</h2>
+						<div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+							<div
+								style={{ width: 120, height: 120, background: '#f0f2f5' }}
+							>
+								Товар 1
+							</div>
+							<div
+								style={{ width: 120, height: 120, background: '#f0f2f5' }}
+							>
+								Товар 2
+							</div>
+							<div
+								style={{ width: 120, height: 120, background: '#f0f2f5' }}
+							>
+								Товар 3
+							</div>
+						</div>
+						{/* Пример "Распродажа" товары */}
+						<h2>РАСПРОДАЖА</h2>
+						<div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+							<div
+								style={{ width: 120, height: 120, background: '#f0f2f5' }}
+							>
+								Товар 1
+							</div>
+							<div
+								style={{ width: 120, height: 120, background: '#f0f2f5' }}
+							>
+								Товар 2
+							</div>
+							<div
+								style={{ width: 120, height: 120, background: '#f0f2f5' }}
+							>
+								Товар 3
+							</div>
+						</div>
 					</Content>
+					<Footer style={{ padding: 0 }}>
+						<GlobalFooter />
+					</Footer>
 				</Layout>
 			</Layout>
 		</Layout>
