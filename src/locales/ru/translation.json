@@ -1,0 +1,17 @@
+{
+	"common": {
+		"headerTitle": "Главная",
+		"login": "Войти",
+		"logout": "Выйти",
+		"categories": "Категории"
+	},
+	"homePage": {
+		"bannerWelcome": "Добро пожаловать!",
+		"subtitle": "Лучшие предложения"
+	},
+	"loginPage": {
+		"username": "Имя пользователя",
+		"password": "Пароль",
+		"button": "Войти"
+	}
+}
