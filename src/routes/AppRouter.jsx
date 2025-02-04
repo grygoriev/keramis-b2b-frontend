@@ -7,6 +7,10 @@ import ClientLayout from '../layouts/ClientLayout';
 import { AdminDashboard } from '../pages/AdminDashboard';
 import RequireAdmin from './RequireAdmin';
 import RequireClient from './RequireClient';
+import HelpPage from '../pages/HelpPage';
+import SolutionsPage from '../pages/SolutionsPage';
+import OrdersPage from '../pages/OrdersPage';
+
 
 export default function AppRouter() {
 	return (
@@ -15,6 +19,11 @@ export default function AppRouter() {
 				{/* Публичные */}
 				<Route path="/" element={<Home />} />
 				<Route path="/login" element={<Login />} />
+
+				{/* Новые страницы-заглушки */}
+				<Route path="/help" element={<HelpPage />} />
+				<Route path="/solutions" element={<SolutionsPage />} />
+				<Route path="/orders" element={<OrdersPage />} />
 
 				{/* Админские */}
 				<Route
