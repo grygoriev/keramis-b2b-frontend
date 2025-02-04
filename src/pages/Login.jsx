@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Card, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,19 @@ export default function Login() {
 	const navigate = useNavigate();
 	const { t } = useTranslation();
 
+	useEffect(() => {
+		// Если уже есть токен - редиректим
+		const token = localStorage.getItem('accessToken');
+		const role = localStorage.getItem('role');
+		if (token && role) {
+			if (role.includes('client')) {
+				navigate('/client');
+			} else {
+				navigate('/admin');
+			}
+		}
+	}, [navigate]);
+
 	const onFinish = async (values) => {
 		setLoading(true);
 		try {
@@ -16,6 +29,9 @@ export default function Login() {
 			// Предположим, бекенд вернет { access: '...', role: 'client_manager' }
 			localStorage.setItem('accessToken', data.access);
 			localStorage.setItem('role', data.role);
+			if (data.username) {
+				localStorage.setItem('username', data.username);
+			}
 
 			// Редирект по роли
 			if (data.role.includes('client')) {

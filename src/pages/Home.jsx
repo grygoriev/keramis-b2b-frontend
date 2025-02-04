@@ -3,6 +3,7 @@ import { Layout, Menu } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { HomeOutlined, FireOutlined, GiftOutlined } from '@ant-design/icons';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import { GlobalHeader } from '../components/GlobalHeader';
 
 const { Header, Sider, Content } = Layout;
 
@@ -44,10 +45,12 @@ export default function Home() {
 						padding: '0 16px',
 						display: 'flex',
 						justifyContent: 'space-between',
+						alignItems: 'center',
 					}}
 				>
 					<h2>{t('common.headerTitle')}</h2>
 					<LanguageSwitcher />
+					<GlobalHeader />
 				</Header>
 
 				<Content style={{ margin: '16px', background: '#fff', padding: 16 }}>

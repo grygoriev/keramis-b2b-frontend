@@ -1,6 +1,7 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
 import { Outlet } from 'react-router-dom';
+import { GlobalHeader } from '../components/GlobalHeader';
 
 const { Header, Sider, Content } = Layout;
 
@@ -15,8 +16,11 @@ export default function AdminLayout() {
 				</Menu>
 			</Sider>
 			<Layout>
-				<Header style={{ background: '#fff', padding: '0 16px' }}>
-					<h2>Admin Layout</h2>
+				<Header style={{ background: '#fff', padding: '0 16px',
+					display: 'flex', justifyContent: 'space-between',
+					alignItems: 'center' }}>
+					<h2 style={{ margin: 0 }}>Admin Layout</h2>
+					+          <GlobalHeader />
 				</Header>
 				<Content style={{ margin: '16px', background: '#fff', padding: 16 }}>
 					<Outlet />
