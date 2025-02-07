@@ -1,39 +1,54 @@
+// src/pages/Login.jsx
+
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Card, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { loginRequest } from '../api/auth'; // функция, шлёт запрос на backend
+import { loginRequest } from '../api/auth';
+
+// Подключаем Redux
+import { useDispatch, useSelector } from 'react-redux';
+import { setAuthData } from '../store/authSlice';
 
 export default function Login() {
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const { t } = useTranslation();
+	const dispatch = useDispatch();
 
+	// Если уже залогинен, можно редиректить
+	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 	useEffect(() => {
-		// Если уже есть токен - редиректим
-		const token = localStorage.getItem('accessToken');
-		const role = localStorage.getItem('role');
-		if (token && role) {
-			if (role.includes('client')) {
+		if (isLoggedIn) {
+			const role = localStorage.getItem('role');
+			if (role && role.includes('client')) {
 				navigate('/client');
 			} else {
 				navigate('/admin');
 			}
 		}
-	}, [navigate]);
+	}, [isLoggedIn, navigate]);
 
 	const onFinish = async (values) => {
 		setLoading(true);
 		try {
 			const data = await loginRequest(values.username, values.password);
-			// Предположим, бекенд вернет { access: '...', role: 'client_manager' }
-			localStorage.setItem('accessToken', data.access);
+
+			// Записываем в Redux state
+			dispatch(
+				setAuthData({
+					username: data.username,
+					role: data.role,
+				})
+			);
+
+			// Пишем в localStorage (если нужно при перезагрузке)
 			localStorage.setItem('role', data.role);
 			if (data.username) {
 				localStorage.setItem('username', data.username);
 			}
 
-			// Редирект по роли
+			// Редирект
 			if (data.role.includes('client')) {
 				navigate('/client');
 			} else {

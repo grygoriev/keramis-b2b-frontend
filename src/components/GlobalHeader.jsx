@@ -2,34 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../store/authSlice';
 
 export const GlobalHeader = () => {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [username, setUsername] = useState('');
 	const [currentLanguage, setCurrentLanguage] = useState(
 		localStorage.getItem('lang') || 'ua',
 	);
 	const navigate = useNavigate();
 	const { i18n, t } = useTranslation();
+	const dispatch = useDispatch();
+
+	const { isLoggedIn, username } = useSelector((state) => ({
+		isLoggedIn: state.auth.isLoggedIn,
+		username: state.auth.username,
+	}));
 
 	useEffect(() => {
-		const token = localStorage.getItem('accessToken');
-		const userName = localStorage.getItem('username');
-		// Если нужна смена языка при загрузке:
 		i18n.changeLanguage(currentLanguage);
-
-		setIsLoggedIn(!!token);
-		if (userName) {
-			setUsername(userName);
-		}
 	}, [currentLanguage, i18n]);
 
 	const handleLogout = () => {
-		localStorage.removeItem('accessToken');
+		// Redux logout
+		dispatch(logout());
+		// Чистим localStorage если нужно (иначе restoreAuth подумает, что мы залогинены)
 		localStorage.removeItem('role');
 		localStorage.removeItem('username');
-		setIsLoggedIn(false);
-		setUsername('');
 		navigate('/login');
 	};
 
@@ -39,13 +37,12 @@ export const GlobalHeader = () => {
 		localStorage.setItem('lang', value);
 	};
 
-	// Простейшая стилизация: активный язык – синий и подчеркнутый, неактивный – серый
 	const getLangStyle = (lang) => {
 		if (lang === currentLanguage) {
 			return {
-				color: '#1890ff',
-				textDecoration: 'underline',
-				cursor: 'pointer',
+				color: '#000',
+				textDecoration: 'none',
+				fontWeight: 'bold',
 			};
 		}
 		return {
@@ -66,7 +63,7 @@ export const GlobalHeader = () => {
 				alignItems: 'center',
 			}}
 		>
-			{/* Левая часть: логотип + ссылки */}
+			{/* Левая часть */}
 			<div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
 				<Link
 					to="/"
@@ -88,13 +85,11 @@ export const GlobalHeader = () => {
 				</Link>
 			</div>
 
-			{/* Правая часть: валюта, язык, поиск, Login/Logout */}
+			{/* Правая часть */}
 			<div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
-				{/* Пример «курсов» */}
 				<span>$42.1 ↑</span>
 				<span>€43.85 ↑</span>
 
-				{/* Переключение языка (UK | RU) */}
 				<div style={{ display: 'flex', gap: 8 }}>
 					<span
 						style={getLangStyle('ua')}
@@ -111,10 +106,8 @@ export const GlobalHeader = () => {
 					</span>
 				</div>
 
-				{/* Кнопка поиска (можно сделать форму) */}
 				<Button>{t('common.find')}</Button>
 
-				{/* Если залогинен → «Hello, username» + Logout, иначе → Login */}
 				{isLoggedIn ? (
 					<>
 						{username && <span>Hello, {username}</span>}

@@ -14,6 +14,7 @@ export default function GlobalFooter() {
 					justifyContent: 'space-around',
 					padding: '20px 0',
 					borderBottom: '1px solid #333',
+					backgroundColor: '#253248',
 				}}
 			>
 				<div style={{ textAlign: 'center' }}>
