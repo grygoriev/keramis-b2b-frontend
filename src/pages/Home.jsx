@@ -13,9 +13,6 @@ export default function Home() {
 
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
-			{/* Глобальная шапка сверху */}
-			<GlobalHeader />
-
 			<Layout>
 				<Sider width={250}>
 					<div
@@ -42,20 +39,6 @@ export default function Home() {
 				</Sider>
 
 				<Layout>
-					{/* Можно убрать второй Header (если не нужен),
-              или оставить как внутренний под-шапку */}
-					<Header
-						style={{
-							background: '#fff',
-							padding: '0 16px',
-							display: 'flex',
-							justifyContent: 'space-between',
-							alignItems: 'center',
-						}}
-					>
-						<h2 style={{ margin: 0 }}>{t('common.headerTitle')}</h2>
-					</Header>
-
 					<Content style={{ margin: '16px', background: '#fff', padding: 16 }}>
 						<h1>{t('homePage.bannerWelcome')}</h1>
 						<p>{t('homePage.subtitle')}</p>
@@ -85,14 +68,14 @@ export default function Home() {
 						<div
 							style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}
 						>
-							<Button>Сертифікати</Button>
-							<Button>Каталоги</Button>
-							<Button>Імпорт</Button>
-							<Button>Експорт</Button>
+							<Button>{t('homePage.certificates')}</Button>
+							<Button>{t('homePage.catalogs')}</Button>
+							<Button>{t('homePage.export')}</Button>
+							<Button>{t('homePage.import')}</Button>
 						</div>
 
 						{/* Пример "Новинки" товары */}
-						<h2>НОВИНКИ</h2>
+						<h2>{t('homePage.newProducts')}</h2>
 						<div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
 							<div
 								style={{ width: 120, height: 120, background: '#f0f2f5' }}
@@ -111,7 +94,7 @@ export default function Home() {
 							</div>
 						</div>
 						{/* Пример "Акции" товары */}
-						<h2>АКЦИИ</h2>
+						<h2>{t('homePage.promo')}</h2>
 						<div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
 							<div
 								style={{ width: 120, height: 120, background: '#f0f2f5' }}
@@ -130,7 +113,7 @@ export default function Home() {
 							</div>
 						</div>
 						{/* Пример "Распродажа" товары */}
-						<h2>РАСПРОДАЖА</h2>
+						<h2>{t('homePage.sales')}</h2>
 						<div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
 							<div
 								style={{ width: 120, height: 120, background: '#f0f2f5' }}
@@ -149,9 +132,6 @@ export default function Home() {
 							</div>
 						</div>
 					</Content>
-					<Footer style={{ padding: 0 }}>
-						<GlobalFooter />
-					</Footer>
 				</Layout>
 			</Layout>
 		</Layout>

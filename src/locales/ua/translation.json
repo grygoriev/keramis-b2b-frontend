@@ -3,15 +3,75 @@
 		"headerTitle": "Головна",
 		"login": "Увійти",
 		"logout": "Вийти",
-		"categories": "Категорії"
+		"categories": "Категорії",
+		"find": "Знайти",
+		"help": "Допомога",
+		"solutions": "ГОТОВІ РІШЕННЯ",
+		"orders": "Замовлення",
+		"more": "Ще"
 	},
 	"homePage": {
 		"bannerWelcome": "Ласкаво просимо!",
-		"subtitle": "Найкращі пропозиції"
+		"subtitle": "Найкращі пропозиції",
+		"promo": "АКЦІЇ",
+		"sales": "РАСПРОДАЖ",
+		"newProducts": "НОВИНКИ",
+		"certificates": "Сертифікати",
+		"catalogs": "Каталоги",
+		"export": "Експорт",
+		"import": "Імпорт"
 	},
 	"loginPage": {
 		"username": "Ім'я користувача",
 		"password": "Пароль",
 		"button": "Увійти"
+	},
+	"footer": {
+		"top": {
+			"delivery": "Доставка",
+			"deliveryDesc": "Своя логістична мережа, можливість доставки Новою Поштою",
+			"warranty": "Гарантія",
+			"warrantyDesc": "Ми надаємо гарантію на нашу продукцію",
+			"payment": "Оплата",
+			"paymentDesc": "Ви можете вибрати зручний спосіб оплати",
+			"service": "Сервісна підтримка",
+			"serviceDesc": "Зручна та оперативна система повернення або ремонту продукції"
+		},
+		"middle": {
+			"logo": "KERAMIS + B2B",
+			"socialHeader": "Ми в соц мережах:",
+			"catalog": "Каталог",
+			"sale": "Розпродаж",
+			"new": "Новинки",
+			"promo": "Акції",
+			"categories": "Категорії",
+			"discounted": "Уцінені товари",
+			"brands": "Бренди",
+
+			"forUser": "Користувачу",
+			"profile": "Профіль",
+			"myOrders": "Мої замовлення",
+			"favorites": "Обране",
+			"messages": "Повідомлення",
+			"export": "Експорт",
+			"return": "Повернення",
+
+			"cooperation": "Співробітництво",
+			"certificates": "Сертифікати",
+			"catalogs": "Каталоги",
+			"webResources": "Інтернет ресурси",
+			"videoCatalog": "Відеокаталог",
+			"collabTerms": "Умови співпраці",
+
+			"help": "Допомога",
+			"hotLine": "Гаряча лінія: 0-800-123-456",
+			"serviceSupport": "Сервісна підтримка: 0-800-123-456",
+			"email": "info@keramis.in.ua",
+			"telegramChat": "Телеграм чат",
+			"managerContact": "Зв'язок з менеджером"
+		},
+		"copyright": {
+			"text": "Keramis + B2B © 2025. Всі права захищені."
+		}
 	}
 }

@@ -10,7 +10,7 @@ export const GlobalHeader = () => {
 		localStorage.getItem('lang') || 'ua',
 	);
 	const navigate = useNavigate();
-	const { i18n } = useTranslation();
+	const { i18n, t } = useTranslation();
 
 	useEffect(() => {
 		const token = localStorage.getItem('accessToken');
@@ -68,18 +68,23 @@ export const GlobalHeader = () => {
 		>
 			{/* Левая часть: логотип + ссылки */}
 			<div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-				<div style={{ fontWeight: 'bold', marginRight: 20 }}>KERAMIS+B2B</div>
+				<Link
+					to="/"
+					style={{ fontWeight: 'bold', marginRight: 20, color: 'inherit' }}
+				>
+					KERAMIS+B2B
+				</Link>
 				<Link to="/help" style={{ color: 'inherit' }}>
-					Допомога
+					{t('common.help')}
 				</Link>
 				<Link to="/solutions" style={{ color: 'inherit' }}>
-					ГОТОВІ РІШЕННЯ
+					{t('common.solutions')}
 				</Link>
 				<Link to="/orders" style={{ color: 'inherit' }}>
-					Замовлення
+					{t('common.orders')}
 				</Link>
 				<Link to="#" style={{ color: 'inherit' }}>
-					Ще
+					{t('common.more')}
 				</Link>
 			</div>
 
@@ -107,7 +112,7 @@ export const GlobalHeader = () => {
 				</div>
 
 				{/* Кнопка поиска (можно сделать форму) */}
-				<Button>Знайти</Button>
+				<Button>{t('common.find')}</Button>
 
 				{/* Если залогинен → «Hello, username» + Logout, иначе → Login */}
 				{isLoggedIn ? (

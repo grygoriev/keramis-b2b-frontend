@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 export default function GlobalFooter() {
+	const { t } = useTranslation();
+
 	return (
 		<div style={{ backgroundColor: '#000', color: '#fff' }}>
 			{/* Верхний блок (Доставка, Гарантія, Оплата, Сервісна підтримка) */}
@@ -14,27 +17,35 @@ export default function GlobalFooter() {
 				}}
 			>
 				<div style={{ textAlign: 'center' }}>
-					<div style={{ fontSize: 20 }}>Доставка</div>
+					<div style={{ fontSize: 20 }}>
+						{t('footer.top.delivery')}
+					</div>
 					<div style={{ fontSize: 12, marginTop: 5 }}>
-						Своя логістична мережа, можливість доставки Новою Поштою
+						{t('footer.top.deliveryDesc')}
 					</div>
 				</div>
 				<div style={{ textAlign: 'center' }}>
-					<div style={{ fontSize: 20 }}>Гарантія</div>
+					<div style={{ fontSize: 20 }}>
+						{t('footer.top.warranty')}
+					</div>
 					<div style={{ fontSize: 12, marginTop: 5 }}>
-						Ми надаємо гарантію на нашу продукцію
+						{t('footer.top.warrantyDesc')}
 					</div>
 				</div>
 				<div style={{ textAlign: 'center' }}>
-					<div style={{ fontSize: 20 }}>Оплата</div>
+					<div style={{ fontSize: 20 }}>
+						{t('footer.top.payment')}
+					</div>
 					<div style={{ fontSize: 12, marginTop: 5 }}>
-						Ви можете вибрати зручний спосіб оплати
+						{t('footer.top.paymentDesc')}
 					</div>
 				</div>
 				<div style={{ textAlign: 'center' }}>
-					<div style={{ fontSize: 20 }}>Сервісна підтримка</div>
+					<div style={{ fontSize: 20 }}>
+						{t('footer.top.service')}
+					</div>
 					<div style={{ fontSize: 12, marginTop: 5 }}>
-						Зручна та оперативна система повернення або ремонту продукції
+						{t('footer.top.serviceDesc')}
 					</div>
 				</div>
 			</div>
@@ -56,12 +67,12 @@ export default function GlobalFooter() {
 				>
 					{/* Левая часть: Логотип, соцсети */}
 					<div>
-						<div
-							style={{ fontWeight: 'bold', fontSize: 24, marginBottom: 10 }}
-						>
-							KERAMIS + B2B
+						<div style={{ fontWeight: 'bold', fontSize: 24, marginBottom: 10 }}>
+							{t('footer.middle.logo')}
 						</div>
-						<div style={{ marginBottom: 10 }}>Ми в соц мережах:</div>
+						<div style={{ marginBottom: 10 }}>
+							{t('footer.middle.socialHeader')}
+						</div>
 						<div style={{ display: 'flex', gap: 10, marginBottom: 10 }}>
 							{/* Иконки соцсетей (заглушки), все ведут на главную */}
 							<Link to="/">
@@ -89,204 +100,86 @@ export default function GlobalFooter() {
 					<div style={{ display: 'flex', gap: 60 }}>
 						<div>
 							<div style={{ fontWeight: 'bold', marginBottom: 10 }}>
-								Каталог
+								{t('footer.middle.catalog')}
 							</div>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Розпродаж
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.sale')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Новинки
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.new')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Акції
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.promo')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Категорії
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.categories')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Уцінені товари
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.discounted')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Бренди
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.brands')}
 							</Link>
 						</div>
+
 						<div>
 							<div style={{ fontWeight: 'bold', marginBottom: 10 }}>
-								Користувачу
+								{t('footer.middle.forUser')}
 							</div>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Профіль
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.profile')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Мої замовлення
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.myOrders')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Обране
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.favorites')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Повідомлення
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.messages')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Експорт
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.export')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Повернення
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.return')}
 							</Link>
 						</div>
+
 						<div>
 							<div style={{ fontWeight: 'bold', marginBottom: 10 }}>
-								Співробітництво
+								{t('footer.middle.cooperation')}
 							</div>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Сертифікати
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.certificates')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Каталоги
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.catalogs')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Інтернет ресурси
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.webResources')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Відеокаталог
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.videoCatalog')}
 							</Link>
-							<Link
-								to="/"
-								style={{
-									display: 'block',
-									color: '#fff',
-									marginBottom: 5,
-								}}
-							>
-								Умови співпраці
+							<Link to="/" style={{ display: 'block', color: '#fff', marginBottom: 5 }}>
+								{t('footer.middle.collabTerms')}
 							</Link>
 						</div>
+
 						<div>
 							<div style={{ fontWeight: 'bold', marginBottom: 10 }}>
-								Допомога
+								{t('footer.middle.help')}
 							</div>
+							<div style={{ marginBottom: 5 }}>{t('footer.middle.hotLine')}</div>
 							<div style={{ marginBottom: 5 }}>
-								Гаряча лінія: 0-800-212-008
+								{t('footer.middle.serviceSupport')}
 							</div>
+							<div style={{ marginBottom: 5 }}>{t('footer.middle.email')}</div>
 							<div style={{ marginBottom: 5 }}>
-								Сервісна підтримка: 0-800-210-247
+								{t('footer.middle.telegramChat')}
 							</div>
-							<div style={{ marginBottom: 5 }}>
-								support@keramisservice.com
-							</div>
-							<div style={{ marginBottom: 5 }}>Телеграм чат</div>
-							<div>Зв'язок з менеджером</div>
+							<div>{t('footer.middle.managerContact')}</div>
 						</div>
 					</div>
 				</div>
@@ -300,7 +193,7 @@ export default function GlobalFooter() {
 						paddingTop: 10,
 					}}
 				>
-					Keramis + B2B © 2023. Всі права захищені.
+					{t('footer.copyright.text')}
 				</div>
 			</div>
 		</div>

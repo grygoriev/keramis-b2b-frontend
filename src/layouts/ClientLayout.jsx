@@ -1,32 +1,54 @@
-import React from 'react';
-import { Layout } from 'antd';
+import React, { useState } from 'react';
+import { Layout, Menu } from 'antd';
 import { Outlet } from 'react-router-dom';
-import { GlobalHeader } from '../components/GlobalHeader';
-import GlobalFooter from '../components/GlobalFooter.jsx';
+import {
+	HomeOutlined,
+	HistoryOutlined,
+	HeartOutlined,
+} from '@ant-design/icons';
 
-const { Header, Content, Footer } = Layout;
+const { Sider, Content } = Layout;
 
 export default function ClientLayout() {
+	const [collapsed, setCollapsed] = useState(true);
+
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
-			<GlobalHeader />
-			<Header
-				style={{
-					background: '#fff',
-					padding: '0 16px',
-					display: 'flex',
-					justifyContent: 'space-between',
-					alignItems: 'center',
-				}}
+			<Sider
+				collapsible
+				collapsed={collapsed}
+				onCollapse={(value) => setCollapsed(value)}
+				width={250}
+				style={{ background: '#001529' }}
 			>
-				<h2 style={{ margin: 0 }}>Client Layout</h2>
-			</Header>
+				<Menu
+					theme="dark"
+					mode="inline"
+					defaultSelectedKeys={['1']}
+					style={{ height: '100%' }}
+					items={[
+						{
+							key: '1',
+							icon: <HomeOutlined />,
+							label: 'Главная клиента',
+						},
+						{
+							key: '2',
+							icon: <HistoryOutlined />,
+							label: 'История заказов',
+						},
+						{
+							key: '3',
+							icon: <HeartOutlined />,
+							label: 'Избранное',
+						},
+					]}
+				/>
+			</Sider>
+
 			<Content style={{ margin: '16px', background: '#fff', padding: 16 }}>
 				<Outlet />
 			</Content>
-			<Footer style={{ padding: 0 }}>
-				<GlobalFooter />
-			</Footer>
 		</Layout>
 	);
 }

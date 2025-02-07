@@ -1,43 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import { Outlet } from 'react-router-dom';
-import { GlobalHeader } from '../components/GlobalHeader';
-import GlobalFooter from '../components/GlobalFooter.jsx';
+import { UserOutlined, ShoppingCartOutlined, SettingOutlined } from '@ant-design/icons';
 
-const { Header, Sider, Content, Footer } = Layout;
+const { Sider, Content } = Layout;
 
 export default function AdminLayout() {
+	const [collapsed, setCollapsed] = useState(true);
+
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
-			<GlobalHeader />
-			<Layout>
-				<Sider>
-					<Menu theme="dark" mode="inline">
-						<Menu.Item key="1">Админ. Панель</Menu.Item>
-						<Menu.Item key="2">Товары</Menu.Item>
-						<Menu.Item key="3">Заказы</Menu.Item>
-					</Menu>
-				</Sider>
-				<Layout>
-					<Header
-						style={{
-							background: '#fff',
-							padding: '0 16px',
-							display: 'flex',
-							justifyContent: 'space-between',
-							alignItems: 'center',
-						}}
-					>
-						<h2 style={{ margin: 0 }}>Admin Layout</h2>
-					</Header>
-					<Content style={{ margin: '16px', background: '#fff', padding: 16 }}>
-						<Outlet />
-					</Content>
-					<Footer style={{ padding: 0 }}>
-						<GlobalFooter />
-					</Footer>
-				</Layout>
-			</Layout>
+			{/* Боковая панель (сворачиваемая) */}
+			<Sider
+				collapsible
+				collapsed={collapsed}
+				onCollapse={(value) => setCollapsed(value)}
+				width={250}
+				style={{ background: '#001529' }}
+			>
+				<Menu
+					theme="dark"
+					mode="inline"
+					defaultSelectedKeys={['1']}
+					style={{ height: '100%' }}
+					items={[
+						{
+							key: '1',
+							icon: <UserOutlined />,
+							label: 'Пользователи',
+						},
+						{
+							key: '2',
+							icon: <ShoppingCartOutlined />,
+							label: 'Заказы',
+						},
+						{
+							key: '3',
+							icon: <SettingOutlined />,
+							label: 'Настройки',
+						},
+					]}
+				/>
+			</Sider>
+
+			{/* Справа – основная часть (дочерние роуты) */}
+			<Content style={{ margin: '16px', background: '#fff', padding: 16 }}>
+				<Outlet />
+			</Content>
 		</Layout>
 	);
 }

@@ -3,15 +3,75 @@
 		"headerTitle": "Главная",
 		"login": "Войти",
 		"logout": "Выйти",
-		"categories": "Категории"
+		"categories": "Категории",
+		"find": "Найти",
+		"help": "Помощь",
+		"solutions": "ГОТОВЫЕ РЕШЕНИЯ",
+		"orders": "Заказы",
+		"more": "Еще"
 	},
 	"homePage": {
 		"bannerWelcome": "Добро пожаловать!",
-		"subtitle": "Лучшие предложения"
+		"subtitle": "Лучшие предложения",
+		"promo": "АКЦИИ",
+		"sales": "РАСПРОДАЖА",
+		"newProducts": "НОВИНКИ",
+		"certificates": "Сертификати",
+		"catalogs": "Каталоги",
+		"export": "Экспорт",
+		"import": "Импорт"
 	},
 	"loginPage": {
 		"username": "Имя пользователя",
 		"password": "Пароль",
 		"button": "Войти"
+	},
+	"footer": {
+		"top": {
+			"delivery": "Доставка",
+			"deliveryDesc": "Собственная логистическая сеть, возможность доставки Новой Почтой",
+			"warranty": "Гарантия",
+			"warrantyDesc": "Мы предоставляем гарантию на нашу продукцию",
+			"payment": "Оплата",
+			"paymentDesc": "Вы можете выбрать удобный способ оплаты",
+			"service": "Сервисная поддержка",
+			"serviceDesc": "Удобная и быстрая система возврата или ремонта продукции"
+		},
+		"middle": {
+			"logo": "KERAMIS + B2B",
+			"socialHeader": "Мы в соцсетях:",
+			"catalog": "Каталог",
+			"sale": "Распродажа",
+			"new": "Новинки",
+			"promo": "Акции",
+			"categories": "Категории",
+			"discounted": "Уцененные товары",
+			"brands": "Бренды",
+
+			"forUser": "Пользователю",
+			"profile": "Профиль",
+			"myOrders": "Мои заказы",
+			"favorites": "Избранное",
+			"messages": "Сообщения",
+			"export": "Экспорт",
+			"return": "Возврат",
+
+			"cooperation": "Сотрудничество",
+			"certificates": "Сертификаты",
+			"catalogs": "Каталоги",
+			"webResources": "Интернет ресурсы",
+			"videoCatalog": "Видеокаталог",
+			"collabTerms": "Условия сотрудничества",
+
+			"help": "Помощь",
+			"hotLine": "Горячая линия: 0-800-123-456",
+			"serviceSupport": "Сервисная поддержка: 0-800-123-456",
+			"email": "support@keramisservice.com",
+			"telegramChat": "Телеграм чат",
+			"managerContact": "Связь с менеджером"
+		},
+		"copyright": {
+			"text": "Keramis + B2B © 2025. Все права защищены."
+		}
 	}
 }
