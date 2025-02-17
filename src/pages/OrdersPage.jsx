@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function OrdersPage() {
+export function OrdersPage() {
 	return <h2>Страница «Замовлення» (в разработке)</h2>;
 }

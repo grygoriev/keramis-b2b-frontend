@@ -1,16 +1,16 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import RootLayout from '../layouts/RootLayout';
-import AdminLayout from '../layouts/AdminLayout';
-import ClientLayout from '../layouts/ClientLayout';
-
-import Home from '../pages/Home';
-import Login from '../pages/Login';
-import HelpPage from '../pages/HelpPage';
-import SolutionsPage from '../pages/SolutionsPage';
-import OrdersPage from '../pages/OrdersPage';
-import { AdminDashboard } from '../pages/AdminDashboard';
-import { ClientDashboard } from '../pages/ClientDashboard'; // пример
+import { ClientLayout, AdminLayout, RootLayout } from '../layouts';
+import {
+	AdminDashboard,
+	ClientDashboard,
+	OrdersPage,
+	SolutionsPage,
+	Home,
+	Login,
+	HelpPage,
+	CategoryPage, ProductPage,
+} from '../pages';
 import RequireAdmin from './RequireAdmin';
 import RequireClient from './RequireClient';
 
@@ -23,6 +23,10 @@ export default function AppRouter() {
 					{/* Публичные / гостевые страницы */}
 					<Route index element={<Home />} />
 					<Route path="login" element={<Login />} />
+					{/* Страница категории */}
+					<Route path="/category/:slug" element={<CategoryPage />} />
+					{/* Страница товара */}
+					<Route path="/product/:slug" element={<ProductPage />} />
 					<Route path="help" element={<HelpPage />} />
 					<Route path="solutions" element={<SolutionsPage />} />
 					<Route path="orders" element={<OrdersPage />} />

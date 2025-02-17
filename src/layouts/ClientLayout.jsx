@@ -9,7 +9,7 @@ import {
 
 const { Sider, Content } = Layout;
 
-export default function ClientLayout() {
+export function ClientLayout() {
 	const [collapsed, setCollapsed] = useState(true);
 
 	return (

@@ -10,7 +10,7 @@ import { loginRequest } from '../api/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuthData } from '../store/authSlice';
 
-export default function Login() {
+export function Login() {
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const { t } = useTranslation();

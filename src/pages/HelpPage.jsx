@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function HelpPage() {
+export function HelpPage() {
 	return <h2>Страница «Допомога» (в разработке)</h2>;
 }

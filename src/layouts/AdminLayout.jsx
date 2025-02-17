@@ -5,7 +5,7 @@ import { UserOutlined, ShoppingCartOutlined, SettingOutlined } from '@ant-design
 
 const { Sider, Content } = Layout;
 
-export default function AdminLayout() {
+export function AdminLayout() {
 	const [collapsed, setCollapsed] = useState(true);
 
 	return (

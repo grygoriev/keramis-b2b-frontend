@@ -6,7 +6,7 @@ import GlobalFooter from '../components/GlobalFooter';
 
 const { Content } = Layout;
 
-export default function RootLayout() {
+export function RootLayout() {
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
 			{/* Глобальный Header всегда сверху */}
