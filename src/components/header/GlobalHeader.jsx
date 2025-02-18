@@ -1,13 +1,17 @@
+// src/components/header/GlobalHeader.jsx
 import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../store/authSlice';
+import { logout } from '../../store/authSlice';
+import { logoutRequest } from '../../api/auth';
+import { CartIcon } from './cart/CartIcon';
+import { fetchCartsAsync } from '../../store/cartSlice';
 
 export const GlobalHeader = () => {
 	const [currentLanguage, setCurrentLanguage] = useState(
-		localStorage.getItem('lang') || 'ua',
+		localStorage.getItem('lang') || 'ua'
 	);
 	const navigate = useNavigate();
 	const { i18n, t } = useTranslation();
@@ -22,10 +26,22 @@ export const GlobalHeader = () => {
 		i18n.changeLanguage(currentLanguage);
 	}, [currentLanguage, i18n]);
 
-	const handleLogout = () => {
-		// Redux logout
+	useEffect(() => {
+		if (isLoggedIn) {
+			// Передаем currentLanguage → fetchCartsAsync
+			// Если currentLanguage='ua', можно преобразовать в 'uk', если бекенд ждет 'uk'
+			const langParam = currentLanguage === 'ua' ? 'uk' : currentLanguage;
+			dispatch(fetchCartsAsync(langParam));
+		}
+	}, [isLoggedIn, currentLanguage, dispatch]);
+
+	const handleLogout = async () => {
+		try {
+			await logoutRequest();
+		} catch (err) {
+			console.error('Logout error:', err);
+		}
 		dispatch(logout());
-		// Чистим localStorage если нужно (иначе restoreAuth подумает, что мы залогинены)
 		localStorage.removeItem('role');
 		localStorage.removeItem('username');
 		navigate('/login');
@@ -91,22 +107,19 @@ export const GlobalHeader = () => {
 				<span>€43.85 ↑</span>
 
 				<div style={{ display: 'flex', gap: 8 }}>
-					<span
-						style={getLangStyle('ua')}
-						onClick={() => handleChangeLanguage('ua')}
-					>
-						UK
-					</span>
+          <span style={getLangStyle('ua')} onClick={() => handleChangeLanguage('ua')}>
+            UK
+          </span>
 					<span>|</span>
-					<span
-						style={getLangStyle('ru')}
-						onClick={() => handleChangeLanguage('ru')}
-					>
-						RU
-					</span>
+					<span style={getLangStyle('ru')} onClick={() => handleChangeLanguage('ru')}>
+            RU
+          </span>
 				</div>
 
 				<Button>{t('common.find')}</Button>
+
+				{/* Иконка корзины */}
+				<CartIcon />
 
 				{isLoggedIn ? (
 					<>

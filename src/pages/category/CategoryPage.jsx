@@ -1,18 +1,39 @@
 // src/pages/CategoryPage.jsx
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Spin, Breadcrumb, Card } from 'antd';
-import { fetchCategoryDetail } from '../../api/catalogApi.js';
-import './CategoryPage.css'; // подключаем стили
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import {
+	Spin,
+	Breadcrumb,
+	Card,
+	Button,
+	message,
+} from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next'; // <-- импортируем хук
+import { fetchCategoryDetail } from '../../api/catalogApi';
+import {
+	addItemToCartAsync,
+	fetchCartsAsync,
+} from '../../store/cartSlice';
+import { CartModal } from '../../components/CartModal';
+import './CategoryPage.css';
 
 export function CategoryPage() {
 	const { slug } = useParams();
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const { t } = useTranslation(); // <-- получаем функцию t()
+
+	const { activeCartId } = useSelector((state) => state.cart);
 
 	const [category, setCategory] = useState(null);
 	const [breadcrumbs, setBreadcrumbs] = useState([]);
 	const [products, setProducts] = useState([]);
 	const [loading, setLoading] = useState(false);
+
+	// Модалка
+	const [showCartModal, setShowCartModal] = useState(false);
+	const [pendingProductId, setPendingProductId] = useState(null);
 
 	// Язык
 	const storedLang = localStorage.getItem('lang') || 'ru';
@@ -22,26 +43,66 @@ export function CategoryPage() {
 		loadCategory();
 	}, [slug, serverLang]);
 
+	useEffect(() => {
+		dispatch(fetchCartsAsync());
+	}, [dispatch]);
+
 	const loadCategory = async () => {
 		setLoading(true);
 		try {
 			const data = await fetchCategoryDetail(slug, serverLang);
-			setCategory(data.category);
-			setBreadcrumbs(data.breadcrumbs);
-			setProducts(data.products);
-		} catch (error) {
-			console.error(error);
+			if (!data.category) {
+				message.error(t('categoryPage.notFound'));
+			} else {
+				setCategory(data.category);
+				setBreadcrumbs(data.breadcrumbs);
+				setProducts(data.products);
+			}
 		} finally {
 			setLoading(false);
 		}
 	};
 
 	if (loading) return <Spin />;
-	if (!category) return <div>Category not found</div>;
+	if (!category) return <div>{t('categoryPage.notFound')}</div>;
 
-	// Клик по карточке → переход к /product/:slug
 	const handleCardClick = (productSlug) => {
 		navigate(`/product/${productSlug}`);
+	};
+
+	const doAddItemToCart = async (cartId, productId) => {
+		try {
+			await dispatch(
+				addItemToCartAsync({ cartId, productId, quantity: 1 })
+			).unwrap();
+			message.success(t('common.productAdded'));
+		} catch (err) {
+			console.error(err);
+			message.error(t('common.productAddError'));
+		}
+	};
+
+	const handleAddToCart = (e, productId) => {
+		e.stopPropagation();
+		if (!activeCartId) {
+			setPendingProductId(productId);
+			setShowCartModal(true);
+			return;
+		}
+		doAddItemToCart(activeCartId, productId);
+	};
+
+	const handleCartSelected = (cartId) => {
+		setShowCartModal(false);
+		if (pendingProductId) {
+			doAddItemToCart(cartId, pendingProductId);
+		}
+		setPendingProductId(null);
+	};
+
+	const handleCloseModal = () => {
+		setShowCartModal(false);
+		setPendingProductId(null);
 	};
 
 	return (
@@ -67,23 +128,33 @@ export function CategoryPage() {
 						cover={
 							<img
 								alt={prod.name}
-								src={
-									prod.image_filename
-										? `${prod.image_filename}`
-										: '/images/no-image.png'
-								}
+								src={prod.image_filename ? prod.image_filename : '/images/no-image.png'}
 							/>
 						}
 					>
 						<div className="two-lines product-name">{prod.name}</div>
-						<div>{prod.price} грн</div>
+						<div>
+							{t('common.price', 'Цена')}: {prod.price} грн
+						</div>
 
-						<Link to={`/product/${prod.slug}`} onClick={(e) => e.stopPropagation()}>
-							Подробнее
-						</Link>
+						<div style={{ marginTop: 8 }}>
+							<Button
+								type="primary"
+								size="small"
+								onClick={(e) => handleAddToCart(e, prod.id)}
+							>
+								{t('common.addToCart')}
+							</Button>
+						</div>
 					</Card>
 				))}
 			</div>
+
+			<CartModal
+				visible={showCartModal}
+				onClose={handleCloseModal}
+				onCartSelected={handleCartSelected}
+			/>
 		</div>
 	);
 }

@@ -1,2 +1,2 @@
 export * from './GlobalFooter.jsx';
-export * from './GlobalHeader.jsx';
+export * from './header/GlobalHeader.jsx';

@@ -8,7 +8,55 @@
 		"help": "Помощь",
 		"solutions": "ГОТОВЫЕ РЕШЕНИЯ",
 		"orders": "Заказы",
-		"more": "Еще"
+		"more": "Еще",
+		"addToCart": "В корзину",
+		"cartNotFound": "Корзина не найдена",
+		"create": "Создать",
+		"remove": "Удалить",
+		"quantityLessWarning": "Количество не может быть меньше 1",
+		"quantityUpdated": "Количество обновлено",
+		"itemRemoved": "Товар удален",
+		"failedToDeleteItem": "Не удалось удалить товар",
+		"failedToUpdateQuantity": "Не удалось обновить количество",
+		"cartFoundError": "Корзина не найдена",
+		"cartTitle": "Корзина",
+		"id": "ID",
+		"quantity": "Количество",
+		"price": "Цена",
+		"productAdded": "Товар добавлен в корзину!",
+		"productAddError": "Ошибка при добавлении",
+		"cartModalTitle": "Выберите или создайте корзину",
+		"cartModalOk": "ОК",
+		"cartModalCancel": "Отмена",
+		"cartModalExisting": "Существующие корзины:",
+		"cartModalPlaceholder": "Выберите корзину",
+		"cartModalNewCart": "Новая корзина",
+		"cartModalPrompt": "Или введите название новой корзины:",
+		"activeCart": "Активная: {{cartName}}",
+		"noActiveCart": "Нет активной корзины",
+		"allCartsList": "Список всех корзин:",
+		"productsInActiveCart": "Товары в активной корзине:",
+		"emptyCart": "Пусто",
+		"noCart": "Нет корзины",
+		"goToCartList": "Перейти в список корзин"
+	},
+	"categoryPage": {
+		"notFound": "Категория не найдена"
+	},
+	"productPage": {
+		"notFound": "Товар не найден",
+		"added": "Товар добавлен в корзину!",
+		"addError": "Ошибка добавления"
+	},
+	"cartPage": {
+		"title": "Ваша корзина"
+	},
+	"cartsPage": {
+		"title": "Ваши корзины",
+		"create": "Создать",
+		"open": "Открыть",
+		"delete": "Удалить",
+		"newCartName": "Название новой корзины"
 	},
 	"homePage": {
 		"bannerWelcome": "Добро пожаловать!",

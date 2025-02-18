@@ -8,7 +8,55 @@
 		"help": "Допомога",
 		"solutions": "ГОТОВІ РІШЕННЯ",
 		"orders": "Замовлення",
-		"more": "Ще"
+		"more": "Ще",
+		"addToCart": "До кошика",
+		"cartNotFound": "Кошик не знайдено",
+		"create": "Створити",
+		"remove": "Видалити",
+		"quantityLessWarning": "Кількість не може бути менше 1",
+		"quantityUpdated": "Кількість оновлено",
+		"itemRemoved": "Товар видалено",
+		"failedToDeleteItem": "Не вдалося видалити товар",
+		"failedToUpdateQuantity": "Не вдалося оновити кількість",
+		"cartFoundError": "Кошик не знайдено",
+		"cartTitle": "Кошик",
+		"id": "ID",
+		"quantity": "Кількість",
+		"price": "Ціна",
+		"productAdded": "Товар додано до кошика!",
+		"productAddError": "Помилка додавання",
+		"cartModalTitle": "Виберіть або створіть кошик",
+		"cartModalOk": "OK",
+		"cartModalCancel": "Відміна",
+		"cartModalExisting": "Існуючі кошики:",
+		"cartModalPlaceholder": "Виберіть кошик",
+		"cartModalNewCart": "Новий кошик",
+		"cartModalPrompt": "Або введіть назву нового кошика:",
+		"activeCart": "Активна: {{cartName}}",
+		"noActiveCart": "Немає активного кошика",
+		"allCartsList": "Список усіх кошиків:",
+		"productsInActiveCart": "Товари в активному кошику:",
+		"emptyCart": "Порожньо",
+		"noCart": "Немає кошика",
+		"goToCartList": "Перейти до списку кошиків"
+	},
+	"categoryPage": {
+		"notFound": "Категорію не знайдено"
+	},
+	"productPage": {
+		"notFound": "Товар не знайдено",
+		"added": "Товар додано до кошика!",
+		"addError": "Помилка додавання"
+	},
+	"cartPage": {
+		"title": "Ваш кошик"
+	},
+	"cartsPage": {
+		"title": "Ваши кошики",
+		"create": "Створити",
+		"open": "Відкрити",
+		"delete": "Видалити",
+		"newCartName": "Назва нового кошика"
 	},
 	"homePage": {
 		"bannerWelcome": "Ласкаво просимо!",
