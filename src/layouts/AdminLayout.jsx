@@ -1,3 +1,4 @@
+// src/layouts/AdminLayout.jsx
 import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import { Outlet } from 'react-router-dom';
@@ -10,7 +11,6 @@ export function AdminLayout() {
 
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
-			{/* Боковая панель (сворачиваемая) */}
 			<Sider
 				collapsible
 				collapsed={collapsed}
@@ -43,7 +43,6 @@ export function AdminLayout() {
 				/>
 			</Sider>
 
-			{/* Справа – основная часть (дочерние роуты) */}
 			<Content style={{ margin: '16px', background: '#fff', padding: 16 }}>
 				<Outlet />
 			</Content>

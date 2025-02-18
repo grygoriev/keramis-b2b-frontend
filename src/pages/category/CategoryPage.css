@@ -1,0 +1,22 @@
+.product-card {
+	/* при наведении легкий зум */
+	transition: transform 0.2s ease-out;
+}
+.product-card:hover {
+	transform: scale(1.03);
+}
+
+/* Две строки в названии */
+.two-lines {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	white-space: normal;
+}
+
+/* При наведении на всю карточку -- убираем line-clamp у .two-lines */
+.product-card:hover .two-lines {
+	-webkit-line-clamp: unset;
+	overflow: visible;
+}

@@ -1,4 +1,4 @@
-export * from './CategoryPage.jsx'
+export * from './category/CategoryPage.jsx'
 export * from './Home.jsx'
 export * from './ProductPage.jsx'
 export * from './AdminDashboard.jsx'

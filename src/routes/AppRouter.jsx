@@ -1,6 +1,11 @@
+// src/routes/AppRouter.jsx
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ClientLayout, AdminLayout, RootLayout } from '../layouts';
+
+// Layouts
+import { BaseLayout,PublicLayout, AdminLayout,  ClientLayout } from '../layouts';
+
+// Pages
 import {
 	AdminDashboard,
 	ClientDashboard,
@@ -9,8 +14,11 @@ import {
 	Home,
 	Login,
 	HelpPage,
-	CategoryPage, ProductPage,
+	CategoryPage,
+	ProductPage
 } from '../pages';
+
+// Guards
 import RequireAdmin from './RequireAdmin';
 import RequireClient from './RequireClient';
 
@@ -18,20 +26,24 @@ export default function AppRouter() {
 	return (
 		<BrowserRouter>
 			<Routes>
-				{/* 1) Внешний route с RootLayout: Header/Footer */}
-				<Route path="/" element={<RootLayout />}>
-					{/* Публичные / гостевые страницы */}
-					<Route index element={<Home />} />
-					<Route path="login" element={<Login />} />
-					{/* Страница категории */}
-					<Route path="/category/:slug" element={<CategoryPage />} />
-					{/* Страница товара */}
-					<Route path="/product/:slug" element={<ProductPage />} />
-					<Route path="help" element={<HelpPage />} />
-					<Route path="solutions" element={<SolutionsPage />} />
-					<Route path="orders" element={<OrdersPage />} />
+				{/*
+          1) Базовый лейаут (Header/Footer) – всё внутри него,
+             но разбиваем публичные (PublicLayout) и admin/client.
+        */}
+				<Route path="/" element={<BaseLayout />}>
+					{/* ПУБЛИЧНЫЕ (с меню категорий) */}
+					<Route element={<PublicLayout />}>
+						<Route index element={<Home />} />
+						<Route path="login" element={<Login />} />
+						<Route path="help" element={<HelpPage />} />
+						<Route path="solutions" element={<SolutionsPage />} />
+						<Route path="orders" element={<OrdersPage />} />
 
-					{/* 2) Админский layout + вложенные страницы */}
+						<Route path="category/:slug" element={<CategoryPage />} />
+						<Route path="product/:slug" element={<ProductPage />} />
+					</Route>
+
+					{/* АДМИН (без публичного меню) */}
 					<Route
 						path="admin"
 						element={
@@ -40,12 +52,11 @@ export default function AppRouter() {
 							</RequireAdmin>
 						}
 					>
-						{/* Внутри админ layout – админские страницы */}
 						<Route index element={<AdminDashboard />} />
-						{/* <Route path="products" element={<ProductsPage />} ... */}
+						{/* ...другие admin pages */}
 					</Route>
 
-					{/* 3) Клиентский layout + вложенные страницы */}
+					{/* КЛИЕНТ (без публичного меню) */}
 					<Route
 						path="client"
 						element={
@@ -54,9 +65,8 @@ export default function AppRouter() {
 							</RequireClient>
 						}
 					>
-						{/* Внутри клиент layout – клиентские страницы */}
 						<Route index element={<ClientDashboard />} />
-						{/* <Route path="cart" element={<CartPage />} ... */}
+						{/* ...другие client pages */}
 					</Route>
 				</Route>
 
