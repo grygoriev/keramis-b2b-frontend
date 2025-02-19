@@ -17,10 +17,9 @@ export const GlobalHeader = () => {
 	const { i18n, t } = useTranslation();
 	const dispatch = useDispatch();
 
-	const { isLoggedIn, username } = useSelector((state) => ({
-		isLoggedIn: state.auth.isLoggedIn,
-		username: state.auth.username,
-	}));
+	// Вместо одного селектора, берем два:
+	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+	const username = useSelector((state) => state.auth.username);
 
 	useEffect(() => {
 		i18n.changeLanguage(currentLanguage);
@@ -28,8 +27,6 @@ export const GlobalHeader = () => {
 
 	useEffect(() => {
 		if (isLoggedIn) {
-			// Передаем currentLanguage → fetchCartsAsync
-			// Если currentLanguage='ua', можно преобразовать в 'uk', если бекенд ждет 'uk'
 			const langParam = currentLanguage === 'ua' ? 'uk' : currentLanguage;
 			dispatch(fetchCartsAsync(langParam));
 		}
@@ -93,7 +90,7 @@ export const GlobalHeader = () => {
 				<Link to="/solutions" style={{ color: 'inherit' }}>
 					{t('common.solutions')}
 				</Link>
-				<Link to="/orders" style={{ color: 'inherit' }}>
+				<Link to="/my-orders" style={{ color: 'inherit' }}>
 					{t('common.orders')}
 				</Link>
 				<Link to="#" style={{ color: 'inherit' }}>

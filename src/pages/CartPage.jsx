@@ -1,17 +1,19 @@
 // src/pages/CartPage.jsx
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
 	getCarts,
 	deleteCartItem,
-	updateCartItem,
+	updateCartItem
 } from '../api/cartApi';
+import { checkoutCart } from '../api/ordersApi'; // <-- импортируем функцию чекаута
 import { Spin, List, Button, message, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 export function CartPage() {
 	const { cartId } = useParams();
-	const { t } = useTranslation(); // i18n
+	const navigate = useNavigate();
+	const { t } = useTranslation();
 	const [cart, setCart] = useState(null);
 	const [loading, setLoading] = useState(false);
 
@@ -73,6 +75,21 @@ export function CartPage() {
 		handleQuantityChange(item, item.quantity - 1);
 	};
 
+	// оформить заказ (Checkout)
+	const handleCheckout = async () => {
+		if (!cart) return;
+		try {
+			const order = await checkoutCart(cart.id); // {id, state, total, ...}
+			message.success(t('common.orderCreated', `Заказ #${order.id} создан!`));
+			// После успешного оформления → переходим на список заказов
+			navigate('/my-orders');
+			// Или если хотите более конкретно: navigate(`/my-orders/${order.id}`)
+		} catch (err) {
+			console.error(err);
+			message.error(t('common.checkoutFailed', 'Не удалось оформить заказ'));
+		}
+	};
+
 	if (loading) return <Spin />;
 	if (!cart) return <div>{t('common.cartNotFound')}</div>;
 
@@ -114,6 +131,13 @@ export function CartPage() {
 					</List.Item>
 				)}
 			/>
+
+			{/* Кнопка "Оформить заказ" */}
+			<div style={{ marginTop: 16 }}>
+				<Button type="primary" onClick={handleCheckout}>
+					{t('common.checkout', 'Оформить заказ')}
+				</Button>
+			</div>
 		</div>
 	);
 }

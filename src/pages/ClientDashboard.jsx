@@ -1,3 +1,3 @@
 export const ClientDashboard = () => {
-	return (<div>Admin dashboard</div>)
+	return (<div>Client dashboard</div>)
 }

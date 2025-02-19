@@ -12,27 +12,23 @@ export function CartIcon() {
 	const dispatch = useDispatch();
 	const { t } = useTranslation();
 
-	// Берём carts и activeCartId из Redux
 	const { carts, activeCartId } = useSelector((state) => state.cart);
-
-	// Находим активную корзину
 	const activeCart = carts.find((c) => c.id === activeCartId);
 
-	// Чтобы показывать Popover при hover
-	const [visible, setVisible] = useState(false);
+	const [open, setOpen] = useState(false);
 
-	const handleVisibleChange = (newVisible) => {
-		setVisible(newVisible);
+	const handleOpenChange = (newOpen) => {
+		setOpen(newOpen);
 	};
 
 	const handleSelectCart = (cartId) => {
 		dispatch(setActiveCart(cartId));
-		setVisible(false);
+		setOpen(false);
 	};
 
 	const goToCartList = () => {
 		navigate('/carts');
-		setVisible(false);
+		setOpen(false);
 	};
 
 	const popoverContent = (
@@ -40,8 +36,7 @@ export function CartIcon() {
 			<div style={{ fontWeight: 'bold', marginBottom: 6 }}>
 				{activeCart
 					? t('common.activeCart', { cartName: activeCart.name })
-					: t('common.noActiveCart')
-				}
+					: t('common.noActiveCart')}
 			</div>
 
 			<Divider style={{ margin: '8px 0' }} />
@@ -66,7 +61,6 @@ export function CartIcon() {
 			/>
 
 			<Divider style={{ margin: '8px 0' }} />
-
 			<div style={{ marginBottom: 6 }}>
 				{t('common.productsInActiveCart')}
 			</div>
@@ -87,11 +81,7 @@ export function CartIcon() {
 			)}
 
 			<Divider style={{ margin: '8px 0' }} />
-			<Button
-				type="link"
-				onClick={goToCartList}
-				style={{ padding: 0 }}
-			>
+			<Button type="link" onClick={goToCartList} style={{ padding: 0 }}>
 				{t('common.goToCartList')}
 			</Button>
 		</div>
@@ -101,8 +91,8 @@ export function CartIcon() {
 		<Popover
 			content={popoverContent}
 			trigger="hover"
-			visible={visible}
-			onVisibleChange={handleVisibleChange}
+			open={open}
+			onOpenChange={handleOpenChange}
 			placement="bottomRight"
 		>
 			<div style={{ cursor: 'pointer' }}>
