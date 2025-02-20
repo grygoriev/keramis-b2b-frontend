@@ -20,6 +20,8 @@ export const GlobalHeader = () => {
 	// Вместо одного селектора, берем два:
 	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 	const username = useSelector((state) => state.auth.username);
+	const role = useSelector((state) => state.auth.role);
+	const dashboard = role ==='internal_manager' ? '/admin' : '/client';
 
 	useEffect(() => {
 		i18n.changeLanguage(currentLanguage);
@@ -90,8 +92,8 @@ export const GlobalHeader = () => {
 				<Link to="/solutions" style={{ color: 'inherit' }}>
 					{t('common.solutions')}
 				</Link>
-				<Link to="/my-orders" style={{ color: 'inherit' }}>
-					{t('common.orders')}
+				<Link to={dashboard} style={{ color: 'inherit' }}>
+					{t('common.dashboard')}
 				</Link>
 				<Link to="#" style={{ color: 'inherit' }}>
 					{t('common.more')}
@@ -104,13 +106,19 @@ export const GlobalHeader = () => {
 				<span>€43.85 ↑</span>
 
 				<div style={{ display: 'flex', gap: 8 }}>
-          <span style={getLangStyle('ua')} onClick={() => handleChangeLanguage('ua')}>
-            UK
-          </span>
+					<span
+						style={getLangStyle('ua')}
+						onClick={() => handleChangeLanguage('ua')}
+					>
+						UK
+					</span>
 					<span>|</span>
-					<span style={getLangStyle('ru')} onClick={() => handleChangeLanguage('ru')}>
-            RU
-          </span>
+					<span
+						style={getLangStyle('ru')}
+						onClick={() => handleChangeLanguage('ru')}
+					>
+						RU
+					</span>
 				</div>
 
 				<Button>{t('common.find')}</Button>

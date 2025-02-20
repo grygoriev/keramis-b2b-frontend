@@ -25,6 +25,7 @@ import {
 // Guards
 import RequireAdmin from './RequireAdmin';
 import RequireClient from './RequireClient';
+import { AdminClientsPage } from '../pages/AdminClientsPage.jsx';
 
 export default function AppRouter() {
 	return (
@@ -68,7 +69,8 @@ export default function AppRouter() {
 						}
 					>
 						<Route index element={<AdminDashboard />} />
-						{/* ... другие админские */}
+						<Route path="my-orders" element={<OrderListPage />} />
+						<Route path="clients" element={<AdminClientsPage />} />
 					</Route>
 
 					{/* CLIENT */}
@@ -81,7 +83,9 @@ export default function AppRouter() {
 						}
 					>
 						<Route index element={<ClientDashboard />} />
-						{/* ... другие клиентские */}
+						<Route path="my-orders" element={<OrderListPage />} />
+						<Route path="carts" element={<CartListPage />} />
+						<Route path="carts/:cartId" element={<CartPage />} />
 					</Route>
 				</Route>
 

@@ -17,24 +17,30 @@ export function OrderListPage() {
 	// Фильтры
 	const [dateRange, setDateRange] = useState([null, null]);
 	const [searchTerm, setSearchTerm] = useState('');
+	const [clientFilter, setClientFilter] = useState('');
 	const [expandedOrderIds, setExpandedOrderIds] = useState([]);
 
-	// Язык
+	// Язык: если в localStorage значение 'ua' – преобразуем в 'uk' для бекенда
 	const storedLang = localStorage.getItem('lang') || 'ru';
 	const serverLang = storedLang === 'ua' ? 'uk' : storedLang;
 
-	// Роль (например, 'internal_manager')
+	// Роль пользователя (например, 'internal_manager' или 'client_manager' и т.п.)
 	const role = localStorage.getItem('role');
 
 	useEffect(() => {
 		loadOrders();
 		// eslint-disable-next-line
-	}, [serverLang]);
+	}, [serverLang, clientFilter]);
 
 	const loadOrders = async () => {
 		setLoading(true);
 		try {
-			const data = await getOrders(serverLang);
+			// Если internal_manager и задан фильтр по клиенту – передаем параметр client
+			const params = { lang: serverLang };
+			if (role === 'internal_manager' && clientFilter) {
+				params.client = clientFilter;
+			}
+			const data = await getOrders(params);
 			setOrders(data);
 		} finally {
 			setLoading(false);
@@ -42,12 +48,15 @@ export function OrderListPage() {
 	};
 
 	const handleDateChange = (dates) => {
-		// Если dates равно null, устанавливаем [null, null]
 		setDateRange(dates ? dates : [null, null]);
 	};
 
 	const handleSearchChange = (e) => {
 		setSearchTerm(e.target.value);
+	};
+
+	const handleClientFilterChange = (e) => {
+		setClientFilter(e.target.value);
 	};
 
 	const handleUpdateStatus = async (orderId, newState) => {
@@ -64,24 +73,15 @@ export function OrderListPage() {
 	};
 
 	const toggleExpand = (orderId) => {
-		setExpandedOrderIds((prev) => {
-			if (prev.includes(orderId)) {
-				return prev.filter((id) => id !== orderId);
-			} else {
-				return [...prev, orderId];
-			}
-		});
+		setExpandedOrderIds((prev) =>
+			prev.includes(orderId) ? prev.filter((id) => id !== orderId) : [...prev, orderId]
+		);
 	};
 
-	// Фильтрация заказов: проверяем наличие диапазона дат
+	// Фильтрация заказов
 	const filteredOrders = orders.filter((order) => {
 		let passDate = true;
-		if (
-			dateRange &&
-			dateRange.length === 2 &&
-			dateRange[0] !== null &&
-			dateRange[1] !== null
-		) {
+		if (dateRange && dateRange.length === 2 && dateRange[0] && dateRange[1]) {
 			const orderDate = dayjs(order.create_datetime);
 			const start = dayjs(dateRange[0]).startOf('day');
 			const end = dayjs(dateRange[1]).endOf('day');
@@ -105,6 +105,9 @@ export function OrderListPage() {
 					onDateChange={handleDateChange}
 					searchTerm={searchTerm}
 					onSearchChange={handleSearchChange}
+					clientFilter={clientFilter}
+					onClientFilterChange={handleClientFilterChange}
+					showClientFilter={role === 'internal_manager'}
 				/>
 				<p style={{ marginTop: 16 }}>
 					{t('orders.noOrdersFound', 'Заказы не найдены для заданных фильтров')}
@@ -121,6 +124,9 @@ export function OrderListPage() {
 				onDateChange={handleDateChange}
 				searchTerm={searchTerm}
 				onSearchChange={handleSearchChange}
+				clientFilter={clientFilter}
+				onClientFilterChange={handleClientFilterChange}
+				showClientFilter={role === 'internal_manager'}
 			/>
 			{filteredOrders.map((order) => {
 				const expanded = expandedOrderIds.includes(order.id);
@@ -128,7 +134,7 @@ export function OrderListPage() {
 					<Card
 						key={order.id}
 						style={{ marginBottom: 16, border: '1px solid #e8e8e8' }}
-						styles={{ body: { padding: 16 } }} // ant5: вместо deprecated bodyStyle
+						styles={{ body: { padding: 16 } }}
 					>
 						<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 							<div>
@@ -150,7 +156,8 @@ export function OrderListPage() {
 								{order.items && order.items.length > 0 ? (
 									order.items.map((item) => (
 										<div key={item.id} style={{ paddingLeft: 16 }}>
-											• {t('orders.productName', 'Товар')}: {item.product_name} ({t('orders.quantity', 'Кол-во')}: {item.quantity}, {t('orders.price', 'Цена')}: {item.price})
+											• {t('orders.productName', 'Товар')}: {item.product_name} (
+											{t('orders.quantity', 'Кол-во')}: {item.quantity}, {t('orders.price', 'Цена')}: {item.price})
 										</div>
 									))
 								) : (
@@ -159,16 +166,10 @@ export function OrderListPage() {
 								<Divider />
 								{role === 'internal_manager' && (
 									<Space>
-										<Button
-											size="small"
-											onClick={() => handleUpdateStatus(order.id, 'confirmed')}
-										>
+										<Button size="small" onClick={() => handleUpdateStatus(order.id, 'confirmed')}>
 											{t('orders.confirm', 'Подтвердить')}
 										</Button>
-										<Button
-											size="small"
-											onClick={() => handleUpdateStatus(order.id, 'paid')}
-										>
+										<Button size="small" onClick={() => handleUpdateStatus(order.id, 'paid')}>
 											{t('orders.paid', 'Оплачено')}
 										</Button>
 									</Space>

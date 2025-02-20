@@ -38,7 +38,8 @@
 		"productsInActiveCart": "Товари в активному кошику:",
 		"emptyCart": "Порожньо",
 		"noCart": "Немає кошика",
-		"goToCartList": "Перейти до списку кошиків"
+		"goToCartList": "Перейти до списку кошиків",
+		"dashboard": "Особистий кабінет"
 	},
 	"categoryPage": {
 		"notFound": "Категорію не знайдено"
@@ -75,6 +76,20 @@
 		"empty": "Замовлень поки що немає",
 		"noOrdersFound": "Замовлення не знайдені за заданими фільтрами",
 		"productsTitle": "Склад замовлення"
+	},
+	"clients": {
+		"title": "Керування клієнтами",
+		"username": "Ім'я користувача",
+		"fullName": "Повне ім'я",
+		"email": "Email",
+		"role": "Роль",
+		"clientGroup": "Група клієнта",
+		"searchPlaceholder": "Пошук на ім'я клієнта",
+		"refresh": "Оновити",
+		"loadError": "Не вдалося завантажити клієнтів",
+		"updateSuccess": "Клієнт оновлено",
+		"updateError": "Помилка оновлення клієнта",
+		"invalidRole": "Неправильна роль"
 	},
 	"homePage": {
 		"bannerWelcome": "Ласкаво просимо!",

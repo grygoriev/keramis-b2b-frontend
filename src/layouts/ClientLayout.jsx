@@ -1,7 +1,7 @@
 // src/layouts/ClientLayout.jsx
 import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import {
 	HomeOutlined,
 	HistoryOutlined,
@@ -36,12 +36,12 @@ export function ClientLayout() {
 						{
 							key: '2',
 							icon: <HistoryOutlined />,
-							label: 'История заказов',
+							label: <Link to="/client/my-orders">Заказы</Link>,
 						},
 						{
 							key: '3',
 							icon: <HeartOutlined />,
-							label: 'Избранное',
+							label: <Link to="/client/carts">Корзины</Link>,
 						},
 					]}
 				/>

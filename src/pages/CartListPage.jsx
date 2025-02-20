@@ -48,7 +48,7 @@ export function CartListPage() {
 	};
 
 	const handleGoToCart = (cartId) => {
-		navigate(`/carts/${cartId}`);
+		navigate(`/client/carts/${cartId}`);
 	};
 
 	/** Удаление корзины */

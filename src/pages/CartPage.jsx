@@ -9,6 +9,7 @@ import {
 import { checkoutCart } from '../api/ordersApi'; // <-- импортируем функцию чекаута
 import { Spin, List, Button, message, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
 export function CartPage() {
 	const { cartId } = useParams();
@@ -16,6 +17,8 @@ export function CartPage() {
 	const { t } = useTranslation();
 	const [cart, setCart] = useState(null);
 	const [loading, setLoading] = useState(false);
+	const role = useSelector((state) => state.auth.role);
+	const dashboard = role ==='internal_manager' ? '/admin' : '/client';
 
 	// Язык
 	const storedLang = localStorage.getItem('lang') || 'ru';
@@ -82,7 +85,7 @@ export function CartPage() {
 			const order = await checkoutCart(cart.id); // {id, state, total, ...}
 			message.success(t('common.orderCreated', `Заказ #${order.id} создан!`));
 			// После успешного оформления → переходим на список заказов
-			navigate('/my-orders');
+			navigate(`${dashboard}/my-orders`);
 			// Или если хотите более конкретно: navigate(`/my-orders/${order.id}`)
 		} catch (err) {
 			console.error(err);

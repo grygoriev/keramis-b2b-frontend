@@ -38,7 +38,8 @@
 		"productsInActiveCart": "Товары в активной корзине:",
 		"emptyCart": "Пусто",
 		"noCart": "Нет корзины",
-		"goToCartList": "Перейти в список корзин"
+		"goToCartList": "Перейти в список корзин",
+		"dashboard": "Личный кабинет"
 	},
 	"categoryPage": {
 		"notFound": "Категория не найдена"
@@ -75,6 +76,20 @@
 		"empty": "Заказов пока нет",
 		"noOrdersFound": "Заказы не найдены для заданных фильтров",
 		"productsTitle": "Состав заказа"
+	},
+	"clients": {
+		"title": "Управление клиентами",
+		"username": "Имя пользователя",
+		"fullName": "Полное имя",
+		"email": "Email",
+		"role": "Роль",
+		"clientGroup": "Группа клиента",
+		"searchPlaceholder": "Поиск по имени клиента",
+		"refresh": "Обновить",
+		"loadError": "Не удалось загрузить клиентов",
+		"updateSuccess": "Клиент обновлен",
+		"updateError": "Ошибка обновления клиента",
+		"invalidRole": "Неверная роль"
 	},
 	"homePage": {
 		"bannerWelcome": "Добро пожаловать!",

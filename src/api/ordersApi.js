@@ -2,17 +2,18 @@
 import axiosInstance from './axiosInstance';
 
 /**
- * Получить список заказов (GET /orders/)
+ * Получить список заказов (GET /orders/orders/)
+ * Принимает объект параметров, например: { lang: 'ru', client: 5 }
  */
-export async function getOrders(lang) {
-	const response = await axiosInstance.get(`/orders/orders/`, {
-		params: { lang }, // например ?lang=ru или ?lang=uk
+export async function getOrders(params) {
+	const response = await axiosInstance.get('/orders/orders/', {
+		params, // отправляет query-параметры, например ?lang=ru&client=5
 	});
-	return response.data;
+	return response.data; // массив заказов
 }
 
 /**
- * Обновить статус заказа (PATCH /orders/<id>/status/)
+ * Обновить статус заказа (PATCH /orders/orders/<id>/status/)
  * body: { "state": "confirmed" }
  */
 export async function updateOrderStatus(orderId, newState) {
@@ -31,5 +32,5 @@ export async function checkoutCart(cartId) {
 	const response = await axiosInstance.post('/orders/checkout/', {
 		cart_id: cartId,
 	});
-	return response.data; // возвращает созданный заказ
+	return response.data; // созданный заказ
 }

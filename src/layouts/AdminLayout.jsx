@@ -1,7 +1,7 @@
 // src/layouts/AdminLayout.jsx
 import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { UserOutlined, ShoppingCartOutlined, SettingOutlined } from '@ant-design/icons';
 
 const { Sider, Content } = Layout;
@@ -27,12 +27,12 @@ export function AdminLayout() {
 						{
 							key: '1',
 							icon: <UserOutlined />,
-							label: 'Пользователи',
+							label: <Link to="/admin/clients">Клиенты</Link>,
 						},
 						{
 							key: '2',
 							icon: <ShoppingCartOutlined />,
-							label: 'Заказы',
+							label: <Link to="/admin/my-orders">Заказы</Link>,
 						},
 						{
 							key: '3',
