@@ -37,7 +37,7 @@ export function AdminLayout() {
 						{
 							key: '3',
 							icon: <SettingOutlined />,
-							label: 'Настройки',
+							label: <Link to="/admin/discounts">Настройки</Link>,
 						},
 					]}
 				/>
