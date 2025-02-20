@@ -1,4 +1,5 @@
 // src/pages/ProductPage.jsx
+
 import React, { useEffect, useState } from 'react';
 import { Spin, Breadcrumb, Carousel, Image, message } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
@@ -6,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { fetchCartsAsync } from '../store/cartSlice';
-import { AddToCartButton } from '../components';
+import { AddToCartButton, PriceBlock } from '../components';
 import { fetchProductDetail } from '../api/catalogApi';
 
 export function ProductPage() {
@@ -95,9 +96,9 @@ export function ProductPage() {
 				/>
 			)}
 
-			<div>
-				{t('common.price', 'Цена')}: {product.price} грн
-			</div>
+			{/* Блок с ценами */}
+			<PriceBlock price={product.price} discountedPrice={product.discounted_price} />
+
 			<div>{product.description}</div>
 
 			<div style={{ marginTop: 16 }}>

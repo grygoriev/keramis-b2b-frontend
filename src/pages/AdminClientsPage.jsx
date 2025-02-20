@@ -2,15 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Input, Button, Space, message, Select, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
-import axiosInstance from '../api/axiosInstance';
+import { getClients, getClientGroups, updateClient } from '../api/clientsApi';
 
 const { Search } = Input;
 const { Option } = Select;
 
-/**
- * Предположим, вы хотите, чтобы пользователь мог выбирать одну из клиентских ролей.
- * Исключаем 'internal_manager'.
- */
 const ALLOWED_ROLES = [
 	{ value: 'client_admin', label: 'Client Admin' },
 	{ value: 'client_manager', label: 'Client Manager' },
@@ -20,13 +16,13 @@ const ALLOWED_ROLES = [
 export function AdminClientsPage() {
 	const { t } = useTranslation();
 	const [clients, setClients] = useState([]);
-	const [clientGroups, setClientGroups] = useState([]); // список доступных групп
+	const [clientGroups, setClientGroups] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [searchText, setSearchText] = useState('');
 
 	useEffect(() => {
 		fetchClients();
-		fetchClientGroups();
+		fetchGroups();
 	}, []);
 
 	/**
@@ -35,10 +31,13 @@ export function AdminClientsPage() {
 	const fetchClients = async () => {
 		setLoading(true);
 		try {
-			const langParam = localStorage.getItem('lang') === 'ua' ? 'uk' : (localStorage.getItem('lang') || 'ru');
-			const response = await axiosInstance.get('/api/auth/clients/', {
-				params: { lang: langParam },
-			});
+			const langParam =
+				localStorage.getItem('lang') === 'ua'
+					? 'uk'
+					: localStorage.getItem('lang') || 'ru';
+
+			// Вызываем функцию из api/clientsApi.js
+			const response = await getClients(langParam);
 			setClients(response.data);
 		} catch (error) {
 			console.error(error);
@@ -51,14 +50,14 @@ export function AdminClientsPage() {
 	/**
 	 * Загрузка списка групп из таблицы ClientGroup
 	 */
-	const fetchClientGroups = async () => {
+	const fetchGroups = async () => {
 		try {
-			const resp = await axiosInstance.get('/api/auth/client-groups/');
-			// Ожидаем массив объектов: [{id, name}, ...]
+			// Вызываем функцию getClientGroups
+			const resp = await getClientGroups();
 			setClientGroups(resp.data);
 		} catch (err) {
 			console.error(err);
-			message.error(t('clientsGroup.loadError', 'Не удалось загрузить группы клиентов'));
+			message.error(t('clientsGroup.loadError', 'Не удалось загрузить группы'));
 		}
 	};
 
@@ -67,9 +66,10 @@ export function AdminClientsPage() {
 	 */
 	const handleUpdateClient = async (clientId, field, value) => {
 		try {
-			await axiosInstance.patch(`/api/auth/clients/${clientId}/`, { [field]: value });
+			// Вызываем функцию updateClient
+			await updateClient(clientId, { [field]: value });
 			message.success(t('clients.updateSuccess', 'Клиент обновлен'));
-			// Перезагружаем список
+			// Перезагружаем список после обновления
 			fetchClients();
 		} catch (error) {
 			console.error(error);
@@ -77,9 +77,6 @@ export function AdminClientsPage() {
 		}
 	};
 
-	/**
-	 * Описание колонок таблицы
-	 */
 	const columns = [
 		{
 			title: t('clients.username', 'Имя пользователя'),
@@ -101,56 +98,45 @@ export function AdminClientsPage() {
 			title: t('clients.role', 'Роль'),
 			dataIndex: 'role',
 			key: 'role',
-			render: (currentRole, record) => {
-				// Если в бэкенде бывает role === 'internal_manager',
-				// то мы не даём его выбрать – но можем отображать, если вдруг попадётся
-				return (
-					<Select
-						style={{ width: 150 }}
-						value={currentRole}
-						onChange={(newRole) => {
-							if (newRole === 'internal_manager') {
-								message.error(t('clients.invalidRole', 'Неверная роль'));
-							} else {
-								handleUpdateClient(record.id, 'role', newRole);
-							}
-						}}
-						options={ALLOWED_ROLES}
-					/>
-				);
-			},
+			render: (currentRole, record) => (
+				<Select
+					style={{ width: 150 }}
+					value={currentRole}
+					onChange={(newRole) => {
+						if (newRole === 'internal_manager') {
+							message.error(t('clients.invalidRole', 'Неверная роль'));
+						} else {
+							handleUpdateClient(record.id, 'role', newRole);
+						}
+					}}
+					options={ALLOWED_ROLES}
+				/>
+			),
 		},
 		{
 			title: t('clients.clientGroup', 'Группа клиента'),
 			dataIndex: 'client_group_name',
-			// Предположим, бэкенд возвращает поле client_group_name для удобства.
-			// Или может быть "client_group" – тогда нужно будет сопоставить id <-> name.
 			key: 'client_group_name',
-			render: (currentGroupName, record) => {
-				return (
-					<Select
-						style={{ width: 180 }}
-						value={currentGroupName || ''}
-						onChange={(newGroupName) => {
-							// ищем соответствующий объект группы, чтобы при нужде передать id
-							// (зависит от того, как у вас API ожидает – по имени или по id)
-							handleUpdateClient(record.id, 'client_group', newGroupName);
-						}}
-					>
-						{clientGroups.map((grp) => (
-							<Option key={grp.id} value={grp.id}>
-								{grp.name}
-							</Option>
-						))}
-					</Select>
-				);
-			},
+			render: (currentGroupName, record) => (
+				<Select
+					style={{ width: 180 }}
+					value={currentGroupName || ''}
+					onChange={(newGroupId) => {
+						// передаём ID группы (если API ждёт ID)
+						handleUpdateClient(record.id, 'client_group', newGroupId);
+					}}
+				>
+					{clientGroups.map((grp) => (
+						<Option key={grp.id} value={grp.id}>
+							{grp.name}
+						</Option>
+					))}
+				</Select>
+			),
 		},
 	];
 
-	/**
-	 * Фильтрация по тексту (username, first_name, last_name)
-	 */
+	// Фильтрация
 	const filteredData = clients.filter((client) => {
 		const search = searchText.toLowerCase();
 		return (

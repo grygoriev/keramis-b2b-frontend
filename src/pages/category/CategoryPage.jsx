@@ -1,4 +1,5 @@
 // src/pages/CategoryPage.jsx
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Spin, Breadcrumb, Card, message } from 'antd';
@@ -6,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { fetchCategoryDetail } from '../../api/catalogApi';
 import { fetchCartsAsync } from '../../store/cartSlice';
-import { AddToCartButton } from '../../components';
+import { AddToCartButton, PriceBlock } from '../../components';
 import './CategoryPage.css';
 
 export function CategoryPage() {
@@ -20,7 +21,6 @@ export function CategoryPage() {
 	const [products, setProducts] = useState([]);
 	const [loading, setLoading] = useState(false);
 
-	// Язык
 	const storedLang = localStorage.getItem('lang') || 'ru';
 	const serverLang = storedLang === 'ua' ? 'uk' : storedLang;
 
@@ -83,9 +83,8 @@ export function CategoryPage() {
 						}
 					>
 						<div className="two-lines product-name">{prod.name}</div>
-						<div>
-							{t('common.price', 'Цена')}: {prod.price} грн
-						</div>
+						{/* Используем общий компонент для вывода цен */}
+						<PriceBlock price={prod.price} discountedPrice={prod.discounted_price} />
 
 						<div style={{ marginTop: 8 }}>
 							<AddToCartButton productId={prod.id} />
