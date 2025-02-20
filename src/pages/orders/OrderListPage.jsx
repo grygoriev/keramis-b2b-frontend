@@ -7,7 +7,7 @@ import isBetween from 'dayjs/plugin/isBetween';
 dayjs.extend(isBetween);
 
 import { useTranslation } from 'react-i18next';
-import { Filters } from './components/Filters';
+import { Filters } from './components';
 
 export function OrderListPage() {
 	const { t } = useTranslation();

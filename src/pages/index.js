@@ -1,6 +1,6 @@
 export * from './category/CategoryPage.jsx'
 export * from './Home.jsx'
-export * from './ProductPage.jsx'
+export * from './product/ProductPage.jsx'
 export * from './AdminDashboard.jsx'
 export * from './Login.jsx'
 export * from './ClientDashboard.jsx'
