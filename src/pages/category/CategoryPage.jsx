@@ -1,18 +1,17 @@
 // src/pages/CategoryPage.jsx
-
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Spin, Breadcrumb, Card, message } from 'antd';
+import { useParams, Link } from 'react-router-dom';
+import { Spin, Breadcrumb, message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+
 import { fetchCategoryDetail } from '../../api/catalogApi';
 import { fetchCartsAsync } from '../../store/cartSlice';
-import { AddToCartButton, PriceBlock } from '../../components';
+import { ProductCard } from '../../components'; // <-- импортируем новый компонент
 import './CategoryPage.css';
 
 export function CategoryPage() {
 	const { slug } = useParams();
-	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const { t } = useTranslation();
 
@@ -51,10 +50,6 @@ export function CategoryPage() {
 	if (loading) return <Spin />;
 	if (!category) return <div>{t('categoryPage.notFound')}</div>;
 
-	const handleCardClick = (productSlug) => {
-		navigate(`/product/${productSlug}`);
-	};
-
 	return (
 		<div>
 			<Breadcrumb style={{ marginBottom: 16 }}>
@@ -69,27 +64,7 @@ export function CategoryPage() {
 
 			<div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
 				{products.map((prod) => (
-					<Card
-						key={prod.id}
-						hoverable
-						onClick={() => handleCardClick(prod.slug)}
-						className="product-card"
-						style={{ width: 200 }}
-						cover={
-							<img
-								alt={prod.name}
-								src={prod.image_filename ? prod.image_filename : '/images/no-image.png'}
-							/>
-						}
-					>
-						<div className="two-lines product-name">{prod.name}</div>
-						{/* Используем общий компонент для вывода цен */}
-						<PriceBlock price={prod.price} discountedPrice={prod.discounted_price} />
-
-						<div style={{ marginTop: 8 }}>
-							<AddToCartButton productId={prod.id} />
-						</div>
-					</Card>
+					<ProductCard key={prod.id} product={prod} />
 				))}
 			</div>
 		</div>

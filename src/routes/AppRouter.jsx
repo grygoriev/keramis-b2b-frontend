@@ -9,7 +9,6 @@ import { BaseLayout, PublicLayout, AdminLayout, ClientLayout } from '../layouts'
 import {
 	AdminDashboard,
 	ClientDashboard,
-	OrdersPage,
 	SolutionsPage,
 	Home,
 	Login,
@@ -44,9 +43,6 @@ export default function AppRouter() {
 						<Route path="login" element={<Login />} />
 						<Route path="help" element={<HelpPage />} />
 						<Route path="solutions" element={<SolutionsPage />} />
-
-						{/* Старый "orders" из ТЗ (публичная страница?) */}
-						<Route path="orders" element={<OrdersPage />} />
 
 						{/* Категории/товары */}
 						<Route path="category/:slug" element={<CategoryPage />} />

@@ -45,7 +45,7 @@ export function CartModal({ visible, onClose, onCartSelected }) {
 	return (
 		<Modal
 			title={t('common.cartModalTitle', 'Выберите или создайте корзину')}
-			visible={visible}
+			open={visible}
 			onOk={handleOk}
 			onCancel={handleCancel}
 			okText={t('common.cartModalOk', 'OK')}
