@@ -40,7 +40,8 @@
 		"emptyCart": "Пусто",
 		"noCart": "Нет корзины",
 		"goToCartList": "Перейти в список корзин",
-		"dashboard": "Личный кабинет"
+		"dashboard": "Личный кабинет",
+		"refresh": "Обновить"
 	},
 	"categoryPage": {
 		"notFound": "Категория не найдена"
@@ -93,6 +94,31 @@
 		"updateSuccess": "Клиент обновлен",
 		"updateError": "Ошибка обновления клиента",
 		"invalidRole": "Неверная роль"
+	},
+	"clientLayout": {
+		"main": "Главная клиента",
+		"orders": "Заказы",
+		"carts": "Корзины",
+		"integration": "Интеграция"
+	},
+	"adminLayout": {
+		"main": "Главная админа",
+		"clients": "Клиенты",
+		"orders": "Заказы",
+		"settings": "Настройки"
+	},
+	"apiToken": {
+		"loadError": "Ошибка при получении токена",
+		"generated": "Токен успешно сгенерирован",
+		"generateError": "Не удалось сгенерировать токен",
+		"title": "Управление API-токеном",
+		"yourToken": "Ваш токен",
+		"downloadCsv": "Скачать CSV",
+		"downloadXml": "Скачать XML",
+		"downloadJson": "Скачать JSON",
+		"noToken": "Токен не сгенерирован.",
+		"regenerateBtn": "Перегенерировать токен",
+		"generateBtn": "Сгенерировать токен"
 	},
 	"homePage": {
 		"bannerWelcome": "Добро пожаловать!",

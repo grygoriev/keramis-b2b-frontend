@@ -20,7 +20,7 @@ import {
 	CartPage,
 	OrderListPage,
 	AdminClientsPage,
-	AdminDiscountsPage
+	AdminDiscountsPage, ApiTokenPage,
 } from '../pages';
 
 
@@ -88,6 +88,7 @@ export default function AppRouter() {
 						<Route path="my-orders" element={<OrderListPage />} />
 						<Route path="carts" element={<CartListPage />} />
 						<Route path="carts/:cartId" element={<CartPage />} />
+						<Route path="api-token" element={<ApiTokenPage />} />
 					</Route>
 				</Route>
 

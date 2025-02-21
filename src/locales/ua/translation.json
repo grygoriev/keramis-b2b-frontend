@@ -40,7 +40,8 @@
 		"emptyCart": "Порожньо",
 		"noCart": "Немає кошика",
 		"goToCartList": "Перейти до списку кошиків",
-		"dashboard": "Особистий кабінет"
+		"dashboard": "Особистий кабінет",
+		"refresh": "Оновити"
 	},
 	"categoryPage": {
 		"notFound": "Категорію не знайдено"
@@ -93,6 +94,31 @@
 		"updateSuccess": "Клієнт оновлено",
 		"updateError": "Помилка оновлення клієнта",
 		"invalidRole": "Неправильна роль"
+	},
+	"clientLayout": {
+		"main": "Головна клієнта",
+		"orders": "Замовлення",
+		"carts": "Кошики",
+		"integration": "Інтеграція"
+	},
+	"adminLayout": {
+		"main": "Головна адміна",
+		"clients": "Клієнти",
+		"orders": "Замовлення",
+		"settings": "Налаштування"
+	},
+	"apiToken": {
+		"loadError": "Помилка при отриманні токена",
+		"generated": "Токен успішно згенерований",
+		"generateError": "Не вдалося згенерувати токен",
+		"title": "Керування API-токеном",
+		"yourToken": "Ваш токен",
+		"downloadCsv": "Завантажити CSV",
+		"downloadXml": "Завантажити XML",
+		"downloadJson": "Завантажити JSON",
+		"noToken": "Токен не згенерований.",
+		"regenerateBtn": "Перегенерувати токен",
+		"generateBtn": "Згенерувати токен"
 	},
 	"homePage": {
 		"bannerWelcome": "Ласкаво просимо!",

@@ -2,12 +2,15 @@
 import React, { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import { Link, Outlet } from 'react-router-dom';
-import { UserOutlined, ShoppingCartOutlined, SettingOutlined } from '@ant-design/icons';
+import { UserOutlined, ShoppingCartOutlined, SettingOutlined, HomeOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 const { Sider, Content } = Layout;
 
 export function AdminLayout() {
 	const [collapsed, setCollapsed] = useState(true);
+
+	const { t } = useTranslation();
 
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
@@ -26,18 +29,39 @@ export function AdminLayout() {
 					items={[
 						{
 							key: '1',
-							icon: <UserOutlined />,
-							label: <Link to="/admin/clients">Клиенты</Link>,
+							icon: <HomeOutlined />,
+							label: (
+								<Link to="/admin">
+									{t('adminLayout.main', 'Главная админа')}
+								</Link>
+							),
 						},
 						{
 							key: '2',
-							icon: <ShoppingCartOutlined />,
-							label: <Link to="/admin/my-orders">Заказы</Link>,
+							icon: <UserOutlined />,
+							label: (
+								<Link to="/admin/clients">
+									{t('adminLayout.clients', 'Клиенты')}
+								</Link>
+							),
 						},
 						{
 							key: '3',
+							icon: <ShoppingCartOutlined />,
+							label: (
+								<Link to="/admin/my-orders">
+									{t('adminLayout.orders', 'Заказы')}
+								</Link>
+							),
+						},
+						{
+							key: '4',
 							icon: <SettingOutlined />,
-							label: <Link to="/admin/discounts">Настройки</Link>,
+							label: (
+								<Link to="/admin/discounts">
+									{t('adminLayout.settings', 'Настройки')}
+								</Link>
+							),
 						},
 					]}
 				/>
