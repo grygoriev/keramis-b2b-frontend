@@ -41,7 +41,12 @@
 		"noCart": "Нет корзины",
 		"goToCartList": "Перейти в список корзин",
 		"dashboard": "Личный кабинет",
-		"refresh": "Обновить"
+		"refresh": "Обновить",
+		"currency": "грн"
+	},
+	"search": {
+		"placeholder": "Поиск товаров...",
+		"noResults": "Нет результатов"
 	},
 	"categoryPage": {
 		"notFound": "Категория не найдена"

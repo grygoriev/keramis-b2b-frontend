@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { fetchCategoryDetail } from '../../api/catalogApi';
 import { fetchCartsAsync } from '../../store/cartSlice';
 import { ProductCard } from '../../components';
-import { CategoryFilters } from './components';
+import { CategoryFilters, CategoryPagination } from './components';
 
 import './CategoryPage.css';
 
@@ -23,8 +23,15 @@ export function CategoryPage() {
 	const [facets, setFacets] = useState([]);
 	const [loading, setLoading] = useState(false);
 
+	// Текущее кол-во всех товаров
+	const [totalCount, setTotalCount] = useState(0);
+
 	// Храним выбранные фильтры в виде { color: [1, 2], ... }
 	const [selectedFilters, setSelectedFilters] = useState({});
+
+	// Пагинация: текущая страница и размер
+	const [page, setPage] = useState(1);
+	const [pageSize, setPageSize] = useState(12); // любое дефолтное значение
 
 	const storedLang = localStorage.getItem('lang') || 'ru';
 	const serverLang = storedLang === 'ua' ? 'uk' : storedLang;
@@ -33,10 +40,10 @@ export function CategoryPage() {
 		dispatch(fetchCartsAsync());
 	}, [dispatch]);
 
-	// При изменении slug или selectedFilters, подгружаем заново
+	// При изменении slug, filters, page или pageSize, грузим заново
 	useEffect(() => {
 		loadCategory();
-	}, [slug, selectedFilters, serverLang]);
+	}, [slug, selectedFilters, page, pageSize, serverLang]);
 
 	const loadCategory = async () => {
 		setLoading(true);
@@ -44,11 +51,13 @@ export function CategoryPage() {
 			// Формируем query-параметры на основе selectedFilters
 			const params = {
 				lang: serverLang,
+				page,
+				page_size: pageSize,
 			};
 			Object.entries(selectedFilters).forEach(([code, arr]) => {
 				if (arr.length) {
 					const paramName = `fv_${code}`;
-					params[paramName] = arr.join(','); // например fv_color=1,3
+					params[paramName] = arr.join(',');
 				}
 			});
 
@@ -59,6 +68,8 @@ export function CategoryPage() {
 				setCategory(data.category);
 				setBreadcrumbs(data.breadcrumbs);
 				setProducts(data.products);
+				setTotalCount(data.count || 0);
+
 				if (data.facets) {
 					setFacets(data.facets);
 				}
@@ -73,6 +84,13 @@ export function CategoryPage() {
 
 	const handleFiltersChange = (newSelected) => {
 		setSelectedFilters(newSelected);
+		setPage(1);
+	};
+
+	// Обработка смены страницы/размера страницы
+	const handleChangePage = (newPage, newPageSize) => {
+		setPage(newPage);
+		setPageSize(newPageSize);
 	};
 
 	return (
@@ -97,13 +115,21 @@ export function CategoryPage() {
 					/>
 				</Col>
 
-				{/* Правая колонка - Список товаров */}
+				{/* Правая колонка - Список товаров + пагинация */}
 				<Col xs={24} sm={24} md={16} lg={18} xl={19}>
 					<div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
 						{products.map((prod) => (
 							<ProductCard key={prod.id} product={prod} />
 						))}
 					</div>
+
+					{/* Компонент пагинации */}
+					<CategoryPagination
+						page={page}
+						pageSize={pageSize}
+						total={totalCount}
+						onChangePage={handleChangePage}
+					/>
 				</Col>
 			</Row>
 		</div>

@@ -1,4 +1,5 @@
 // src/components/header/GlobalHeader.jsx
+
 import React, { useEffect, useState } from 'react';
 import { Button } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,6 +9,7 @@ import { logout } from '../../store/authSlice';
 import { logoutRequest } from '../../api/auth';
 import { CartIcon } from './cart/CartIcon';
 import { fetchCartsAsync } from '../../store/cartSlice';
+import { GlobalSearch } from './search/GlobalSearch';
 
 export const GlobalHeader = () => {
 	const [currentLanguage, setCurrentLanguage] = useState(
@@ -17,11 +19,10 @@ export const GlobalHeader = () => {
 	const { i18n, t } = useTranslation();
 	const dispatch = useDispatch();
 
-	// Вместо одного селектора, берем два:
 	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 	const username = useSelector((state) => state.auth.username);
 	const role = useSelector((state) => state.auth.role);
-	const dashboard = role ==='internal_manager' ? '/admin' : '/client';
+	const dashboard = role === 'internal_manager' ? '/admin' : '/client';
 
 	useEffect(() => {
 		i18n.changeLanguage(currentLanguage);
@@ -105,23 +106,25 @@ export const GlobalHeader = () => {
 				<span>$42.1 ↑</span>
 				<span>€43.85 ↑</span>
 
+				{/* Переключение языка */}
 				<div style={{ display: 'flex', gap: 8 }}>
-					<span
-						style={getLangStyle('ua')}
-						onClick={() => handleChangeLanguage('ua')}
-					>
-						UK
-					</span>
+          <span
+			  style={getLangStyle('ua')}
+			  onClick={() => handleChangeLanguage('ua')}
+		  >
+            UK
+          </span>
 					<span>|</span>
 					<span
 						style={getLangStyle('ru')}
 						onClick={() => handleChangeLanguage('ru')}
 					>
-						RU
-					</span>
+            RU
+          </span>
 				</div>
 
-				<Button>{t('common.find')}</Button>
+				{/* Наш новый компонент быстрого поиска */}
+				<GlobalSearch />
 
 				{/* Иконка корзины */}
 				<CartIcon />

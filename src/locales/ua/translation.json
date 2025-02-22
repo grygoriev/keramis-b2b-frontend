@@ -41,7 +41,12 @@
 		"noCart": "Немає кошика",
 		"goToCartList": "Перейти до списку кошиків",
 		"dashboard": "Особистий кабінет",
-		"refresh": "Оновити"
+		"refresh": "Оновити",
+		"currency": "грн"
+	},
+	"search": {
+		"placeholder": "Пошук товарів...",
+		"noResults": "Немає результатів"
 	},
 	"categoryPage": {
 		"notFound": "Категорію не знайдено"
