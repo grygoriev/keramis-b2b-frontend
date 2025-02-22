@@ -1,4 +1,4 @@
-// src/components/HomeBannerSlider.jsx
+// src/pages/home/components/HomeBannerSlider.jsx
 import React, { useEffect, useState } from 'react';
 import { Carousel, Spin } from 'antd';
 import axiosInstance from '../../../api/axiosInstance';

@@ -1,4 +1,4 @@
-// src/pages/ProductPage.jsx
+// src/pages/product/ProductPage.jsx
 import React, { useEffect, useState } from 'react';
 import { Spin, Breadcrumb, Carousel, Image, message } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { fetchCartsAsync } from '../../store/cartSlice';
 import { AddToCartButton, PriceBlock } from '../../components';
-import { StockInfo } from './components';
+import { StockInfo, ProductFeatures } from './components';
 import { fetchProductDetail } from '../../api/catalogApi';
 
 export function ProductPage() {
@@ -63,7 +63,6 @@ export function ProductPage() {
 			<div style={{ display: 'flex', gap: 24 }}>
 				{/* Левая колонка (картинки) */}
 				<div style={{ width: 320 }}>
-					{/* Если несколько картинок, показываем слайдер */}
 					{images.length > 1 ? (
 						<Image.PreviewGroup>
 							<Carousel arrows style={{ width: 300, marginBottom: 16 }}>
@@ -118,8 +117,11 @@ export function ProductPage() {
 						<AddToCartButton productId={product.id} />
 					</div>
 
-					{/* Компонент с остатками и единицами измерения */}
+					{/* Блок Остатков и Единиц Измерения */}
 					<StockInfo unit={product.unit_of_measure} stocks={product.stocks} />
+
+					{/* Блок Характеристик (features) */}
+					<ProductFeatures features={product.features} />
 				</div>
 			</div>
 		</div>

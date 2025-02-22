@@ -1,4 +1,4 @@
-// src/pages/Home.jsx
+// src/pages/home/Home.jsx
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 

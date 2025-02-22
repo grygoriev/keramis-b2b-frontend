@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import {
 	MenuUnfoldOutlined,
 	MenuFoldOutlined,
-	HomeOutlined,
 	ProductOutlined,
 } from '@ant-design/icons';
 

@@ -1,13 +1,15 @@
-// src/pages/CategoryPage.jsx
+// src/pages/category/CategoryPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Spin, Breadcrumb, message } from 'antd';
+import { Spin, Breadcrumb, message, Row, Col } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
 import { fetchCategoryDetail } from '../../api/catalogApi';
 import { fetchCartsAsync } from '../../store/cartSlice';
-import { ProductCard } from '../../components'; // <-- импортируем новый компонент
+import { ProductCard } from '../../components';
+import { CategoryFilters } from './components';
+
 import './CategoryPage.css';
 
 export function CategoryPage() {
@@ -18,29 +20,48 @@ export function CategoryPage() {
 	const [category, setCategory] = useState(null);
 	const [breadcrumbs, setBreadcrumbs] = useState([]);
 	const [products, setProducts] = useState([]);
+	const [facets, setFacets] = useState([]);
 	const [loading, setLoading] = useState(false);
+
+	// Храним выбранные фильтры в виде { color: [1, 2], ... }
+	const [selectedFilters, setSelectedFilters] = useState({});
 
 	const storedLang = localStorage.getItem('lang') || 'ru';
 	const serverLang = storedLang === 'ua' ? 'uk' : storedLang;
 
 	useEffect(() => {
-		loadCategory();
-	}, [slug, serverLang]);
-
-	useEffect(() => {
 		dispatch(fetchCartsAsync());
 	}, [dispatch]);
+
+	// При изменении slug или selectedFilters, подгружаем заново
+	useEffect(() => {
+		loadCategory();
+	}, [slug, selectedFilters, serverLang]);
 
 	const loadCategory = async () => {
 		setLoading(true);
 		try {
-			const data = await fetchCategoryDetail(slug, serverLang);
+			// Формируем query-параметры на основе selectedFilters
+			const params = {
+				lang: serverLang,
+			};
+			Object.entries(selectedFilters).forEach(([code, arr]) => {
+				if (arr.length) {
+					const paramName = `fv_${code}`;
+					params[paramName] = arr.join(','); // например fv_color=1,3
+				}
+			});
+
+			const data = await fetchCategoryDetail(slug, serverLang, params);
 			if (!data.category) {
 				message.error(t('categoryPage.notFound'));
 			} else {
 				setCategory(data.category);
 				setBreadcrumbs(data.breadcrumbs);
 				setProducts(data.products);
+				if (data.facets) {
+					setFacets(data.facets);
+				}
 			}
 		} finally {
 			setLoading(false);
@@ -49,6 +70,10 @@ export function CategoryPage() {
 
 	if (loading) return <Spin />;
 	if (!category) return <div>{t('categoryPage.notFound')}</div>;
+
+	const handleFiltersChange = (newSelected) => {
+		setSelectedFilters(newSelected);
+	};
 
 	return (
 		<div>
@@ -62,11 +87,25 @@ export function CategoryPage() {
 
 			<h2>{category.name}</h2>
 
-			<div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-				{products.map((prod) => (
-					<ProductCard key={prod.id} product={prod} />
-				))}
-			</div>
+			<Row gutter={[16, 16]}>
+				{/* Левая колонка - Фильтры */}
+				<Col xs={24} sm={24} md={8} lg={6} xl={5}>
+					<CategoryFilters
+						facets={facets}
+						selected={selectedFilters}
+						onChange={handleFiltersChange}
+					/>
+				</Col>
+
+				{/* Правая колонка - Список товаров */}
+				<Col xs={24} sm={24} md={16} lg={18} xl={19}>
+					<div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+						{products.map((prod) => (
+							<ProductCard key={prod.id} product={prod} />
+						))}
+					</div>
+				</Col>
+			</Row>
 		</div>
 	);
 }

@@ -1,4 +1,4 @@
-// src/components/HomeActions.jsx
+// src/pages/home/components/HomeActions.jsx
 import React from 'react';
 import { Button } from 'antd';
 import { Link } from 'react-router-dom';

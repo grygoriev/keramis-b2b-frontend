@@ -18,17 +18,33 @@ export async function fetchCategoryTree(lang) {
 
 /**
  * Возвращает детали категории (GET /catalog/categories/:slug/detail/)
+ *
+ * Ожидаемый ответ:
  * {
- *   category: {...},
- *   breadcrumbs: [...],
- *   products: [...]
+ *   "category": { ... },
+ *   "breadcrumbs": [ ... ],
+ *   "products": [ ... ],
+ *   "facets": [ ... ] // если на бэкенде это реализовано
  * }
+ *
+ * @param {string} slug - Slug категории
+ * @param {string} lang - Код языка (ru/uk/...)
+ * @param {object} [extraParams] - Дополнительные query-параметры,
+ *   например { fv_color: "1,2", fv_surface: "4,5" }
+ * @returns {Promise<object>} - объект ответа { category, breadcrumbs, products, facets? }
  */
-export async function fetchCategoryDetail(slug, lang) {
+export async function fetchCategoryDetail(slug, lang, extraParams = {}) {
+	// Формируем объект params, объединяя language + дополнительные параметры (фильтры)
+	const params = {
+		lang,
+		...extraParams,
+	};
+
 	const response = await axiosInstance.get(`/catalog/categories/${slug}/detail/`, {
-		params: { lang }, // например ?lang=ru или ?lang=uk
+		params, // ?lang=ru&fv_color=4,7&fv_surface=11 ...
 	});
-	return response.data; // {category, breadcrumbs, products}
+
+	return response.data;
 }
 
 // --- Товары ---
