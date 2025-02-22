@@ -1,59 +1,69 @@
-// src/pages/category/CategoryPage.jsx
+// src/pages/catalog/CatalogPage.jsx
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Spin, Breadcrumb, message, Row, Col } from 'antd';
+import { useParams, useLocation } from 'react-router-dom';
+import { Spin, Row, Col, message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import { fetchCategoryDetail } from '../../api/catalogApi';
 import { fetchCartsAsync } from '../../store/cartSlice';
+import { fetchCategoryDetail, fetchSearchProducts } from '../../api/catalogApi';
 import { ProductCard } from '../../components';
 import { CategoryFilters, CategoryPagination } from './components';
-
-import './CategoryPage.css';
+import { BreadcrumbsBlock } from './components';
 
 export function CategoryPage() {
-	const { slug } = useParams();
+	const { slug } = useParams(); // slug категории (если есть)
+	const location = useLocation(); // для поиска query-параметров
 	const dispatch = useDispatch();
 	const { t } = useTranslation();
 
-	const [category, setCategory] = useState(null);
+	// Состояния
 	const [breadcrumbs, setBreadcrumbs] = useState([]);
 	const [products, setProducts] = useState([]);
 	const [facets, setFacets] = useState([]);
+	const [totalCount, setTotalCount] = useState(0);
 	const [loading, setLoading] = useState(false);
 
-	// Текущее кол-во всех товаров
-	const [totalCount, setTotalCount] = useState(0);
-
-	// Храним выбранные фильтры в виде { color: [1, 2], ... }
+	// Фильтры (пример, как в CategoryPage)
 	const [selectedFilters, setSelectedFilters] = useState({});
 
-	// Пагинация: текущая страница и размер
+	// Пагинация
 	const [page, setPage] = useState(1);
-	const [pageSize, setPageSize] = useState(12); // любое дефолтное значение
+	const [pageSize, setPageSize] = useState(12);
 
 	const storedLang = localStorage.getItem('lang') || 'ru';
 	const serverLang = storedLang === 'ua' ? 'uk' : storedLang;
+
+	// Определяем, в каком «режиме» мы находимся: Категория или Поиск
+	// Если slug есть => категория, иначе => поиск.
+	const isCategoryMode = Boolean(slug);
+
+	// Извлекаем query (например, ?q=плитка)
+	const searchParams = new URLSearchParams(location.search);
+	const q = searchParams.get('q') || ''; // может быть пусто
 
 	useEffect(() => {
 		dispatch(fetchCartsAsync());
 	}, [dispatch]);
 
-	// При изменении slug, filters, page или pageSize, грузим заново
+	// При изменении slug, filters, page, pageSize, q -> загружаем заново
 	useEffect(() => {
-		loadCategory();
-	}, [slug, selectedFilters, page, pageSize, serverLang]);
+		loadData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [slug, selectedFilters, page, pageSize, serverLang, q]);
 
-	const loadCategory = async () => {
+	const loadData = async () => {
 		setLoading(true);
+
 		try {
-			// Формируем query-параметры на основе selectedFilters
+			// Общие параметры
 			const params = {
 				lang: serverLang,
 				page,
 				page_size: pageSize,
 			};
+
+			// Если у нас есть выбранные фильтры (fv_...), добавляем
 			Object.entries(selectedFilters).forEach(([code, arr]) => {
 				if (arr.length) {
 					const paramName = `fv_${code}`;
@@ -61,52 +71,82 @@ export function CategoryPage() {
 				}
 			});
 
-			const data = await fetchCategoryDetail(slug, serverLang, params);
-			if (!data.category) {
-				message.error(t('categoryPage.notFound'));
-			} else {
-				setCategory(data.category);
-				setBreadcrumbs(data.breadcrumbs);
-				setProducts(data.products);
-				setTotalCount(data.count || 0);
+			let data;
+			if (isCategoryMode) {
+				// Режим категории
+				// slug обязателен, вызываем fetchCategoryDetail
+				data = await fetchCategoryDetail(slug, serverLang, params);
 
-				if (data.facets) {
-					setFacets(data.facets);
+				// Если нет category, возможно slug неверный
+				if (!data.category) {
+					message.error(t('categoryPage.notFound'));
+					setLoading(false);
+					return;
 				}
+				// Установим breadcrumbs, products и т.д.
+				setBreadcrumbs(data.breadcrumbs || []);
+				setProducts(data.products || []);
+				setTotalCount(data.count || 0);
+				if (data.facets) setFacets(data.facets);
+
+			} else {
+				// Режим поиска
+				// берём q (из location.search)
+				if (q) {
+					params.q = q;
+				}
+
+				// fetchSearchProducts
+				data = await fetchSearchProducts(serverLang, params);
+
+				// В ответе нет category/breadcrumbs — либо пустые
+				setBreadcrumbs([]); // нет хлебных крошек
+				setProducts(data.products || []);
+				setTotalCount(data.count || 0);
+				if (data.facets) setFacets(data.facets);
 			}
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	if (loading) return <Spin />;
-	if (!category) return <div>{t('categoryPage.notFound')}</div>;
-
+	// Коллбек фильтров
 	const handleFiltersChange = (newSelected) => {
 		setSelectedFilters(newSelected);
 		setPage(1);
 	};
 
-	// Обработка смены страницы/размера страницы
+	// Коллбек пагинации
 	const handleChangePage = (newPage, newPageSize) => {
 		setPage(newPage);
 		setPageSize(newPageSize);
 	};
 
+	if (loading) return <Spin style={{ marginTop: 20 }} />;
+
+	// Если поиск, можно отобразить "Результаты поиска: ..." (q)
+	// Если категория, показываем название
+	const title = isCategoryMode
+		? t('categoryPage.titleWithName', { name: slug }) // или data.category?.name
+		: t('search.resultsFor', 'Результаты поиска');
+
 	return (
 		<div>
-			<Breadcrumb style={{ marginBottom: 16 }}>
-				{breadcrumbs.map((bc) => (
-					<Breadcrumb.Item key={bc.slug}>
-						<Link to={`/category/${bc.slug}`}>{bc.name}</Link>
-					</Breadcrumb.Item>
-				))}
-			</Breadcrumb>
+			{/* Блок хлебных крошек - покажется только если есть breadcrumbs */}
+			<BreadcrumbsBlock breadcrumbs={breadcrumbs} />
 
-			<h2>{category.name}</h2>
+			<h2 style={{ marginBottom: 16 }}>{title}</h2>
+
+			{/* При поиске, если нужно, можно вывести: "По вашему запросу '{q}' найдено totalCount товаров" */}
+			{!isCategoryMode && q && (
+				<div style={{ marginBottom: 16, color: '#555' }}>
+					{t('search.foundItems', 'Найдено')} {totalCount}
+					{' '} {t('search.products', 'товаров')}
+					{' '} {t('search.forQuery', 'по запросу')} «{q}»
+				</div>
+			)}
 
 			<Row gutter={[16, 16]}>
-				{/* Левая колонка - Фильтры */}
 				<Col xs={24} sm={24} md={8} lg={6} xl={5}>
 					<CategoryFilters
 						facets={facets}
@@ -114,8 +154,6 @@ export function CategoryPage() {
 						onChange={handleFiltersChange}
 					/>
 				</Col>
-
-				{/* Правая колонка - Список товаров + пагинация */}
 				<Col xs={24} sm={24} md={16} lg={18} xl={19}>
 					<div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
 						{products.map((prod) => (
@@ -123,7 +161,6 @@ export function CategoryPage() {
 						))}
 					</div>
 
-					{/* Компонент пагинации */}
 					<CategoryPagination
 						page={page}
 						pageSize={pageSize}

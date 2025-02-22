@@ -46,7 +46,10 @@
 	},
 	"search": {
 		"placeholder": "Поиск товаров...",
-		"noResults": "Нет результатов"
+		"noResults": "Нет результатов",
+		"foundItems": "Найдено",
+		"products": "товаров",
+		"forQuery": "по запросу"
 	},
 	"categoryPage": {
 		"notFound": "Категория не найдена"

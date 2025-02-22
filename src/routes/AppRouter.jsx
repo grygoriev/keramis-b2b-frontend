@@ -47,6 +47,8 @@ export default function AppRouter() {
 						{/* Категории/товары */}
 						<Route path="category/:slug" element={<CategoryPage />} />
 						<Route path="product/:slug" element={<ProductPage />} />
+						{/* Поиск */}
+						<Route path="/search" element={<CategoryPage />} />
 
 						{/* Новые пути для корзин и заказов */}
 						<Route path="carts" element={<CartListPage />} />

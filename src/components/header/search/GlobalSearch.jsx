@@ -110,6 +110,12 @@ export function GlobalSearch() {
 			<Input
 				value={searchTerm}
 				onChange={handleChange}
+				onPressEnter={() => {
+					// Редирект на /search?q=<searchTerm>
+					navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+					// Скрываем автокомплит
+					setShowDropdown(false);
+				}}
 				placeholder={t('search.placeholder', 'Поиск товаров...')}
 				style={{ width: 300 }}
 				allowClear

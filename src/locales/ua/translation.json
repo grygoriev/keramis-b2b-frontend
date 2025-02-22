@@ -46,7 +46,10 @@
 	},
 	"search": {
 		"placeholder": "Пошук товарів...",
-		"noResults": "Немає результатів"
+		"noResults": "Немає результатів",
+		"foundItems": "Знайдено",
+		"products": "товарів",
+		"forQuery": "за запитом"
 	},
 	"categoryPage": {
 		"notFound": "Категорію не знайдено"
