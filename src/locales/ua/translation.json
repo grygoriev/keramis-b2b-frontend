@@ -49,7 +49,15 @@
 		"noResults": "Немає результатів",
 		"foundItems": "Знайдено",
 		"products": "товарів",
-		"forQuery": "за запитом"
+		"forQuery": "за запитом",
+		"resultsFor": "Результати пошуку"
+	},
+	"sort": {
+		"byDefault": "За замовчуванням",
+		"priceAsc": "Ціна (зростання)",
+		"priceDesc": "Ціна (спадання)",
+		"nameAsc": "Назва A-Z",
+		"nameDesc": "Назва Z-A"
 	},
 	"categoryPage": {
 		"notFound": "Категорію не знайдено"

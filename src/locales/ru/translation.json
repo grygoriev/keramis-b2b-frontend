@@ -49,7 +49,15 @@
 		"noResults": "Нет результатов",
 		"foundItems": "Найдено",
 		"products": "товаров",
-		"forQuery": "по запросу"
+		"forQuery": "по запросу",
+		"resultsFor": "Результаты поиска"
+	},
+	"sort": {
+		"byDefault": "По умолчанию",
+		"priceAsc": "Цена (возрастание)",
+		"priceDesc": "Цена (убывание)",
+		"nameAsc": "Название A-Z",
+		"nameDesc": "Название Z-A"
 	},
 	"categoryPage": {
 		"notFound": "Категория не найдена"

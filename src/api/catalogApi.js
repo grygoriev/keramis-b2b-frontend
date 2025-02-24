@@ -33,7 +33,7 @@ export async function fetchCategoryTree(lang) {
  * @param {string} slug - Slug категории
  * @param {string} lang - Код языка (ru/uk/...)
  * @param {object} [extraParams] - Дополнительные query-параметры,
- *   например { fv_color: "1,2", fv_surface: "4,5", page: 1, page_size: 12 }
+ *   например { fv_color: "1,2", fv_surface: "4,5", page: 1, page_size: 12, sort: price_desc }
  * @returns {Promise<object>} - объект ответа { count, next, previous, category, breadcrumbs, products, facets? }
  */
 export async function fetchCategoryDetail(slug, lang, extraParams = {}) {
@@ -64,7 +64,7 @@ export async function fetchCategoryDetail(slug, lang, extraParams = {}) {
  *
  * @param {string} lang - Код языка (ru/uk/...)
  * @param {object} [extraParams] - Дополнительные query-параметры,
- *   например { fv_color: "1,2", fv_surface: "4,5", page: 1, page_size: 12 }
+ *   например { fv_color: "1,2", fv_surface: "4,5", page: 1, page_size: 12, sort: price_desc }
  * @returns {Promise<object>} - объект ответа { count, next, previous, products, facets? }
  */
 export async function fetchSearchProducts(lang, extraParams = {}) {

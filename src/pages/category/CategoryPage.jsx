@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { fetchCartsAsync } from '../../store/cartSlice';
 import { fetchCategoryDetail, fetchSearchProducts } from '../../api/catalogApi';
 import { ProductCard } from '../../components';
-import { CategoryFilters, CategoryPagination } from './components';
+import { CategoryFilters, CategoryPagination, SortSelect } from './components';
 import { BreadcrumbsBlock } from './components';
 
 export function CategoryPage() {
@@ -18,6 +18,7 @@ export function CategoryPage() {
 	const { t } = useTranslation();
 
 	// Состояния
+	const [category, setCategory] = useState(null);
 	const [breadcrumbs, setBreadcrumbs] = useState([]);
 	const [products, setProducts] = useState([]);
 	const [facets, setFacets] = useState([]);
@@ -30,6 +31,9 @@ export function CategoryPage() {
 	// Пагинация
 	const [page, setPage] = useState(1);
 	const [pageSize, setPageSize] = useState(12);
+
+	// Сортировка
+	const [sort, setSort] = useState('id_asc');
 
 	const storedLang = localStorage.getItem('lang') || 'ru';
 	const serverLang = storedLang === 'ua' ? 'uk' : storedLang;
@@ -50,7 +54,7 @@ export function CategoryPage() {
 	useEffect(() => {
 		loadData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [slug, selectedFilters, page, pageSize, serverLang, q]);
+	}, [slug, selectedFilters, page, pageSize, serverLang, q, sort]);
 
 	const loadData = async () => {
 		setLoading(true);
@@ -61,6 +65,7 @@ export function CategoryPage() {
 				lang: serverLang,
 				page,
 				page_size: pageSize,
+				sort
 			};
 
 			// Если у нас есть выбранные фильтры (fv_...), добавляем
@@ -84,6 +89,7 @@ export function CategoryPage() {
 					return;
 				}
 				// Установим breadcrumbs, products и т.д.
+				setCategory(data.category);
 				setBreadcrumbs(data.breadcrumbs || []);
 				setProducts(data.products || []);
 				setTotalCount(data.count || 0);
@@ -127,7 +133,7 @@ export function CategoryPage() {
 	// Если поиск, можно отобразить "Результаты поиска: ..." (q)
 	// Если категория, показываем название
 	const title = isCategoryMode
-		? t('categoryPage.titleWithName', { name: slug }) // или data.category?.name
+		? category?.name
 		: t('search.resultsFor', 'Результаты поиска');
 
 	return (
@@ -135,7 +141,20 @@ export function CategoryPage() {
 			{/* Блок хлебных крошек - покажется только если есть breadcrumbs */}
 			<BreadcrumbsBlock breadcrumbs={breadcrumbs} />
 
-			<h2 style={{ marginBottom: 16 }}>{title}</h2>
+			<div style={{
+				marginBottom: 16,
+				display: 'flex',
+				justifyContent: 'space-between',
+				alignItems: 'center'
+			}}>
+				<h2 style={{ margin: 0 }}>{title}</h2>
+
+				{/* Блок сортировки в правом верхнем углу */}
+				<SortSelect value={sort} onChange={(val) => {
+					setSort(val);
+					setPage(1); // при смене сортировки идём на 1-ю страницу
+				}} />
+			</div>
 
 			{/* При поиске, если нужно, можно вывести: "По вашему запросу '{q}' найдено totalCount товаров" */}
 			{!isCategoryMode && q && (
