@@ -5,7 +5,7 @@ import {
 	getCarts,
 	createCart,
 	deleteCart,       // <-- импортируем
-} from '../api/cartApi';
+} from '../../api/cartApi.js';
 import { Button, Spin, Input, List, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';

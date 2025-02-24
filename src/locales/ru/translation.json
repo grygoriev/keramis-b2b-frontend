@@ -150,7 +150,25 @@
 	"loginPage": {
 		"username": "Имя пользователя",
 		"password": "Пароль",
-		"button": "Войти"
+		"button": "Войти",
+		"noAccount": "Нет аккаунта?",
+		"registerNow": "Зарегистрируйтесь"
+	},
+	"register": {
+		"title": "Регистрация",
+		"passwordMismatch": "Пароли не совпадают",
+		"success": "Вы успешно зарегистрированы!",
+		"failed": "Ошибка регистрации",
+		"username": "Имя пользователя",
+		"usernameReq": "Введите имя пользователя",
+		"email": "Email",
+		"emailReq": "Введите email",
+		"emailValid": "Некорректный email",
+		"password": "Пароль",
+		"passwordReq": "Введите пароль",
+		"confirmPassword": "Подтвердите пароль",
+		"confirmReq": "Подтвердите пароль",
+		"submitBtn": "Зарегистрироваться"
 	},
 	"footer": {
 		"top": {

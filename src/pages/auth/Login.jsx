@@ -1,14 +1,12 @@
-// src/pages/Login.jsx
-
+// src/pages/auth/Login.jsx
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, Card, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { loginRequest } from '../api/auth';
+import { loginRequest } from '../../api/auth';
 
-// Подключаем Redux
 import { useDispatch, useSelector } from 'react-redux';
-import { setAuthData } from '../store/authSlice';
+import { setAuthData } from '../../store/authSlice';
 
 export function Login() {
 	const [loading, setLoading] = useState(false);
@@ -16,7 +14,6 @@ export function Login() {
 	const { t } = useTranslation();
 	const dispatch = useDispatch();
 
-	// Если уже залогинен, можно редиректить
 	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 	useEffect(() => {
 		if (isLoggedIn) {
@@ -34,7 +31,7 @@ export function Login() {
 		try {
 			const data = await loginRequest(values.username, values.password);
 
-			// Записываем в Redux state
+			// Записать в Redux
 			dispatch(
 				setAuthData({
 					username: data.username,
@@ -42,7 +39,7 @@ export function Login() {
 				})
 			);
 
-			// Пишем в localStorage (если нужно при перезагрузке)
+			// LocalStorage
 			localStorage.setItem('role', data.role);
 			if (data.username) {
 				localStorage.setItem('username', data.username);
@@ -87,9 +84,18 @@ export function Login() {
 					>
 						<Input.Password placeholder={t('loginPage.password')} />
 					</Form.Item>
+
 					<Button type="primary" htmlType="submit" loading={loading} block>
 						{t('loginPage.button')}
 					</Button>
+
+					<div style={{ marginTop: 16, textAlign: 'center' }}>
+						{/* Ссылка на регистрацию */}
+						{t('loginPage.noAccount', 'Нет аккаунта?')}{' '}
+						<Link to="/register">
+							{t('loginPage.registerNow', 'Зарегистрируйтесь')}
+						</Link>
+					</div>
 				</Form>
 			</Card>
 		</div>

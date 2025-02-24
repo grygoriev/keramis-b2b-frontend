@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Input, Button, Space, message, Select, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { getClients, getClientGroups, updateClient } from '../api/clientsApi';
+import { getClients, getClientGroups, updateClient } from '../../api/clientsApi.js';
 
 const { Search } = Input;
 const { Option } = Select;

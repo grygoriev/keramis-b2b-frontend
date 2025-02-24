@@ -23,6 +23,7 @@ import {
 	ApiTokenPage,
 	NotFoundPage,
 	ForbiddenPage,
+	RegisterPage,
 } from '../pages';
 
 // Guards
@@ -43,6 +44,7 @@ export default function AppRouter() {
 					<Route element={<PublicLayout />}>
 						<Route index element={<Home />} />
 						<Route path="login" element={<Login />} />
+						<Route path="/register" element={<RegisterPage />} />
 						<Route path="help" element={<HelpPage />} />
 						<Route path="solutions" element={<SolutionsPage />} />
 

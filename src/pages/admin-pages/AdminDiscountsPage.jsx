@@ -10,8 +10,8 @@ import {
 	updateGroupDiscount,
 	createGroupDiscount,
 	deleteGroupDiscount,
-} from '../api/discountsApi';
-import { getClientGroups } from '../api/clientsApi.js';
+} from '../../api/discountsApi.js';
+import { getClientGroups } from '../../api/clientsApi.js';
 
 const { Search } = Input;
 const { Option } = Select;

@@ -150,7 +150,25 @@
 	"loginPage": {
 		"username": "Ім'я користувача",
 		"password": "Пароль",
-		"button": "Увійти"
+		"button": "Увійти",
+		"noAccount": "Немає акаунта?",
+		"registerNow": "Зареєструйтеся"
+	},
+	"register": {
+		"title": "Реєстрація",
+		"passwordMismatch": "Паролі не збігаються",
+		"success": "Ви успішно зареєстровані!",
+		"failed": "Помилка реєстрації",
+		"username": "Ім'я користувача",
+		"usernameReq": "Введіть ім'я користувача",
+		"email": "Email",
+		"emailReq": "Введіть email",
+		"emailValid": "Некоректний email",
+		"password": "Пароль",
+		"passwordReq": "Введіть пароль",
+		"confirmPassword": "Підтвердіть пароль",
+		"confirmReq": "Підтвердіть пароль",
+		"submitBtn": "Зареєструватися"
 	},
 	"footer": {
 		"top": {

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, message, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { fetchMyToken, generateNewToken } from '../api/apiTokenApi';
+import { fetchMyToken, generateNewToken } from '../../api/apiTokenApi.js';
 
 /**
  * Страница управления API-токеном:

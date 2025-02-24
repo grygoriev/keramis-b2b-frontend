@@ -5,8 +5,8 @@ import {
 	getCarts,
 	deleteCartItem,
 	updateCartItem
-} from '../api/cartApi';
-import { checkoutCart } from '../api/ordersApi'; // <-- импортируем функцию чекаута
+} from '../../api/cartApi.js';
+import { checkoutCart } from '../../api/ordersApi.js'; // <-- импортируем функцию чекаута
 import { Spin, List, Button, message, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
