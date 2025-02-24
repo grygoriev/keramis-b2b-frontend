@@ -24,6 +24,15 @@ import {
 	NotFoundPage,
 	ForbiddenPage,
 	RegisterPage,
+	PricesCatalogsPage,
+	ContactsPage,
+	AboutCompanyPage,
+	DeliveryPage,
+	GuaranteePage,
+	PaymentPage,
+	ServiceSupportPage,
+	CertificatesPage,
+	CooperationPage,
 } from '../pages';
 
 // Guards
@@ -47,6 +56,15 @@ export default function AppRouter() {
 						<Route path="/register" element={<RegisterPage />} />
 						<Route path="help" element={<HelpPage />} />
 						<Route path="solutions" element={<SolutionsPage />} />
+						<Route path="/prices-catalogs" element={<PricesCatalogsPage />} />
+						<Route path="/contacts" element={<ContactsPage />} />
+						<Route path="/about" element={<AboutCompanyPage />} />
+						<Route path="/delivery" element={<DeliveryPage />} />
+						<Route path="/guarantee" element={<GuaranteePage />} />
+						<Route path="/payment" element={<PaymentPage />} />
+						<Route path="/service-support" element={<ServiceSupportPage />} />
+						<Route path="/certificates" element={<CertificatesPage />} />
+						<Route path="/cooperation" element={<CooperationPage />} />
 
 						{/* Категории/товары */}
 						<Route path="category/:slug" element={<CategoryPage />} />

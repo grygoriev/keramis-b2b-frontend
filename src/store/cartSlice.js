@@ -15,6 +15,12 @@ export const fetchCartsAsync = createAsyncThunk(
 			const data = await getCarts(lang);  // <-- передаем lang
 			return data; // [{id, name, items:[]}, ...]
 		} catch (err) {
+			if (err.response && err.response.status === 401) {
+				// Логика, если пользователь не авторизован
+				console.warn('Пользователь не авторизован, корзина недоступна');
+				// Возвращаем пустую корзину (или любую заглушку)
+				return [];
+			}
 			return rejectWithValue(err.response?.data || err.message);
 		}
 	}

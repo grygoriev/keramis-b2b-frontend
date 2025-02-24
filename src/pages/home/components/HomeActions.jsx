@@ -8,18 +8,18 @@ export function HomeActions() {
 	const { t } = useTranslation();
 
 	return (
-		<div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+		<div style={{ display: 'flex', gap: '16px', marginBottom: '16px', marginTop: '16px' }}>
 			<Link to="/certificates">
 				<Button>{t('homePage.certificates')}</Button>
 			</Link>
-			<Link to="/catalogs">
+			<Link to="/prices-catalogs">
 				<Button>{t('homePage.catalogs')}</Button>
 			</Link>
-			<Link to="/export">
-				<Button>{t('homePage.export')}</Button>
+			<Link to="/cooperation">
+				<Button>{t('homePage.cooperation')}</Button>
 			</Link>
-			<Link to="/import">
-				<Button>{t('homePage.import')}</Button>
+			<Link to="/service-support">
+				<Button>{t('homePage.support')}</Button>
 			</Link>
 		</div>
 	);

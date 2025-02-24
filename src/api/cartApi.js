@@ -9,7 +9,7 @@ export async function getCarts(lang) {
 	const response = await axiosInstance.get('/orders/carts/', {
 		params: { lang }, // например ?lang=ru или ?lang=uk
 	});
-	return response.data;  // массив [{id, name, items:[...]}]
+	return response.data; // массив [{id, name, items:[...]}]
 }
 
 /**
@@ -37,11 +37,11 @@ export async function deleteCart(cartId) {
  * Добавить товар в корзину
  * POST /orders/cart-items/ { "cart_id", "product_id", "quantity" }
  */
-export async function addItemToCart(cartId, productId, quantity=1) {
+export async function addItemToCart(cartId, productId, quantity = 1) {
 	const response = await axiosInstance.post('/orders/cart-items/', {
 		cart_id: cartId,
 		product_id: productId,
-		quantity
+		quantity,
 	});
 	return response.data; // {id, product, quantity}
 }
@@ -64,7 +64,7 @@ export async function deleteCartItem(itemId) {
 export async function updateCartItem(itemId, quantity) {
 	// Нужен эндпоинт PATCH /orders/cart-items/<itemId>/ { "quantity": ... }
 	const response = await axiosInstance.patch(`/orders/cart-items/${itemId}/`, {
-		"quantity": quantity
+		quantity: quantity,
 	});
 	return response.data; // {id, product, quantity} (обновлённая инфа)
 }
@@ -75,7 +75,7 @@ export async function updateCartItem(itemId, quantity) {
  */
 export async function checkoutCart(cartId) {
 	const response = await axiosInstance.post('/orders/checkout/', {
-		cart_id: cartId
+		cart_id: cartId,
 	});
 	return response.data; // возвращает данные о заказе
 }

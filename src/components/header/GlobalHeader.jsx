@@ -1,7 +1,7 @@
 // src/components/header/GlobalHeader.jsx
 
 import React, { useEffect, useState } from 'react';
-import { Button } from 'antd';
+import { Button, Tooltip } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,10 +10,12 @@ import { logoutRequest } from '../../api/auth';
 import { CartIcon } from './cart/CartIcon';
 import { fetchCartsAsync } from '../../store/cartSlice';
 import { GlobalSearch } from './search/GlobalSearch';
+import { Logo } from './logo/Logo.jsx';
+
 
 export const GlobalHeader = () => {
 	const [currentLanguage, setCurrentLanguage] = useState(
-		localStorage.getItem('lang') || 'ua'
+		localStorage.getItem('lang') || 'ua',
 	);
 	const navigate = useNavigate();
 	const { i18n, t } = useTranslation();
@@ -81,24 +83,19 @@ export const GlobalHeader = () => {
 		>
 			{/* Левая часть */}
 			<div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-				<Link
-					to="/"
-					style={{ fontWeight: 'bold', marginRight: 20, color: 'inherit' }}
-				>
-					KERAMIS+B2B
-				</Link>
-				<Link to="/help" style={{ color: 'inherit' }}>
-					{t('common.help')}
-				</Link>
-				<Link to="/solutions" style={{ color: 'inherit' }}>
-					{t('common.solutions')}
-				</Link>
-				<Link to={dashboard} style={{ color: 'inherit' }}>
-					{t('common.dashboard')}
-				</Link>
-				<Link to="#" style={{ color: 'inherit' }}>
-					{t('common.more')}
-				</Link>
+				<Logo />
+				{/*<Link to="/help" style={{ color: 'inherit' }}>*/}
+				{/*	{t('common.help')}*/}
+				{/*</Link>*/}
+				{/*<Link to="/solutions" style={{ color: 'inherit' }}>*/}
+				{/*	{t('common.solutions')}*/}
+				{/*</Link>*/}
+				{/*<Link to={dashboard} style={{ color: 'inherit' }}>*/}
+				{/*	{t('common.dashboard')}*/}
+				{/*</Link>*/}
+				{/*<Link to="#" style={{ color: 'inherit' }}>*/}
+				{/*	{t('common.more')}*/}
+				{/*</Link>*/}
 			</div>
 
 			{/* Правая часть */}
@@ -108,19 +105,19 @@ export const GlobalHeader = () => {
 
 				{/* Переключение языка */}
 				<div style={{ display: 'flex', gap: 8 }}>
-          <span
-			  style={getLangStyle('ua')}
-			  onClick={() => handleChangeLanguage('ua')}
-		  >
-            UK
-          </span>
+					<span
+						style={getLangStyle('ua')}
+						onClick={() => handleChangeLanguage('ua')}
+					>
+						UK
+					</span>
 					<span>|</span>
 					<span
 						style={getLangStyle('ru')}
 						onClick={() => handleChangeLanguage('ru')}
 					>
-            RU
-          </span>
+						RU
+					</span>
 				</div>
 
 				{/* Наш новый компонент быстрого поиска */}
@@ -131,7 +128,13 @@ export const GlobalHeader = () => {
 
 				{isLoggedIn ? (
 					<>
-						{username && <span>Hello, {username}</span>}
+						{username && (
+							<Tooltip title={t('common.dashboard', 'Перейти в кабинет')}>
+								<Link to={dashboard} style={{ color: 'inherit' }}>
+									Hello, {username}
+								</Link>
+							</Tooltip>
+						)}
 						<Button danger onClick={handleLogout}>
 							Logout
 						</Button>

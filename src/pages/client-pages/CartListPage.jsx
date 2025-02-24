@@ -27,7 +27,7 @@ export function CartListPage() {
 			const data = await getCarts();
 			setCarts(data);
 		} catch (err) {
-			console.error(err);
+			// console.error(err);
 			message.error('Failed to load carts');
 		} finally {
 			setLoading(false);

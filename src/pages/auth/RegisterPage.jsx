@@ -29,7 +29,7 @@ export function RegisterPage() {
 
 		setLoading(true);
 		try {
-			// Если нужно invisible reCAPTCHA:
+			// invisible reCAPTCHA:
 			// const recaptchaToken = await recaptchaRef.current.executeAsync();
 			// И передать recaptchaToken в registerRequest(...recaptchaToken).
 			const regData = await registerRequest(username, email, password, confirm_password);

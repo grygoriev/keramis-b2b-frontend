@@ -9,6 +9,10 @@ import { useTranslation } from 'react-i18next';
 export function AddToCartButton({ productId }) {
 	const { t } = useTranslation();
 	const dispatch = useDispatch();
+
+	// Берём информацию о логине из state.auth
+	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
 	const { activeCartId, carts } = useSelector((state) => state.cart);
 	const [showCartModal, setShowCartModal] = useState(false);
 	const [pendingProductId, setPendingProductId] = useState(null);
@@ -27,12 +31,21 @@ export function AddToCartButton({ productId }) {
 
 	const handleAddToCart = (e) => {
 		e.stopPropagation();
-		// Если нет активной корзины или список пуст – показать модалку
+
+		// 1) Если пользователь НЕ залогинен — показываем предупреждение
+		if (!isLoggedIn) {
+			message.error(t('cart.authRequired', 'Необходимо авторизоваться или зарегистрироваться'));
+			return;
+		}
+
+		// 2) Если нет активной корзины или список корзин пуст – показать модалку выбора
 		if (!activeCartId || !carts || carts.length === 0) {
 			setPendingProductId(productId);
 			setShowCartModal(true);
 			return;
 		}
+
+		// 3) Иначе добавляем в активную корзину
 		doAddItemToCart(activeCartId, productId);
 	};
 
