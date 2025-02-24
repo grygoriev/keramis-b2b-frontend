@@ -41,7 +41,7 @@ axiosInstance.interceptors.response.use(
 			localStorage.removeItem('role');
 			localStorage.removeItem('username');
 			// 3) Редирект на /login
-			window.location.href = '/login';
+			// window.location.href = '/login';
 		}
 		return Promise.reject(error);
 	}

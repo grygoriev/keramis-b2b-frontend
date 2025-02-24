@@ -12,13 +12,13 @@ export function BreadcrumbsBlock({ breadcrumbs }) {
 		return null; // Если массив пуст, ничего не рендерим
 	}
 
+	// Формируем массив для items:
+	const breadcrumbItems = breadcrumbs.map((bc) => ({
+		key: bc.slug,
+		title: <Link to={`/category/${bc.slug}`}>{bc.name}</Link>,
+	}));
+
 	return (
-		<Breadcrumb style={{ marginBottom: 16 }}>
-			{breadcrumbs.map((bc) => (
-				<Breadcrumb.Item key={bc.slug}>
-					<Link to={`/category/${bc.slug}`}>{bc.name}</Link>
-				</Breadcrumb.Item>
-			))}
-		</Breadcrumb>
+		<Breadcrumb style={{ marginBottom: 16 }} items={breadcrumbItems} />
 	);
 }

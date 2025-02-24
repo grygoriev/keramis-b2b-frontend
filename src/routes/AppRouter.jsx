@@ -19,9 +19,11 @@ import {
 	CartPage,
 	OrderListPage,
 	AdminClientsPage,
-	AdminDiscountsPage, ApiTokenPage,
+	AdminDiscountsPage,
+	ApiTokenPage,
+	NotFoundPage,
+	ForbiddenPage,
 } from '../pages';
-
 
 // Guards
 import RequireAdmin from './RequireAdmin';
@@ -90,8 +92,11 @@ export default function AppRouter() {
 					</Route>
 				</Route>
 
+				{/* Страница 403 */}
+				<Route path="/forbidden" element={<ForbiddenPage />} />
+
 				{/* 404 */}
-				<Route path="*" element={<div>404 Not Found</div>} />
+				<Route path="*" element={<NotFoundPage />} />
 			</Routes>
 		</BrowserRouter>
 	);
