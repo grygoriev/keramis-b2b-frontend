@@ -1,5 +1,5 @@
-// src/pages/CartListPage.jsx
-import React, { useEffect, useState } from 'react';
+// src/pages/client/CartListPage.jsx
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
 	getCarts,
@@ -56,7 +56,7 @@ export function CartListPage() {
 		// чтобы не срабатывало onClick на всю строку
 		e.stopPropagation();
 
-		// Можно спросить подтверждение
+		// Подтверждение
 		if (!window.confirm('Are you sure you want to delete this cart?')) {
 			return;
 		}

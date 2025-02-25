@@ -4,9 +4,8 @@ import {
 	getCarts,
 	addItemToCart,
 	deleteCartItem,
-	createCart, // <-- мы добавляем createCart для POST /orders/carts
+	createCart,
 } from '../api/cartApi';
-import { message } from 'antd';
 
 export const fetchCartsAsync = createAsyncThunk(
 	'cart/fetchCarts',
@@ -18,7 +17,7 @@ export const fetchCartsAsync = createAsyncThunk(
 			if (err.response && err.response.status === 401) {
 				// Логика, если пользователь не авторизован
 				console.warn('Пользователь не авторизован, корзина недоступна');
-				// Возвращаем пустую корзину (или любую заглушку)
+				// Возвращаем пустую корзину
 				return [];
 			}
 			return rejectWithValue(err.response?.data || err.message);
@@ -53,7 +52,6 @@ export const deleteCartItemAsync = createAsyncThunk(
 	}
 );
 
-// <-- new
 export const createCartAsync = createAsyncThunk(
 	'cart/createCart',
 	async (name, { rejectWithValue }) => {

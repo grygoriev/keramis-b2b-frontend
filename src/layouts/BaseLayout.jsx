@@ -1,5 +1,4 @@
 // src/layouts/BaseLayout.jsx
-import React from 'react';
 import { Layout } from 'antd';
 import { Outlet } from 'react-router-dom';
 import { GlobalHeader, GlobalFooter } from '../components';

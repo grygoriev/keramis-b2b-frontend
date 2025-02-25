@@ -1,5 +1,4 @@
 // src/components/product/components/StockInfo.jsx
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 /**

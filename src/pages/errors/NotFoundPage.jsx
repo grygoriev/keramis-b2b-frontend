@@ -1,6 +1,4 @@
 // src/pages/errors/NotFoundPage.jsx
-
-import React from 'react';
 import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +8,7 @@ export function NotFoundPage() {
 	const { t } = useTranslation();
 
 	const goHome = () => {
-		navigate('/'); // на главную или любой другой маршрут
+		navigate('/');
 	};
 
 	return (

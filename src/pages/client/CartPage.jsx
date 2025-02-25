@@ -1,12 +1,12 @@
-// src/pages/CartPage.jsx
-import React, { useEffect, useState } from 'react';
+// src/pages/client/CartPage.jsx
+import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
 	getCarts,
 	deleteCartItem,
 	updateCartItem
 } from '../../api/cartApi.js';
-import { checkoutCart } from '../../api/ordersApi.js'; // <-- импортируем функцию чекаута
+import { checkoutCart } from '../../api/ordersApi.js';
 import { Spin, List, Button, message, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -20,13 +20,11 @@ export function CartPage() {
 	const role = useSelector((state) => state.auth.role);
 	const dashboard = role ==='internal_manager' ? '/admin' : '/client';
 
-	// Язык
 	const storedLang = localStorage.getItem('lang') || 'ru';
 	const serverLang = storedLang === 'ua' ? 'uk' : storedLang;
 
 	useEffect(() => {
 		loadCart();
-		// eslint-disable-next-line
 	}, [cartId, serverLang]);
 
 	const loadCart = async () => {
@@ -86,7 +84,6 @@ export function CartPage() {
 			message.success(t('common.orderCreated', `Заказ #${order.id} создан!`));
 			// После успешного оформления → переходим на список заказов
 			navigate(`${dashboard}/my-orders`);
-			// Или если хотите более конкретно: navigate(`/my-orders/${order.id}`)
 		} catch (err) {
 			console.error(err);
 			message.error(t('common.checkoutFailed', 'Не удалось оформить заказ'));

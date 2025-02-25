@@ -1,5 +1,5 @@
 // src/pages/home/components/HomeBannerSlider.jsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Carousel, Spin } from 'antd';
 import axiosInstance from '../../../api/axiosInstance';
 
@@ -41,7 +41,6 @@ export function HomeBannerSlider() {
 								style={{ width: '100%', maxHeight: 400, objectFit: 'cover' }}
 							/>
 						</a>
-						{/* Если нужно, можно добавить overlay с текстом */}
 					</div>
 				</div>
 			))}

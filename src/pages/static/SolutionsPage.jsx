@@ -1,5 +1,18 @@
-import React from 'react';
+// src/pages/static/SolutionsPage.jsx
+import { Typography } from 'antd';
+import { useTranslation } from 'react-i18next';
+
+const { Title, Paragraph } = Typography;
 
 export function SolutionsPage() {
-	return <h2>Страница «Готові рішення» (в разработке)</h2>;
+	const { t } = useTranslation();
+
+	return (
+		<div style={{ padding: 16 }}>
+			<Title level={2}>{t('static.solutions.title')}</Title>
+			<Paragraph>
+				{t('static.solutions.content')}
+			</Paragraph>
+		</div>
+	);
 }

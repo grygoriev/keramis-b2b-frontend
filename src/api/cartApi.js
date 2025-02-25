@@ -29,8 +29,7 @@ export async function createCart(name) {
 export async function deleteCart(cartId) {
 	// вызываем DELETE /orders/carts/<cartId>/
 	const response = await axiosInstance.delete(`/orders/carts/${cartId}/`);
-	// Обычно вернёт 204 (No Content)
-	return response.status; // 204
+	return response.status;
 }
 
 /**
@@ -52,7 +51,7 @@ export async function addItemToCart(cartId, productId, quantity = 1) {
  */
 export async function deleteCartItem(itemId) {
 	const response = await axiosInstance.delete(`/orders/cart-items/${itemId}/`);
-	return response.status; // 204
+	return response.status;
 }
 
 /**

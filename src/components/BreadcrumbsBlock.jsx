@@ -1,5 +1,4 @@
-// src/pages/catalog/components/BreadcrumbsBlock.jsx
-import React from 'react';
+// src/components/BreadcrumbsBlock.jsx
 import { Breadcrumb } from 'antd';
 import { Link } from 'react-router-dom';
 

@@ -1,17 +1,12 @@
 // src/components/header/GlobalHeader.jsx
-
-import React, { useEffect, useState } from 'react';
-import { Button, Tooltip } from 'antd';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../store/authSlice';
 import { logoutRequest } from '../../api/auth';
-import { CartIcon } from './cart/CartIcon';
+import { CartIcon, Currency, GlobalSearch, LanguageSwitcher, Logo, UserBlock } from './components';
 import { fetchCartsAsync } from '../../store/cartSlice';
-import { GlobalSearch } from './search/GlobalSearch';
-import { Logo } from './logo/Logo.jsx';
-
 
 export const GlobalHeader = () => {
 	const [currentLanguage, setCurrentLanguage] = useState(
@@ -55,21 +50,6 @@ export const GlobalHeader = () => {
 		localStorage.setItem('lang', value);
 	};
 
-	const getLangStyle = (lang) => {
-		if (lang === currentLanguage) {
-			return {
-				color: '#000',
-				textDecoration: 'none',
-				fontWeight: 'bold',
-			};
-		}
-		return {
-			color: '#aaa',
-			textDecoration: 'none',
-			cursor: 'pointer',
-		};
-	};
-
 	return (
 		<div
 			style={{
@@ -100,50 +80,27 @@ export const GlobalHeader = () => {
 
 			{/* Правая часть */}
 			<div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
-				<span>$42.1 ↑</span>
-				<span>€43.85 ↑</span>
+				{/* Курсы валют */}
+				<Currency />
 
 				{/* Переключение языка */}
-				<div style={{ display: 'flex', gap: 8 }}>
-					<span
-						style={getLangStyle('ua')}
-						onClick={() => handleChangeLanguage('ua')}
-					>
-						UK
-					</span>
-					<span>|</span>
-					<span
-						style={getLangStyle('ru')}
-						onClick={() => handleChangeLanguage('ru')}
-					>
-						RU
-					</span>
-				</div>
+				<LanguageSwitcher
+					currentLanguage={currentLanguage}
+					onChangeLanguage={handleChangeLanguage}
+				/>
 
-				{/* Наш новый компонент быстрого поиска */}
+				{/* Быстрый поиск */}
 				<GlobalSearch />
 
 				{/* Иконка корзины */}
 				<CartIcon />
 
-				{isLoggedIn ? (
-					<>
-						{username && (
-							<Tooltip title={t('common.dashboard', 'Перейти в кабинет')}>
-								<Link to={dashboard} style={{ color: 'inherit' }}>
-									Hello, {username}
-								</Link>
-							</Tooltip>
-						)}
-						<Button danger onClick={handleLogout}>
-							Logout
-						</Button>
-					</>
-				) : (
-					<Link to="/login">
-						<Button type="primary">Login</Button>
-					</Link>
-				)}
+				<UserBlock
+					isLoggedIn={isLoggedIn}
+					username={username}
+					dashboardPath={dashboard}
+					onLogout={handleLogout}
+				/>
 			</div>
 		</div>
 	);

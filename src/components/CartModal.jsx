@@ -1,8 +1,8 @@
 // src/components/CartModal.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, Select, Input, message } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next'; // <-- i18n
+import { useTranslation } from 'react-i18next';
 import { setActiveCart, createCartAsync } from '../store/cartSlice';
 
 const { Option } = Select;
@@ -10,7 +10,7 @@ const { Option } = Select;
 export function CartModal({ visible, onClose, onCartSelected }) {
 	const dispatch = useDispatch();
 	const { carts } = useSelector((state) => state.cart);
-	const { t } = useTranslation(); // <-- i18n
+	const { t } = useTranslation();
 
 	const [chosenCartId, setChosenCartId] = useState(null);
 	const [newCartName, setNewCartName] = useState('');

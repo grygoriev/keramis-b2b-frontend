@@ -1,5 +1,5 @@
 // src/pages/catalog/CatalogPage.jsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { Spin, Row, Col, message } from 'antd';
 import { useDispatch } from 'react-redux';
@@ -9,7 +9,7 @@ import { fetchCartsAsync } from '../../store/cartSlice';
 import { fetchCategoryDetail, fetchSearchProducts } from '../../api/catalogApi';
 import { ProductCard } from '../../components';
 import { CategoryFilters, CategoryPagination, SortSelect } from './components';
-import { BreadcrumbsBlock } from './components';
+import { BreadcrumbsBlock } from '../../components';
 
 export function CategoryPage() {
 	const { slug } = useParams(); // slug категории (если есть)
@@ -25,7 +25,7 @@ export function CategoryPage() {
 	const [totalCount, setTotalCount] = useState(0);
 	const [loading, setLoading] = useState(false);
 
-	// Фильтры (пример, как в CategoryPage)
+	// Фильтры
 	const [selectedFilters, setSelectedFilters] = useState({});
 
 	// Пагинация
@@ -130,7 +130,7 @@ export function CategoryPage() {
 
 	if (loading) return <Spin style={{ marginTop: 20 }} />;
 
-	// Если поиск, можно отобразить "Результаты поиска: ..." (q)
+	// Если поиск, отображаем "Результаты поиска: ..." (q)
 	// Если категория, показываем название
 	const title = isCategoryMode
 		? category?.name
@@ -156,7 +156,7 @@ export function CategoryPage() {
 				}} />
 			</div>
 
-			{/* При поиске, если нужно, можно вывести: "По вашему запросу '{q}' найдено totalCount товаров" */}
+			{/* При поиске выводим: "По вашему запросу '{q}' найдено totalCount товаров" */}
 			{!isCategoryMode && q && (
 				<div style={{ marginBottom: 16, color: '#555' }}>
 					{t('search.foundItems', 'Найдено')} {totalCount}

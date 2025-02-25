@@ -1,6 +1,4 @@
 // src/pages/product/components/ProductFeatures.jsx
-import React from 'react';
-
 /**
  * @param {Array} features - Массив характеристик из бэкенда:
  *    [

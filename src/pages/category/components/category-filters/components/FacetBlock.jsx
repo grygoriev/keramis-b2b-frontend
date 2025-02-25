@@ -1,5 +1,4 @@
 // src/pages/category/components/category-filters/components/FacetBlock.jsx
-import React from 'react';
 import { Checkbox } from 'antd';
 
 /**

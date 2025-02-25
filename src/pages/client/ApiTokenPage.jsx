@@ -1,5 +1,5 @@
-// src/pages/ApiTokenPage.jsx
-import React, { useEffect, useState } from 'react';
+// src/pages/client/ApiTokenPage.jsx
+import { useEffect, useState } from 'react';
 import { Button, message, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { fetchMyToken, generateNewToken } from '../../api/apiTokenApi.js';

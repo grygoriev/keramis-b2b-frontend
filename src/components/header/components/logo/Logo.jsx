@@ -2,7 +2,6 @@
 
 import { Tooltip } from 'antd';
 import { Link } from 'react-router-dom';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 export function Logo() {

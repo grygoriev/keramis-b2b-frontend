@@ -1,5 +1,4 @@
 // src/pages/category/components/category-filters/components/SelectedFiltersBar.jsx
-import React from 'react';
 import { Button } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 

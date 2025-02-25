@@ -1,5 +1,4 @@
 // src/pages/category/components/CategoryPagination.jsx
-import React from 'react';
 import { Pagination } from 'antd';
 
 /**
@@ -21,7 +20,6 @@ export function CategoryPagination({ page, pageSize, total, onChangePage }) {
 				total={total}
 				onChange={onChangePage}
 				showSizeChanger
-				// showQuickJumper - если хотите вводить страницу руками
 				style={{ textAlign: 'center' }}
 			/>
 		</div>

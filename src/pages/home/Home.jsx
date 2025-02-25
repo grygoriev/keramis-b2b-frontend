@@ -1,5 +1,4 @@
 // src/pages/home/Home.jsx
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { HomeBannerSlider, HomeActions } from './components';
@@ -13,7 +12,7 @@ export function Home() {
 			{/* Слайдер баннеров */}
 			<HomeBannerSlider />
 
-			{/* Кнопки (Сертификаты, Каталоги, Экспорт, Импорт) */}
+			{/* Кнопки (Сертификаты, Каталоги ...) */}
 			<HomeActions />
 
 			{/* Раздел "Новинки" */}

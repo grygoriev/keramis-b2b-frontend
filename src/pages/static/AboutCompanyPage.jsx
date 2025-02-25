@@ -1,5 +1,4 @@
 // src/pages/static/AboutCompanyPage.jsx
-import React from 'react';
 import { Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 

@@ -1,5 +1,4 @@
 // src/components/footer/components/FooterTopBlock.jsx
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 export function FooterTopBlock() {

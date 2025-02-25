@@ -1,5 +1,5 @@
 // src/layouts/PublicLayout.jsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Layout, Menu, Spin } from 'antd';
 import { fetchCategoryTree } from '../api/catalogApi';
@@ -15,7 +15,6 @@ const { Sider, Content } = Layout;
 
 function getCategoryIcon(iconName) {
 	if (!iconName) {
-		// нет иконки => дефолт (ProductOutlined)
 		return <ProductOutlined />;
 	}
 	// Путь к файлу

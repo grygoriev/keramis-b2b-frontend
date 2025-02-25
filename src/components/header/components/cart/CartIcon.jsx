@@ -1,10 +1,10 @@
 // src/components/header/cart/CartIcon.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { Popover, List, Button, Divider } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { setActiveCart } from '../../../store/cartSlice';
+import { setActiveCart } from '../../../../store/cartSlice.js';
 import { useTranslation } from 'react-i18next';
 
 export function CartIcon() {

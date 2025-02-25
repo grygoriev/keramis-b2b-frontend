@@ -1,5 +1,5 @@
 // src/pages/category/components/category-filters/CategoryFilters.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SelectedFiltersBar, FacetBlock } from './components';
 
 /**

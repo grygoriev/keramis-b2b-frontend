@@ -1,5 +1,5 @@
 // src/layouts/ClientLayout.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Layout, Menu } from 'antd';
 import { Link, Outlet } from 'react-router-dom';
 import {
@@ -9,7 +9,6 @@ import {
 	DownloadOutlined,
 } from '@ant-design/icons';
 
-// Предполагаем, что в Redux хранится текущий пользователь
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 

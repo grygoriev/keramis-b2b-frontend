@@ -1,5 +1,4 @@
 // src/components/footer/GlobalFooter.jsx
-import React from 'react';
 import { FooterTopBlock, FooterMiddleBlock, FooterBottomBlock } from './components';
 
 export function GlobalFooter() {

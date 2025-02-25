@@ -3,7 +3,7 @@ import axios from 'axios';
 import store from '../store';
 import { logout } from '../store/authSlice';
 
-// Функция для получения CSRF-токена (если используете Django + CSRF cookie)
+// Функция для получения CSRF-токена
 function getCookie(name) {
 	const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
 	if (match) return match[2];

@@ -1,5 +1,5 @@
 // src/components/ProductSection.jsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Spin, message } from 'antd';
 import axiosInstance from '../api/axiosInstance';
 import { ProductCard } from './ProductCard';

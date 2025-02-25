@@ -1,5 +1,5 @@
 // src/pages/auth/Login.jsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form, Input, Button, Card, message } from 'antd';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

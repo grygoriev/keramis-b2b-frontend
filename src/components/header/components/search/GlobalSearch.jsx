@@ -1,9 +1,9 @@
 // src/components/header/search/GlobalSearch.jsx
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { Input, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';   // <-- импорт
-import { fetchSearchAutocomplete } from '../../../api/catalogApi';
+import { useTranslation } from 'react-i18next';
+import { fetchSearchAutocomplete } from '../../../../api/catalogApi.js';
 import debounce from 'lodash/debounce';
 
 const MIN_LENGTH = 3;
@@ -82,7 +82,6 @@ export function GlobalSearch() {
 	const renderPrice = (item) => {
 		if (!item.price) return null;
 
-		// При желании перевести «грн» тоже можно вынести в локализацию:
 		const currencyLabel = t('common.currency', 'грн');
 
 		if (item.discounted_price) {

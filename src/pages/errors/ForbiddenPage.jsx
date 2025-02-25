@@ -1,6 +1,4 @@
 // src/pages/errors/ForbiddenPage.jsx
-
-import React from 'react';
 import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

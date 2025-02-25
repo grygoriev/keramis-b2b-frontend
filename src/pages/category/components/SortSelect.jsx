@@ -1,5 +1,4 @@
 // src/pages/category/components/SortSelect.jsx
-import React from 'react';
 import { Select } from 'antd';
 import { useTranslation } from 'react-i18next';
 
