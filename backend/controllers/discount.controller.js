@@ -3,7 +3,6 @@ const GroupDiscount = require('../models/groupDiscount.model');
 
 exports.createGroupDiscount = async (req, res) => {
 	try {
-		// req.body => { client_group, price_group, discount_percent }
 		const gd = new GroupDiscount(req.body);
 		await gd.save();
 		return res.status(201).json(gd);

@@ -133,8 +133,8 @@ export function CartPage() {
 			/>
 
 			{/* Кнопка "Оформить заказ" */}
-			<div style={{ marginTop: 16 }}>
-				<Button type="primary" onClick={handleCheckout}>
+			<div style={{ marginTop: 16 }} >
+				<Button type="primary" onClick={handleCheckout} disabled={cart.items.length === 0}>
 					{t('common.checkout', 'Оформить заказ')}
 				</Button>
 			</div>

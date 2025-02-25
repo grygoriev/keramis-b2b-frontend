@@ -145,9 +145,8 @@ exports.updateClient = async (req, res) => {
 		// например, role, client_group (id), email...
 		const { role, client_group, email, first_name, last_name } = req.body;
 
-		// Пример: запрещаем ставить role='internal_manager', если хотите
+		// Пример: запрещаем ставить role='internal_manager'
 		if (role && role === 'internal_manager') {
-			// или любые другие проверки
 			return res.status(400).json({ detail: "Setting role=internal_manager is not allowed" });
 		}
 
@@ -165,7 +164,6 @@ exports.updateClient = async (req, res) => {
 			}
 			user.client_group = groupDoc._id;
 		} else if (client_group === null) {
-			// если хотим убрать группу
 			user.client_group = null;
 		}
 
@@ -185,7 +183,6 @@ exports.updateClient = async (req, res) => {
 		await user.save();
 
 		// 4) Формируем ответ (id вместо _id)
-		// или использовать toObject()
 		const updated = {
 			id: user._id,
 			username: user.username,

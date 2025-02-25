@@ -64,7 +64,7 @@ export function CartIcon() {
 			<div style={{ marginBottom: 6 }}>
 				{t('common.productsInActiveCart')}
 			</div>
-			{activeCart && activeCart.items.length > 0 ? (
+			{activeCart && activeCart?.items.length > 0 ? (
 				<List
 					size="small"
 					dataSource={activeCart.items}

@@ -8,7 +8,7 @@ const ProductImage = require('../models/productImage.model');
 exports.listProducts = async (req, res) => {
 	try {
 		// Если ?fv_product_list=promo, то мы фильтруем товары,
-		// иначе возвращаем все (или можете сделать другой подход).
+		// иначе возвращаем все.
 		const fvValue = req.query.fv_product_list;  // строка, например 'promo'
 		let productIds = null;
 
@@ -23,7 +23,6 @@ exports.listProducts = async (req, res) => {
 			// 2) Находим FeatureValue, где featureId=feature._id и value=fvValue
 			const fv = await FeatureValue.findOne({ featureId: feature._id, value: fvValue });
 			if (!fv) {
-				// Если нет, пустой результат
 				return res.json([]);
 			}
 
@@ -55,7 +54,7 @@ exports.listProducts = async (req, res) => {
 
 			let mainImgUrl = null;
 			if (mainImg && mainImg.imagePath) {
-				// Собираем абсолютный URL, если нужно
+				// Собираем абсолютный URL
 				mainImgUrl = `${req.protocol}://${req.get('host')}/uploads/${mainImg.imagePath}`;
 			}
 

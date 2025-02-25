@@ -54,15 +54,15 @@ export function AdminLayout() {
 								</Link>
 							),
 						},
-						{
-							key: '4',
-							icon: <SettingOutlined />,
-							label: (
-								<Link to="/admin/discounts">
-									{t('adminLayout.settings', 'Настройки')}
-								</Link>
-							),
-						},
+						// {
+						// 	key: '4',
+						// 	icon: <SettingOutlined />,
+						// 	label: (
+						// 		<Link to="/admin/discounts">
+						// 			{t('adminLayout.settings', 'Настройки')}
+						// 		</Link>
+						// 	),
+						// },
 					]}
 				/>
 			</Sider>

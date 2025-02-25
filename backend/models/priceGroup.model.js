@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const priceGroupSchema = new Schema({
 	name: { type: String, required: true, unique: true },
-	code: { type: String, required: true, unique: true }, // "retail", "wholesale"
+	code: { type: String, required: true, unique: true },
 });
 
 module.exports = mongoose.model('PriceGroup', priceGroupSchema);

@@ -5,8 +5,6 @@
  *   { id, productId, quantity, ... }
  */
 function mapCartItem(cartItemDoc) {
-	// Если мы делали populate('productId'), тогда cartItemDoc.productId
-	// - это объект Product (или null).
 	let productName = '';
 	let productUrl = '';
 	if (cartItemDoc.productId) {
@@ -16,7 +14,7 @@ function mapCartItem(cartItemDoc) {
 
 	return {
 		id: cartItemDoc._id,
-		productId: cartItemDoc.productId?._id || cartItemDoc.productId, // если populate не сработал, будет ObjectId
+		productId: cartItemDoc.productId?._id || cartItemDoc.productId,
 		product_name: productName,
 		product_url: productUrl,
 		quantity: cartItemDoc.quantity
@@ -43,7 +41,6 @@ function mapCart(cartDoc, itemsDocs = []) {
  *   вместе с каждым списком items
  */
 function mapCarts(cartDocs, itemsByCartIdMap) {
-	// itemsByCartIdMap — объект { cartId -> [CartItemDocs...] }
 	return cartDocs.map((cartDoc) => {
 		const cartItems = itemsByCartIdMap[cartDoc._id] || [];
 		return mapCart(cartDoc, cartItems);
@@ -51,7 +48,6 @@ function mapCarts(cartDocs, itemsByCartIdMap) {
 }
 
 module.exports = {
-	mapCartItem,
 	mapCart,
 	mapCarts
 };

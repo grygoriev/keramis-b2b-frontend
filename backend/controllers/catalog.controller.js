@@ -5,14 +5,12 @@ const ProductFeature = require('../models/productFeature.model');
 const Feature = require('../models/feature.model');
 const FeatureValue = require('../models/featureValue.model');
 
-// GET /catalog/categories/tree/ (пример из вашего кода без изменений)
+// GET /catalog/categories/tree/
 exports.getCategoryTree = async (req, res) => {
 	try {
-		// Предположим, parentId=null => корень
 		const rootCats = await Category.find({ parentId: null, status: true });
 
 		const buildTree = async (cat) => {
-			// ищем детей
 			const children = await Category.find({ parentId: cat._id, status: true });
 			let childrenData = [];
 			for (let child of children) {
@@ -52,7 +50,6 @@ exports.getCategoryDetail = async (req, res) => {
 		];
 
 		// Ищем товары (status='active')
-		// Допустим, subcategories: если хотим, можно тоже искать дочерние категории.
 		const products = await Product.find({ categoryId: category._id, status: 'active' });
 
 		// Для каждого product -> ищем главное изображение (isMain=true) или первое по sortOrder
@@ -63,7 +60,7 @@ exports.getCategoryDetail = async (req, res) => {
 			const images = await ProductImage.find({ productId: p._id }).sort({ sortOrder: 1 });
 			let mainImg = images.find((img) => img.isMain) || images[0];
 
-			// Формируем абсолютный URL (если нужно). Предположим, что imagePath хранит имя файла в папке /uploads
+			// Формируем абсолютный URL (если нужно). imagePath хранит имя файла в папке /uploads
 			let mainImgUrl = null;
 			if (mainImg && mainImg.imagePath) {
 				mainImgUrl = `${req.protocol}://${req.get('host')}/uploads/${mainImg.imagePath}`;
@@ -120,7 +117,7 @@ exports.getProductDetail = async (req, res) => {
 			mainImgUrl = `${req.protocol}://${req.get('host')}/uploads/${mainImg.imagePath}`;
 		}
 
-		// Хлебные крошки (упрощённо, если хотим что-то сделать)
+		// Хлебные крошки
 		let breadcrumbs = [];
 
 		// 2) Загружаем productFeature
@@ -130,7 +127,6 @@ exports.getProductDetail = async (req, res) => {
 		// затем подтянем Feature, FeatureValue
 		let featuresMap = {};
 		for (let pf of pfList) {
-			// загрузить feature (или кэшировать), загрузить featureValue
 			let feature = await Feature.findById(pf.featureId);
 			let fvalue = await FeatureValue.findById(pf.featureValueId);
 
@@ -146,7 +142,7 @@ exports.getProductDetail = async (req, res) => {
 			featuresMap[feature._id].values.push(fvalue.value);
 		}
 
-		// Трансформируем в массив, аналогично Django:
+		// Трансформируем в массив
 		// если multiple=false => value= (single)
 		let featuresArray = [];
 		for (let fId in featuresMap) {
@@ -156,14 +152,14 @@ exports.getProductDetail = async (req, res) => {
 					id: fData.id,
 					status: fData.status,
 					name: fData.name,
-					value: fData.values // массив строк
+					value: fData.values
 				});
 			} else {
 				featuresArray.push({
 					id: fData.id,
 					status: fData.status,
 					name: fData.name,
-					value: fData.values[0] || '' // одна строка
+					value: fData.values[0] || ''
 				});
 			}
 		}

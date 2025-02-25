@@ -12,10 +12,8 @@ exports.searchProducts = async (req, res) => {
 				{ sku_id: { $regex: q, $options: 'i' } }
 			];
 		}
-		// sort, pagination etc...
-		// db query
+
 		let products = await Product.find(query);
-		// for pagination, maybe skip/limit + totalCount
 
 		// Подгружаем главное изображение:
 		let productList = [];
@@ -32,10 +30,9 @@ exports.searchProducts = async (req, res) => {
 				sku_id: p.sku_id,
 				name: p.name,
 				price: p.price,
-				discounted_price: null, // если нужна логика скидки - отдельно
+				discounted_price: null,
 				image_filename: mainImgUrl,
 				slug: p.url,
-				// ...
 			});
 		}
 
@@ -64,14 +61,12 @@ exports.searchAutocomplete = async (req, res) => {
 		}
 		query = query.limit(20); // top 20
 		const results = await query.exec();
-		// Возвращаем массив
 		const data = results.map((p) => ({
 			id: p._id,
 			sku_id: p.sku_id,
 			name: p.name,
 			price: p.price,
 			slug: p.url,
-			// ...
 		}));
 		return res.json(data);
 	} catch (err) {

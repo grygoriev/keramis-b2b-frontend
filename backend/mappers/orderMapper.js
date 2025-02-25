@@ -32,6 +32,5 @@ function mapOrder(orderDoc, itemsDocs = []) {
 }
 
 module.exports = {
-	mapOrderItem,
 	mapOrder
 };

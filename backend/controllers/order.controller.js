@@ -10,7 +10,6 @@ exports.listOrders = async (req, res) => {
 		const user = req.user; // { userId, role }
 		let query = {};
 		if (user.role !== 'internal_manager') {
-			// показываем заказы текущего userId
 			query.userId = user.userId;
 		}
 
@@ -66,10 +65,6 @@ exports.checkoutCart = async (req, res) => {
 		await order.save();
 
 		for (let ci of items) {
-			// find product, calc price
-			// let price = getClientPrice(product, user)???
-			// or just product.price for now
-			// ...
 			let price = 100; // placeholder
 			const oi = new OrderItem({
 				orderId: order._id,
@@ -96,7 +91,6 @@ exports.checkoutCart = async (req, res) => {
 
 exports.updateOrderStatus = async (req, res) => {
 	try {
-		// req.user.role must be 'internal_manager' => or use isInternalManager
 		const { orderId } = req.params;
 		const { state } = req.body;
 
@@ -104,8 +98,6 @@ exports.updateOrderStatus = async (req, res) => {
 		if (!order) {
 			return res.status(404).json({ detail: 'Order not found' });
 		}
-		// check if state in allowed
-		// ...
 		order.state = state;
 		await order.save();
 		res.json(order);
