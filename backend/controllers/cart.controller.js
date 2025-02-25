@@ -1,14 +1,59 @@
 const Cart = require('../models/cart.model');
 const CartItem = require('../models/cartItem.model');
+const { mapCarts } = require('../mappers/cartMapper');
+const { mapCart } = require('../mappers/cartMapper');
 
 exports.listCarts = async (req, res) => {
 	try {
-		// req.user.userId (из JWT)
-		const carts = await Cart.find({ userId: req.user.userId });
-		// populate items? up to you
-		return res.json(carts);
+		const userId = req.user.userId;
+		const carts = await Cart.find({ userId });
+
+		// Оптимизированный вариант:
+		// 1) Собрать все cartIds
+		const cartIds = carts.map(c => c._id);
+		// 2) Найти CartItem с populate('productId')
+		const allItems = await CartItem.find({ cartId: { $in: cartIds } })
+			.populate('productId', 'name url');
+		// указываем поля: 'name url', чтоб не тянуть все поля из Product
+
+		// 3) Группируем items
+		const itemsByCartId = {};
+		for (let it of allItems) {
+			const cIdStr = it.cartId.toString();
+			if (!itemsByCartId[cIdStr]) {
+				itemsByCartId[cIdStr] = [];
+			}
+			itemsByCartId[cIdStr].push(it);
+		}
+
+		// 4) маппим carts => [{id, userId, name, items: [..] }]
+		const result = mapCarts(carts, itemsByCartId);
+
+		return res.json(result);
 	} catch (err) {
-		res.status(500).json({ detail: 'Server error' });
+		console.error(err);
+		return res.status(500).json({ detail: "Server error" });
+	}
+};
+
+exports.getCartDetail = async (req, res) => {
+	try {
+		const { cartId } = req.params;
+		const userId = req.user.userId;
+		const cart = await Cart.findOne({ _id: cartId, userId });
+		if (!cart) {
+			return res.status(404).json({ detail: "Cart not found." });
+		}
+
+		// грузим items + populate
+		const items = await CartItem.find({ cartId: cart._id })
+			.populate('productId', 'name url');
+
+		const mapped = mapCart(cart, items);
+		return res.json(mapped);
+	} catch (err) {
+		console.error(err);
+		return res.status(500).json({ detail: "Server error" });
 	}
 };
 

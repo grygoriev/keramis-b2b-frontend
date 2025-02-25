@@ -31,7 +31,7 @@ export function CartPage() {
 		setLoading(true);
 		try {
 			const carts = await getCarts(serverLang);
-			const c = carts.find((x) => x.id === parseInt(cartId));
+			const c = carts.find((x) => x.id === (Number(cartId) ?  parseInt(cartId): cartId));
 			if (!c) {
 				message.error(t('common.cartFoundError', 'Корзина не найдена'));
 			} else {

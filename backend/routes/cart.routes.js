@@ -3,7 +3,11 @@ const router = express.Router();
 const authJwt = require('../middlewares/authJwt');
 const cartCtrl = require('../controllers/cart.controller');
 
+// GET /orders/carts/
 router.get('/carts/', authJwt, cartCtrl.listCarts);
+// GET /orders/carts/:cartId
+router.get('/carts/:cartId', authJwt, cartCtrl.getCartDetail);
+// POST /orders/carts/
 router.post('/carts/', authJwt, cartCtrl.createCart);
 
 router.delete('/carts/:cartId', authJwt, cartCtrl.deleteCart);
