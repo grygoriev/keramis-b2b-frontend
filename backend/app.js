@@ -14,6 +14,7 @@ const orderRoutes = require('./routes/order.routes');
 const priceGroupRoutes = require('./routes/priceGroup.routes');
 const searchRoutes = require('./routes/search.routes');
 const productRoutes = require('./routes/product.routes');
+const path = require('path');
 
 const app = express();
 
@@ -23,6 +24,7 @@ connectDB(process.env.DB_CONNECTION_STRING);
 // Миддлвары
 app.use(morgan('dev'));
 // app.use(cors());
+app.use(express.static(path.resolve('..', 'frontend', 'build')));
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
