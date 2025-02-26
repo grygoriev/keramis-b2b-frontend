@@ -43,6 +43,10 @@ app.use('/catalog/products', productRoutes);
 // Статика
 app.use('/uploads', express.static('uploads'));
 
+app.get('*', (req, res) => {
+	res.sendFile(path.resolve('..', 'frontend', 'build', 'index.html'));
+});
+
 // Запуск
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
