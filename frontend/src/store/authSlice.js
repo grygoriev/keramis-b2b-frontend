@@ -41,8 +41,8 @@ const authSlice = createSlice({
 	},
 });
 
-// Экспорт экшенов (по именам)
 export const { setAuthData, logout, restoreAuth } = authSlice.actions;
-
-// Экспорт по умолчанию (default) – это сам reducer
+export const selectUserRole = (state) => state.auth.role;
+export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
+export const selectUsername = (state) => state.auth.username;
 export default authSlice.reducer;

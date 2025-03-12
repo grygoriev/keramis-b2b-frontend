@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { logout } from '../../store/authSlice';
-import { setLang } from '../../store/langSlice';
+import { logout, selectIsLoggedIn, selectUsername, selectUserRole } from '../../store/authSlice';
+import { selectCurrentLang, setLang } from '../../store/langSlice';
 import { logoutRequest } from '../../api/auth';
 import { fetchCartsAsync } from '../../store/cartSlice';
 
@@ -17,18 +17,19 @@ import {
 	Logo,
 	UserBlock,
 } from './components';
+import { getDashboardPath, transformLangToServer } from '../../utils';
 
 export const GlobalHeader = () => {
 	const navigate = useNavigate();
 	const { i18n, t } = useTranslation();
 	const dispatch = useDispatch();
 
-	const currentLanguage = useSelector((state) => state.lang.currentLang);
-	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-	const username = useSelector((state) => state.auth.username);
-	const role = useSelector((state) => state.auth.role);
+	const currentLanguage = useSelector(selectCurrentLang);
+	const isLoggedIn = useSelector(selectIsLoggedIn);
+	const username = useSelector(selectUsername);
+	const role = useSelector(selectUserRole);
 
-	const dashboard = role === 'internal_manager' ? '/admin' : '/client';
+	const dashboard = getDashboardPath(role);
 
 	// Каждый раз при смене currentLanguage - меняем язык i18n
 	useEffect(() => {
@@ -38,7 +39,7 @@ export const GlobalHeader = () => {
 	// Грузим корзины, если залогинены
 	useEffect(() => {
 		if (isLoggedIn) {
-			const langParam = currentLanguage === 'ua' ? 'uk' : currentLanguage;
+			const langParam = transformLangToServer(currentLanguage);
 			dispatch(fetchCartsAsync(langParam));
 		}
 	}, [isLoggedIn, currentLanguage, dispatch]);

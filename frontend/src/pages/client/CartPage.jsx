@@ -1,105 +1,92 @@
-// src/pages/client/CartPage.jsx
-import { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import {
-	getCarts,
-	deleteCartItem,
-	updateCartItem
-} from '../../api/cartApi.js';
-import { checkoutCart } from '../../api/ordersApi.js';
-import { Spin, List, Button, message, Space } from 'antd';
+import { Button, List, Space, Spin, message } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
+import {
+	fetchCartsAsync,
+	selectCartById,
+	updateCartItemAsync,
+	deleteCartItemAsync,
+	checkoutCartAsync, selectCartStatus, selectCartError,
+} from '../../store/cartSlice';
+
+import { selectUserRole } from '../../store/authSlice';
+import { transformLangToServer, getDashboardPath } from '../../utils';
+import { selectCurrentLang } from '../../store/langSlice.js';
+import { LoadingWrapper } from '../../components';
 
 export function CartPage() {
 	const { cartId } = useParams();
 	const navigate = useNavigate();
 	const { t } = useTranslation();
-	const [cart, setCart] = useState(null);
-	const [loading, setLoading] = useState(false);
-	const role = useSelector((state) => state.auth.role);
-	const dashboard = role ==='internal_manager' ? '/admin' : '/client';
+	const dispatch = useDispatch();
 
-	const storedLang = localStorage.getItem('lang') || 'ru';
-	const serverLang = storedLang === 'ua' ? 'uk' : storedLang;
+	const currentLang = useSelector(selectCurrentLang);
+	const serverLang = transformLangToServer(currentLang);
+	const role = useSelector(selectUserRole);
+	const dashboard = getDashboardPath(role);
+
+	const cartStatus = useSelector(selectCartStatus);
+	const cartError = useSelector(selectCartError);
 
 	useEffect(() => {
-		loadCart();
-	}, [cartId, serverLang]);
+		dispatch(fetchCartsAsync(serverLang));
+	}, [dispatch, serverLang]);
 
-	const loadCart = async () => {
-		setLoading(true);
-		try {
-			const carts = await getCarts(serverLang);
-			const c = carts.find((x) => x.id === (Number(cartId) ?  parseInt(cartId): cartId));
-			if (!c) {
-				message.error(t('common.cartFoundError', 'Корзина не найдена'));
-			} else {
-				setCart(c);
-			}
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	const handleDeleteItem = async (itemId) => {
-		try {
-			await deleteCartItem(itemId);
-			message.success(t('common.itemRemoved', 'Товар удален'));
-			loadCart();
-		} catch (err) {
-			console.error(err);
-			message.error(t('common.failedToDeleteItem', 'Не удалось удалить товар'));
-		}
-	};
-
-	const handleQuantityChange = async (item, newQty) => {
-		if (newQty < 1) {
-			message.warning(t('common.quantityLessWarning', 'Количество не может быть меньше 1'));
-			return;
-		}
-		try {
-			await updateCartItem(item.id, newQty);
-			message.success(t('common.quantityUpdated', 'Количество обновлено'));
-			loadCart();
-		} catch (err) {
-			console.error(err);
-			message.error(t('common.failedToUpdateQuantity', 'Не удалось обновить количество'));
-		}
-	};
+	const cart = useSelector((state) => {
+		const cId = Number(cartId);
+		return selectCartById(state, cId);
+	});
 
 	const handleIncrement = (item) => {
-		handleQuantityChange(item, item.quantity + 1);
+		dispatch(updateCartItemAsync({ itemId: item.id, quantity: item.quantity + 1 }))
+			.unwrap()
+			.then(() => message.success(t('common.quantityUpdated')))
+			.catch(() => message.error(t('common.failedToUpdateQuantity')));
 	};
 
 	const handleDecrement = (item) => {
-		handleQuantityChange(item, item.quantity - 1);
-	};
-
-	// оформить заказ (Checkout)
-	const handleCheckout = async () => {
-		if (!cart) return;
-		try {
-			const order = await checkoutCart(cart.id); // {id, state, total, ...}
-			message.success(t('common.orderCreated', `Заказ #${order.id} создан!`));
-			// После успешного оформления → переходим на список заказов
-			navigate(`${dashboard}/my-orders`);
-		} catch (err) {
-			console.error(err);
-			message.error(t('common.checkoutFailed', 'Не удалось оформить заказ'));
+		if (item.quantity > 1) {
+			dispatch(updateCartItemAsync({ itemId: item.id, quantity: item.quantity - 1 }))
+				.unwrap()
+				.then(() => message.success(t('common.quantityUpdated')))
+				.catch(() => message.error(t('common.failedToUpdateQuantity')));
+		} else {
+			handleDeleteItem(item.id);
 		}
 	};
 
-	if (loading) return <Spin />;
-	if (!cart) return <div>{t('common.cartNotFound')}</div>;
+	const handleDeleteItem = (itemId) => {
+		dispatch(deleteCartItemAsync(itemId))
+			.unwrap()
+			.then(() => message.success(t('common.itemRemoved')))
+			.catch(() => message.error(t('common.failedToDeleteItem')));
+	};
+
+	const handleCheckout = () => {
+		dispatch(checkoutCartAsync(cart.id))
+			.unwrap()
+			.then(({ order }) => {
+				if (order) {
+					message.success(
+						t('common.orderCreated', `Заказ #${order?.id} создан!`),
+					);
+					navigate(`${dashboard}/my-orders`);
+				}
+			})
+			.catch(() => message.error(t('common.checkoutFailed')));
+	};
 
 	return (
+		<LoadingWrapper loading={cartStatus === 'loading'} error={cartError} data={cart}>
 		<div style={{ padding: 16 }}>
-			<h2>{t('common.cartTitle', 'Корзина')}: {cart.name}</h2>
-			<p>{t('common.id')}: {cart.id}</p>
+			<h2>{t('common.cartTitle', 'Корзина')}: {cart?.name}</h2>
+			<p>ID: {cart?.id}</p>
 
 			<List
-				dataSource={cart.items}
+				dataSource={cart?.items}
 				renderItem={(item) => (
 					<List.Item
 						actions={[
@@ -110,7 +97,7 @@ export function CartPage() {
 								<Button size="small" onClick={() => handleIncrement(item)}>
 									+
 								</Button>
-								<Button danger onClick={() => handleDeleteItem(item.id)}>
+								<Button danger size="small" onClick={() => handleDeleteItem(item.id)}>
 									{t('common.remove', 'Удалить')}
 								</Button>
 							</Space>,
@@ -118,7 +105,7 @@ export function CartPage() {
 					>
 						<List.Item.Meta
 							title={
-								<Link to={`/product/${item.product_url}/`}>
+								<Link to={`/product/${item.product_url}`}>
 									{item.product_name}
 								</Link>
 							}
@@ -132,12 +119,16 @@ export function CartPage() {
 				)}
 			/>
 
-			{/* Кнопка "Оформить заказ" */}
-			<div style={{ marginTop: 16 }} >
-				<Button type="primary" onClick={handleCheckout} disabled={cart.items.length === 0}>
+			<div style={{ marginTop: 16 }}>
+				<Button
+					type="primary"
+					onClick={handleCheckout}
+					disabled={cart?.items.length === 0}
+				>
 					{t('common.checkout', 'Оформить заказ')}
 				</Button>
 			</div>
 		</div>
+		</LoadingWrapper>
 	);
 }

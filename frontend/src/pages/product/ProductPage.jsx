@@ -1,10 +1,9 @@
 // src/pages/product/ProductPage.jsx
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { fetchCartsAsync } from '../../store/cartSlice.js';
-import { useProductDetail } from './hooks/useProductDetail.js';
+import { useProductDetail } from './hooks';
 
 import {
 	AddToCartButton,
@@ -18,16 +17,11 @@ import { transformLangToServer } from '../../utils';
 
 export function ProductPage() {
 	const { slug } = useParams();
-	const dispatch = useDispatch();
 
 	const currentLanguage = useSelector(selectCurrentLang);
 	const serverLang = transformLangToServer(currentLanguage);
 
 	const { product, breadcrumbs, loading, error } = useProductDetail(slug, serverLang);
-
-	useEffect(() => {
-		dispatch(fetchCartsAsync(serverLang));
-	}, [dispatch, serverLang]);
 
 	return (
 		<LoadingWrapper loading={loading} error={error} data={product}>

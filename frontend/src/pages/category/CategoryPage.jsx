@@ -1,15 +1,14 @@
 // src/pages/catalog/CategoryPage.jsx
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { Row, Col } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
-import { fetchCartsAsync } from '../../store/cartSlice';
 import { selectCurrentLang } from '../../store/langSlice';
 import { transformLangToServer } from '../../utils';
 
-import { useCategoryOrSearch } from './hooks/useCategoryOrSearch';
+import { useCategoryOrSearch } from './hooks';
 
 import {
 	ProductCard,
@@ -62,10 +61,6 @@ export function CategoryPage() {
 		sort,
 		serverLang,
 	});
-
-	useEffect(() => {
-	  dispatch(fetchCartsAsync(serverLang));
-	}, [serverLang, dispatch]);
 
 	// Коллбек изменения фильтров
 	const handleFiltersChange = (newSelected) => {
