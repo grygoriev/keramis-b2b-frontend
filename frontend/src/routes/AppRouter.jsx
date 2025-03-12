@@ -2,81 +2,35 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Layouts
-import { BaseLayout, PublicLayout, AdminLayout, ClientLayout } from '../layouts/index.js';
-
-// Pages (публичные, админские, клиентские)
-import {
-	AdminDashboard,
-	ClientDashboard,
-	SolutionsPage,
-	Home,
-	Login,
-	HelpPage,
-	CategoryPage,
-	ProductPage,
-	CartListPage,
-	CartPage,
-	OrderListPage,
-	AdminClientsPage,
-	AdminDiscountsPage,
-	ApiTokenPage,
-	NotFoundPage,
-	ForbiddenPage,
-	RegisterPage,
-	PricesCatalogsPage,
-	ContactsPage,
-	AboutCompanyPage,
-	DeliveryPage,
-	GuaranteePage,
-	PaymentPage,
-	ServiceSupportPage,
-	CertificatesPage,
-	CooperationPage,
-} from '../pages/index.js';
+import { BaseLayout, PublicLayout, AdminLayout, ClientLayout } from '../layouts';
 
 // Guards
-import RequireAdmin from './RequireAdmin.jsx';
-import RequireClient from './RequireClient.jsx';
+import RequireAdmin from './RequireAdmin';
+import RequireClient from './RequireClient';
+
+// Дополнительно
+import { NotFoundPage, ForbiddenPage } from '../pages';
+// Импортируем наши массивы
+import { adminRoutes } from './adminRoutes.jsx';
+import { clientRoutes } from './clientRoutes.jsx';
+import { publicRoutes } from './publicRoutes.jsx';
 
 export default function AppRouter() {
 	return (
 		<BrowserRouter>
 			<Routes>
-				{/*
-          1) BaseLayout – Header/Footer.
-          2) PublicLayout – меню категорий.
-          3) Admin/Client – без публичного меню.
-        */}
 				<Route path="/" element={<BaseLayout />}>
 					{/* PUBLIC (с меню категорий) */}
 					<Route element={<PublicLayout />}>
-						<Route index element={<Home />} />
-						<Route path="login" element={<Login />} />
-						<Route path="/register" element={<RegisterPage />} />
-						<Route path="help" element={<HelpPage />} />
-						<Route path="solutions" element={<SolutionsPage />} />
-						<Route path="/prices-catalogs" element={<PricesCatalogsPage />} />
-						<Route path="/contacts" element={<ContactsPage />} />
-						<Route path="/about" element={<AboutCompanyPage />} />
-						<Route path="/delivery" element={<DeliveryPage />} />
-						<Route path="/guarantee" element={<GuaranteePage />} />
-						<Route path="/payment" element={<PaymentPage />} />
-						<Route path="/service-support" element={<ServiceSupportPage />} />
-						<Route path="/certificates" element={<CertificatesPage />} />
-						<Route path="/cooperation" element={<CooperationPage />} />
-
-						{/* Категории/товары */}
-						<Route path="category/:slug" element={<CategoryPage />} />
-						<Route path="product/:slug" element={<ProductPage />} />
-						{/* Поиск */}
-						<Route path="/search" element={<CategoryPage />} />
-
-						{/* Новые пути для корзин и заказов */}
-						<Route path="carts" element={<CartListPage />} />
-						<Route path="carts/:cartId" element={<CartPage />} />
-
-						{/* Просмотр заказов (список), отличается от /orders? */}
-						<Route path="my-orders" element={<OrderListPage />} />
+						{/* Мапим publicRoutes */}
+						{publicRoutes.map(({ path, index, element }, i) => (
+							<Route
+								key={i}
+								path={path}
+								index={!!index}
+								element={element}
+							/>
+						))}
 					</Route>
 
 					{/* ADMIN */}
@@ -88,10 +42,14 @@ export default function AppRouter() {
 							</RequireAdmin>
 						}
 					>
-						<Route index element={<AdminDashboard />} />
-						<Route path="my-orders" element={<OrderListPage />} />
-						<Route path="clients" element={<AdminClientsPage />} />
-						<Route path="discounts" element={<AdminDiscountsPage />} />
+						{adminRoutes.map(({ path, index, element }, i) => (
+							<Route
+								key={i}
+								path={path}
+								index={!!index}
+								element={element}
+							/>
+						))}
 					</Route>
 
 					{/* CLIENT */}
@@ -103,11 +61,14 @@ export default function AppRouter() {
 							</RequireClient>
 						}
 					>
-						<Route index element={<ClientDashboard />} />
-						<Route path="my-orders" element={<OrderListPage />} />
-						<Route path="carts" element={<CartListPage />} />
-						<Route path="carts/:cartId" element={<CartPage />} />
-						<Route path="api-token" element={<ApiTokenPage />} />
+						{clientRoutes.map(({ path, index, element }, i) => (
+							<Route
+								key={i}
+								path={path}
+								index={!!index}
+								element={element}
+							/>
+						))}
 					</Route>
 				</Route>
 

@@ -26,6 +26,8 @@ export function OrderCard({
 					{t('orders.total', 'Сумма')}: {order.total}
 					<Divider type="vertical" />
 					{t('orders.state', 'Статус')}: {order.state}
+					<Divider type="vertical" />
+					{t('orders.client', 'Клиент')}: {order.user}
 				</div>
 				<Button size="small" onClick={() => onToggleExpand(order.id)}>
 					{expanded ? t('orders.collapse', 'Свернуть') : t('orders.expand', 'Развернуть')}

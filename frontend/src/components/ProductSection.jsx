@@ -13,15 +13,19 @@ export function ProductSection({ title, filter, limit = 4 }) {
 	const [products, setProducts] = useState([]);
 	const [loading, setLoading] = useState(false);
 
+	// Язык
+	const storedLang = localStorage.getItem('lang') || 'ru';
+	const serverLang = storedLang === 'ua' ? 'uk' : storedLang;
+
 	useEffect(() => {
 		fetchProducts();
-	}, [filter]);
+	}, [filter, serverLang]);
 
 	const fetchProducts = async () => {
 		setLoading(true);
 		try {
 			const resp = await axiosInstance.get('/catalog/products', {
-				params: { filter },
+				params: { lang: serverLang, filter },
 			});
 			const data = resp.data.slice(0, limit);
 			setProducts(data);

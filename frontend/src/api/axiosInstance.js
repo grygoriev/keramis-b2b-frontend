@@ -14,7 +14,7 @@ function getCookie(name) {
 const axiosInstance = axios.create({
 	// baseURL: 'http://localhost:8000',
 	// baseURL: 'http://localhost:3001',
-	baseURL: '',
+	baseURL: 'https://159.69.148.221',
 	timeout: 10000,
 	withCredentials: true, // отправлять/принимать cookie
 });
