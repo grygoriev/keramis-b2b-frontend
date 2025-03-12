@@ -17,11 +17,11 @@ export function StockInfo({ unit, stocks }) {
 	return (
 		<div style={{ border: '1px solid #ccc', padding: 12, marginTop: 16 }}>
 			<h3 style={{ marginBottom: 8 }}>{t('productPage.availability')}</h3>
-			{/*{unit && (*/}
-			{/*	<div style={{ marginBottom: 8 }}>*/}
-			{/*		{t('productPage.units')}: <strong>{unit.name}</strong>*/}
-			{/*	</div>*/}
-			{/*)}*/}
+			{unit && (
+				<div style={{ marginBottom: 8 }}>
+					{t('productPage.units')}: <strong>{unit.name}</strong>
+				</div>
+			)}
 			{stocks.map((stock) => (
 				<div key={stock.id} style={{ marginBottom: 4 }}>
 					<strong>{stock.stock_name}:</strong> {stock.count} {unit?.name || ''}

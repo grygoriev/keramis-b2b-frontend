@@ -1,87 +1,71 @@
 // src/pages/product/ProductPage.jsx
-import { useEffect, useState } from 'react';
-import { Spin, message } from 'antd';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { fetchCartsAsync } from '../../store/cartSlice.js';
-import { fetchProductDetail } from '../../api/catalogApi.js';
-import { AddToCartButton, PriceBlock, BreadcrumbsBlock } from '../../components/index.js';
-import { StockInfo, ProductFeatures, ProductGallery } from './components/index.js';
+import { useProductDetail } from './hooks/useProductDetail.js';
+
+import {
+	AddToCartButton,
+	PriceBlock,
+	BreadcrumbsBlock,
+	LoadingWrapper,
+} from '../../components';
+import { ProductGallery, StockInfo, ProductFeatures } from './components';
+import { selectCurrentLang } from '../../store/langSlice.js';
+import { transformLangToServer } from '../../utils';
 
 export function ProductPage() {
 	const { slug } = useParams();
 	const dispatch = useDispatch();
-	const { t } = useTranslation();
 
-	const [product, setProduct] = useState(null);
-	const [breadcrumbs, setBreadcrumbs] = useState([]);
-	const [loading, setLoading] = useState(false);
+	const currentLanguage = useSelector(selectCurrentLang);
+	const serverLang = transformLangToServer(currentLanguage);
 
-	const storedLang = localStorage.getItem('lang') || 'ru';
-	const serverLang = storedLang === 'ua' ? 'uk' : storedLang;
+	const { product, breadcrumbs, loading, error } = useProductDetail(slug, serverLang);
 
 	useEffect(() => {
-		loadProduct();
-	}, [slug, serverLang]);
-
-	useEffect(() => {
-		dispatch(fetchCartsAsync());
-	}, [dispatch]);
-
-	const loadProduct = async () => {
-		setLoading(true);
-		try {
-			const data = await fetchProductDetail(slug, serverLang);
-			if (!data.product) {
-				message.error(t('productPage.notFound'));
-			} else {
-				setProduct(data.product);
-				setBreadcrumbs(data.breadcrumbs);
-			}
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	if (loading) return <Spin />;
-	if (!product) return <div>{t('productPage.notFound')}</div>;
+		dispatch(fetchCartsAsync(serverLang));
+	}, [dispatch, serverLang]);
 
 	return (
-		<div>
-			<BreadcrumbsBlock breadcrumbs={breadcrumbs} />
+		<LoadingWrapper loading={loading} error={error} data={product}>
+			<div>
+				<BreadcrumbsBlock breadcrumbs={breadcrumbs} />
 
-			<div style={{ display: 'flex', gap: 24 }}>
-				{/* Левая колонка (галерея) */}
-				<div style={{ width: 320 }}>
-					<ProductGallery
-						images={product.images || []}
-						image_filename={product.image_filename}
-						productName={product.name}
-					/>
-				</div>
-
-				{/* Правая колонка (информация) */}
-				<div style={{ flex: 1 }}>
-					<h2>{product.name}</h2>
-
-					<PriceBlock
-						price={product.price}
-						discountedPrice={product.discounted_price}
-					/>
-
-					<div style={{ marginTop: 16, marginBottom: 16 }}>
-						{product.description}
+				<div style={{ display: 'flex', gap: 24 }}>
+					{/* Левая колонка (галерея) */}
+					<div style={{ width: 320 }}>
+						<ProductGallery
+							images={product?.images || []}
+							image_filename={product?.image_filename}
+							productName={product?.name}
+						/>
 					</div>
 
-					<div style={{ marginBottom: 16 }}>
-						<AddToCartButton productId={product.id} />
-					</div>
+					{/* Правая колонка (информация) */}
+					<div style={{ flex: 1 }}>
+						<h2>{product?.name}</h2>
 
-					<StockInfo unit={product.unit_of_measure} stocks={product.stocks} />
-					<ProductFeatures features={product.features} />
+						<PriceBlock
+							price={product?.price}
+							discountedPrice={product?.discounted_price}
+						/>
+
+						<div style={{ marginTop: 16, marginBottom: 16 }}>
+							{product?.description}
+						</div>
+
+						<div style={{ marginBottom: 16 }}>
+							<AddToCartButton productId={product?.id} />
+						</div>
+
+						<StockInfo unit={product?.unit_of_measure} stocks={product?.stocks} />
+						<ProductFeatures features={product?.features} />
+					</div>
 				</div>
 			</div>
-		</div>
+		</LoadingWrapper>
 	);
 }
