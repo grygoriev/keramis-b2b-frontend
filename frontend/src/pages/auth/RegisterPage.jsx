@@ -80,9 +80,9 @@ export function RegisterPage() {
 
 			// Редирект
 			if (role && role.includes('client')) {
-				navigate('/client');
+				navigate('/client/dashboard');
 			} else {
-				navigate('/admin');
+				navigate('/admin/dashboard');
 			}
 		} catch (err) {
 			console.error(err);

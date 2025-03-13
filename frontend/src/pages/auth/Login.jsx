@@ -27,9 +27,9 @@ export function Login() {
 	useEffect(() => {
 		if (isLoggedIn) {
 			if (role && role.includes('client')) {
-				navigate('/client');
+				navigate('/client/dashboard');
 			} else {
-				navigate('/admin');
+				navigate('/admin/dashboard');
 			}
 		}
 	}, [isLoggedIn, role, navigate]);
@@ -54,9 +54,9 @@ export function Login() {
 			);
 
 			if (data.role.includes('client')) {
-				navigate('/client');
+				navigate('/client/dashboard');
 			} else {
-				navigate('/admin');
+				navigate('/admin/dashboard');
 			}
 		} catch (error) {
 			if (error.response) {

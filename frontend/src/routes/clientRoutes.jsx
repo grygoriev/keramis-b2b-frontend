@@ -9,7 +9,7 @@ import {
 
 export const clientRoutes = [
 	{
-		path: '',
+		path: 'dashboard',
 		index: true,
 		element: <ClientDashboard />,
 	},

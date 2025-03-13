@@ -17,7 +17,7 @@ export function DiscountsTable({
 
 	const columns = [
 		{
-			title: t('discounts.clientGroup', 'Группа клиента'),
+			title: t('clients.clientGroup', 'Группа клиента'),
 			dataIndex: 'client_group',
 			key: 'client_group',
 			render: (clientGroupId, record) => (
@@ -76,10 +76,10 @@ export function DiscountsTable({
 					<Popconfirm
 						title={t('discounts.confirmDelete', 'Удалить эту скидку?')}
 						onConfirm={() => onDelete(record.id)}
-						okText={t('common.delete', 'Удалить')}
-						cancelText={t('common.cancel', 'Отмена')}
+						okText={t('common.remove', 'Удалить')}
+						cancelText={t('common.cansel', 'Отмена')}
 					>
-						<Button danger>{t('common.delete', 'Удалить')}</Button>
+						<Button danger>{t('common.remove', 'Удалить')}</Button>
 					</Popconfirm>
 				</Space>
 			),

@@ -1,14 +1,13 @@
 // src/layouts/ClientLayout.jsx
 import { useState } from 'react';
 import { Layout, Menu } from 'antd';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import {
 	HomeOutlined,
 	HistoryOutlined,
 	HeartOutlined,
 	DownloadOutlined,
 } from '@ant-design/icons';
-
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
@@ -16,47 +15,45 @@ const { Sider, Content } = Layout;
 
 export function ClientLayout() {
 	const { t } = useTranslation();
-
 	const [collapsed, setCollapsed] = useState(true);
 
-	// Берём из Redux информацию о текущем роли
 	const role = useSelector((state) => state.auth.role);
-
-	// Проверяем, админ ли клиент
 	const isClientAdmin = role === 'client_admin';
 
-	// Формируем список пунктов меню
-	// Чтобы скрыть «Интеграция» для не-админов, условно добавляем этот пункт.
+	const location = useLocation();
+	const { pathname } = location;
+
 	const menuItems = [
 		{
-			key: '1',
+			key: '/client/dashboard',
 			icon: <HomeOutlined />,
-			label: <Link to="/client">{t('clientLayout.main', 'Главная клиента')}</Link>,
+			label: <Link to="/client/dashboard">{t('clientLayout.main', 'Главная клиента')}</Link>,
 		},
 		{
-			key: '2',
+			key: '/client/my-orders',
 			icon: <HistoryOutlined />,
 			label: <Link to="/client/my-orders">{t('clientLayout.orders', 'Заказы')}</Link>,
 		},
 		{
-			key: '3',
+			key: '/client/carts',
 			icon: <HeartOutlined />,
 			label: <Link to="/client/carts">{t('clientLayout.carts', 'Корзины')}</Link>,
 		},
 		...(isClientAdmin
 			? [
 				{
-					key: '4',
+					key: '/client/api-token',
 					icon: <DownloadOutlined />,
-					label: (
-						<Link to="/client/api-token">
-							{t('clientLayout.integration', 'Интеграция')}
-						</Link>
-					),
+					label: <Link to="/client/api-token">{t('clientLayout.integration', 'Интеграция')}</Link>,
 				},
 			]
-			: [])
+			: []),
 	];
+
+	let selectedKey = menuItems.find((item) => pathname.startsWith(item.key))?.key;
+	if (!selectedKey) {
+		selectedKey = '/client/dashboard';
+	}
 
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
@@ -70,7 +67,7 @@ export function ClientLayout() {
 				<Menu
 					theme="dark"
 					mode="inline"
-					defaultSelectedKeys={['1']}
+					selectedKeys={[selectedKey]}
 					style={{ height: '100%' }}
 					items={menuItems}
 				/>

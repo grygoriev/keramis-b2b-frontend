@@ -29,6 +29,7 @@
 		"cartModalTitle": "Выберите или создайте корзину",
 		"cartModalOk": "ОК",
 		"cartModalCancel": "Отмена",
+		"cansel": "Отмена",
 		"cartModalExisting": "Существующие корзины:",
 		"cartModalPlaceholder": "Выберите корзину",
 		"cartModalNewCart": "Новая корзина",
@@ -100,6 +101,13 @@
 		"noOrdersFound": "Заказы не найдены для заданных фильтров",
 		"productsTitle": "Состав заказа",
 		"client": "Клиент"
+	},
+	"discounts": {
+		"priceGroup": "Ценовая группа",
+		"discountPercent": "Скидка (%)",
+		"actions": "Действия",
+		"confirmDelete": "Удалить эту скидку?",
+		"createNew": "Создать скидку"
 	},
 	"clients": {
 		"title": "Управление клиентами",

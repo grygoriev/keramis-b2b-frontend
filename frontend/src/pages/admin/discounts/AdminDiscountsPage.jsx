@@ -1,6 +1,6 @@
 // src/pages/admin/discounts/AdminDiscountsPage.jsx
 import { useEffect, useState } from 'react';
-import { Input, Button, Space, message, Spin } from 'antd';
+import { Input, Button, Space, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import {
 	getPriceGroups,
@@ -11,6 +11,7 @@ import {
 } from '../../../api/discountsApi.js';
 import { getClientGroups } from '../../../api/clientsApi.js';
 import { DiscountsTable } from './components/index.js';
+import { LoadingWrapper } from '../../../components';
 
 const { Search } = Input;
 
@@ -20,7 +21,10 @@ export function AdminDiscountsPage() {
 	const [discounts, setDiscounts] = useState([]);
 	const [clientGroups, setClientGroups] = useState([]);
 	const [priceGroups, setPriceGroups] = useState([]);
+
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(null);
+
 	const [searchText, setSearchText] = useState('');
 
 	useEffect(() => {
@@ -29,6 +33,7 @@ export function AdminDiscountsPage() {
 
 	const fetchAllData = async () => {
 		setLoading(true);
+		setError(null);
 		try {
 			const [cgResp, pgResp, discountsResp] = await Promise.all([
 				getClientGroups(),
@@ -40,7 +45,7 @@ export function AdminDiscountsPage() {
 			setDiscounts(discountsResp.data);
 		} catch (err) {
 			console.error(err);
-			message.error(t('discounts.loadError', 'Не удалось загрузить данные о скидках'));
+			setError(t('discounts.loadError', 'Не удалось загрузить данные о скидках'));
 		} finally {
 			setLoading(false);
 		}
@@ -111,27 +116,25 @@ export function AdminDiscountsPage() {
 	});
 
 	return (
-		<div style={{ padding: 16 }}>
-			<h2>{t('discounts.title', 'Управление скидками')}</h2>
+		<LoadingWrapper loading={loading} error={error} data={discounts}>
+			<div style={{ padding: 16 }}>
+				<h2>{t('discounts.title', 'Управление скидками')}</h2>
 
-			<Space style={{ marginBottom: 16 }}>
-				<Search
-					placeholder={t('discounts.searchPlaceholder', 'Поиск по группам')}
-					value={searchText}
-					onChange={(e) => setSearchText(e.target.value)}
-					style={{ width: 300 }}
-				/>
-				<Button type="primary" onClick={fetchAllData}>
-					{t('common.refresh', 'Обновить')}
-				</Button>
-				<Button onClick={handleCreate}>
-					{t('discounts.createNew', 'Создать скидку')}
-				</Button>
-			</Space>
+				<Space style={{ marginBottom: 16 }}>
+					<Search
+						placeholder={t('discounts.searchPlaceholder', 'Поиск по группам')}
+						value={searchText}
+						onChange={(e) => setSearchText(e.target.value)}
+						style={{ width: 300 }}
+					/>
+					<Button type="primary" onClick={fetchAllData}>
+						{t('common.refresh', 'Обновить')}
+					</Button>
+					<Button onClick={handleCreate}>
+						{t('discounts.createNew', 'Создать скидку')}
+					</Button>
+				</Space>
 
-			{loading && discounts.length === 0 ? (
-				<Spin style={{ margin: 20 }} />
-			) : (
 				<DiscountsTable
 					discounts={discounts}
 					clientGroups={clientGroups}
@@ -141,7 +144,7 @@ export function AdminDiscountsPage() {
 					onDelete={handleDelete}
 					filteredData={filteredData}
 				/>
-			)}
-		</div>
+			</div>
+		</LoadingWrapper>
 	);
 }

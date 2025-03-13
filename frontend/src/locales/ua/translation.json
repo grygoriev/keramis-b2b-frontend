@@ -29,6 +29,7 @@
 		"cartModalTitle": "Виберіть або створіть кошик",
 		"cartModalOk": "OK",
 		"cartModalCancel": "Відміна",
+		"cansel": "Відміна",
 		"cartModalExisting": "Існуючі кошики:",
 		"cartModalPlaceholder": "Виберіть кошик",
 		"cartModalNewCart": "Новий кошик",
@@ -100,6 +101,13 @@
 		"noOrdersFound": "Замовлення не знайдені за заданими фільтрами",
 		"productsTitle": "Склад замовлення",
 		"client": "Клієнт"
+	},
+	"discounts": {
+		"priceGroup": "Цінова група",
+		"discountPercent": "Знижка (%)",
+		"діяння": "Дії",
+		"confirmDelete": "Видалити цю знижку?",
+		"createNew": "Створити знижку"
 	},
 	"clients": {
 		"title": "Керування клієнтами",

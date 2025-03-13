@@ -36,14 +36,7 @@ axiosInstance.interceptors.response.use(
 	(response) => response,
 	(error) => {
 		if (error.response && error.response.status === 401) {
-			// Сервер вернул 401 → значит, нет/протух accessToken.
-			// 1) Делаем logout в Redux
 			store.dispatch(logout());
-			// 2) Удаляем role и username из localStorage
-			localStorage.removeItem('role');
-			localStorage.removeItem('username');
-			// 3) Редирект на /login
-			// window.location.href = '/login';
 		}
 		return Promise.reject(error);
 	}

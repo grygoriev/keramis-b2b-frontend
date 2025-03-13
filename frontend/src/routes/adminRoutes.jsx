@@ -8,7 +8,7 @@ import {
 
 export const adminRoutes = [
 	{
-		path: '',
+		path: 'dashboard',
 		index: true,
 		element: <AdminDashboard />,
 	},

@@ -1,16 +1,51 @@
 // src/layouts/AdminLayout.jsx
 import { useState } from 'react';
 import { Layout, Menu } from 'antd';
-import { Link, Outlet } from 'react-router-dom';
-import { UserOutlined, ShoppingCartOutlined, SettingOutlined, HomeOutlined } from '@ant-design/icons';
+import { Link, Outlet, useLocation } from 'react-router-dom';
+import {
+	HomeOutlined,
+	UserOutlined,
+	ShoppingCartOutlined,
+	SettingOutlined,
+} from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 
 const { Sider, Content } = Layout;
 
 export function AdminLayout() {
 	const [collapsed, setCollapsed] = useState(true);
-
 	const { t } = useTranslation();
+
+	const location = useLocation();
+	const { pathname } = location;
+
+	const menuItems = [
+		{
+			key: '/admin/dashboard',
+			icon: <HomeOutlined />,
+			label: <Link to="/admin/dashboard">{t('adminLayout.main', 'Главная админа')}</Link>,
+		},
+		{
+			key: '/admin/clients',
+			icon: <UserOutlined />,
+			label: <Link to="/admin/clients">{t('adminLayout.clients', 'Клиенты')}</Link>,
+		},
+		{
+			key: '/admin/my-orders',
+			icon: <ShoppingCartOutlined />,
+			label: <Link to="/admin/my-orders">{t('adminLayout.orders', 'Заказы')}</Link>,
+		},
+		{
+			key: '/admin/discounts',
+			icon: <SettingOutlined />,
+			label: <Link to="/admin/discounts">{t('adminLayout.settings', 'Настройки')}</Link>,
+		},
+	];
+
+	let selectedKey = menuItems.find((item) => pathname.startsWith(item.key))?.key;
+	if (!selectedKey) {
+		selectedKey = '/admin/dashboard';
+	}
 
 	return (
 		<Layout style={{ minHeight: '100vh' }}>
@@ -24,46 +59,9 @@ export function AdminLayout() {
 				<Menu
 					theme="dark"
 					mode="inline"
-					defaultSelectedKeys={['1']}
+					selectedKeys={[selectedKey]}
 					style={{ height: '100%' }}
-					items={[
-						{
-							key: '1',
-							icon: <HomeOutlined />,
-							label: (
-								<Link to="/admin">
-									{t('adminLayout.main', 'Главная админа')}
-								</Link>
-							),
-						},
-						{
-							key: '2',
-							icon: <UserOutlined />,
-							label: (
-								<Link to="/admin/clients">
-									{t('adminLayout.clients', 'Клиенты')}
-								</Link>
-							),
-						},
-						{
-							key: '3',
-							icon: <ShoppingCartOutlined />,
-							label: (
-								<Link to="/admin/my-orders">
-									{t('adminLayout.orders', 'Заказы')}
-								</Link>
-							),
-						},
-						{
-							key: '4',
-							icon: <SettingOutlined />,
-							label: (
-								<Link to="/admin/discounts">
-									{t('adminLayout.settings', 'Настройки')}
-								</Link>
-							),
-						},
-					]}
+					items={menuItems}
 				/>
 			</Sider>
 
