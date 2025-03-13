@@ -77,7 +77,6 @@ export function OrderListPage() {
 				showClientFilter={role === 'internal_manager'}
 			/>
 
-			{/* Обёртка загрузки и ошибки */}
 			<LoadingWrapper loading={loading} error={error} data={orders}>
 				{filteredOrders.length === 0 ? (
 					<p style={{ marginTop: 16 }}>

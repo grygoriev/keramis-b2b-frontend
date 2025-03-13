@@ -129,3 +129,57 @@ export async function fetchProductDetail(slug, lang) {
 	});
 	return response.data; // { product, breadcrumbs }
 }
+
+/**
+ * Возвращает список товаров (GET /catalog/products/)
+ * Ожидаемый ответ:
+ * [
+ *     {
+ *         "id": 3,
+ *         "sku_id": "00-00223808",
+ *         "name": "умывальник Rea Royal 36x62,5 granit shiny (REA-U8596)",
+ *         "price": "7636.00",
+ *         "discounted_price": null,
+ *         "image_filename": "http://159.69.148.221/media/products/03/00/3/72697.970.jpg",
+ *         "slug": "umyvalnik_rea_royal_36x62_5_granit_rea_u8596_",
+ *         "category_name": "Royal",
+ *         "unit_of_measure": {...},
+ *         "stocks": [...],
+ *         "features": [...]
+ *     }
+ * ]
+ * @param {string} lang - Код языка (ru/uk/...)
+ * @param {object} [extraParams] - Дополнительные query-параметры,
+ *   например { fv_product_list: "new,promo", fv_surface: "4,5" }
+ */
+export async function fetchHomeProducts(lang, extraParams = {}) {
+	const resp = await axiosInstance.get('/catalog/products', {
+		params: {
+			lang,
+			...extraParams,
+		},
+	});
+	return resp.data; // массив [{id, name, ...}, ...]
+}
+
+/**
+ * Загрузка банеров (GET /catalog/banners/)
+ * Ожидаемый ответ:
+ * [
+ *     {
+ *         "id": 1,
+ *         "image_url": "http://159.69.148.221/media/banners/promo_674727c5302d8934271423.jpg",
+ *         "link_url": "https://keramis.in.ua/search/?query=isvea",
+ *         "title": "Банер 1",
+ *         "description": "Описание Банер 1",
+ *         "sort_order": 0,
+ *         "start_date": null,
+ *         "end_date": null
+ *     }
+ * ]
+ */
+export async function fetchBanners() {
+	// GET /catalog/banners/
+	const resp = await axiosInstance.get('/catalog/banners/');
+	return resp.data; // [{id, image_url, link_url, ...}]
+}

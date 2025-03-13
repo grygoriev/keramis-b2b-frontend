@@ -1,8 +1,11 @@
 // src/components/ProductSection.jsx
 import { useEffect, useState } from 'react';
-import { Spin, message } from 'antd';
-import axiosInstance from '../api/axiosInstance.js';
+import { message } from 'antd';
 import { ProductCard } from './ProductCard.jsx';
+import { useSelector } from 'react-redux';
+import { transformLangToServer } from '../utils/index.js';
+import { LoadingWrapper } from './LoadingWrapper.jsx';
+import { fetchHomeProducts } from '../api/catalogApi.js';
 
 /**
  * @param {string} title - заголовок (e.g. "Новинки")
@@ -12,41 +15,40 @@ import { ProductCard } from './ProductCard.jsx';
 export function ProductSection({ title, filter, limit = 4 }) {
 	const [products, setProducts] = useState([]);
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(null);
 
-	// Язык
-	const storedLang = localStorage.getItem('lang') || 'ru';
-	const serverLang = storedLang === 'ua' ? 'uk' : storedLang;
+	const currentLang = useSelector((state) => state.lang.currentLang);
+	const serverLang = transformLangToServer(currentLang);
 
 	useEffect(() => {
-		fetchProducts();
+		loadProducts();
 	}, [filter, serverLang]);
 
-	const fetchProducts = async () => {
+	async function loadProducts() {
 		setLoading(true);
 		try {
-			const resp = await axiosInstance.get('/catalog/products', {
-				params: { lang: serverLang, filter },
-			});
-			const data = resp.data.slice(0, limit);
-			setProducts(data);
+			const data = await fetchHomeProducts(serverLang, {fv_product_list: filter });
+			setProducts(data.slice(0, limit));
 		} catch (err) {
 			console.error(err);
-			message.error('Ошибка при загрузке товаров');
+			const msg = 'Ошибка при загрузке товаров';
+			setError(msg);
+			message.error(msg);
 		} finally {
 			setLoading(false);
 		}
-	};
-
-	if (loading) return <Spin style={{ margin: '20px 0' }} />;
+	}
 
 	return (
-		<div style={{ marginBottom: 24 }}>
-			<h2>{title}</h2>
-			<div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-				{products.map((p) => (
-					<ProductCard key={p.id} product={p} />
-				))}
+		<LoadingWrapper loading={loading} error={error} data={products}>
+			<div style={{ marginBottom: 24 }}>
+				<h2>{title}</h2>
+				<div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+					{products.map((p) => (
+						<ProductCard key={p.id} product={p} />
+					))}
+				</div>
 			</div>
-		</div>
+		</LoadingWrapper>
 	);
 }
