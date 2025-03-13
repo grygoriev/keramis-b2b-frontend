@@ -1,51 +1,76 @@
 // src/pages/auth/RegisterPage.jsx
-import { useState } from 'react';
-import { Form, Input, Button, Card, message } from 'antd';
+import React from 'react';
+import { Card, Button, Input, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 /* import ReCAPTCHA from 'react-google-recaptcha'; // <-- комментируем пока не нужно */
 
 import { useDispatch } from 'react-redux';
-import { setAuthData } from '../../store/authSlice.js';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
-import { registerRequest } from '../../api/auth.js';
+import { setAuthData } from '../../store/authSlice';
+import { registerRequest } from '../../api/auth';
+
+// Описание схемы валидации Yup
+const registerSchema = yup.object().shape({
+	username: yup.string().required('Введите имя пользователя'),
+	email: yup
+		.string()
+		.required('Введите email')
+		.email('Некорректный email'),
+	password: yup
+		.string()
+		.required('Введите пароль')
+		.min(6, 'Минимум 6 символов'),
+	confirm_password: yup
+		.string()
+		.required('Подтвердите пароль')
+		.oneOf([yup.ref('password')], 'Пароли не совпадают'),
+});
 
 export function RegisterPage() {
-	const [loading, setLoading] = useState(false);
-	const navigate = useNavigate();
 	const { t } = useTranslation();
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	// /* const recaptchaRef = useRef(null); */
-	// const RECAPTCHA_SITE_KEY = '...'; // когда будет домен
+	// Настраиваем React Hook Form
+	// mode: 'onChange' → валидация будет на каждом изменении ввода
+	const {
+		control,
+		handleSubmit,
+		formState: { errors, isSubmitting, isValid },
+	} = useForm({
+		mode: 'onChange',              // валидация в режиме "onChange"
+		resolver: yupResolver(registerSchema),
+	});
 
-	const onFinish = async (values) => {
+	// /* const recaptchaRef = useRef(null);
+	// const RECAPTCHA_SITE_KEY = '...'; // когда будет домен */
+
+	const onSubmit = async (values) => {
 		const { username, email, password, confirm_password } = values;
+		// if (recaptchaRef.current) { const recaptchaToken = await recaptchaRef.current.executeAsync(); }
 
-		if (password !== confirm_password) {
-			message.error(t('register.passwordMismatch', 'Пароли не совпадают'));
-			return;
-		}
-
-		setLoading(true);
 		try {
-			// invisible reCAPTCHA:
-			// const recaptchaToken = await recaptchaRef.current.executeAsync();
-			// И передать recaptchaToken в registerRequest(...recaptchaToken).
-			const regData = await registerRequest(username, email, password, confirm_password);
+			const regData = await registerRequest(
+				username,
+				email,
+				password,
+				confirm_password
+			);
 
-			// Бэкенд при регистрации установил HttpOnly cookie
 			message.success(t('register.success', 'Вы успешно зарегистрированы!'));
 
-			// Достаем поля (role, username) из ответа
 			const { role, username: newUser } = regData;
 
-			// Запись в Redux store
+			// Запись в Redux
 			dispatch(
 				setAuthData({
 					username: newUser,
 					role,
-				})
+				}),
 			);
 
 			localStorage.setItem('role', role);
@@ -66,8 +91,6 @@ export function RegisterPage() {
 			} else {
 				message.error(t('register.failed', 'Ошибка регистрации'));
 			}
-		} finally {
-			setLoading(false);
 			// if (recaptchaRef.current) recaptchaRef.current.reset();
 		}
 	};
@@ -84,55 +107,118 @@ export function RegisterPage() {
 		>
 			<Card style={{ width: 400 }}>
 				<h2>{t('register.title', 'Регистрация')}</h2>
-				<Form layout="vertical" onFinish={onFinish}>
-					<Form.Item
-						name="username"
-						label={t('register.username', 'Имя пользователя')}
-						rules={[{ required: true, message: t('register.usernameReq', 'Введите имя пользователя') }]}
+
+				<form onSubmit={handleSubmit(onSubmit)}>
+					{/* username */}
+					<div style={{ marginBottom: 12 }}>
+						<label>{t('register.username', 'Имя пользователя')}</label>
+						<Controller
+							name="username"
+							control={control}
+							render={({ field, fieldState }) => (
+								<>
+									<Input
+										{...field}
+										placeholder={t('register.username', 'Имя пользователя')}
+										status={fieldState.error ? 'error' : ''}
+									/>
+									{fieldState.error && (
+										<div style={{ color: 'red', fontSize: 12 }}>
+											{fieldState.error.message}
+										</div>
+									)}
+								</>
+							)}
+						/>
+					</div>
+
+					{/* email */}
+					<div style={{ marginBottom: 12 }}>
+						<label>{t('register.email', 'Email')}</label>
+						<Controller
+							name="email"
+							control={control}
+							render={({ field, fieldState }) => (
+								<>
+									<Input
+										{...field}
+										placeholder={t('register.email', 'Email')}
+										status={fieldState.error ? 'error' : ''}
+									/>
+									{fieldState.error && (
+										<div style={{ color: 'red', fontSize: 12 }}>
+											{fieldState.error.message}
+										</div>
+									)}
+								</>
+							)}
+						/>
+					</div>
+
+					{/* password */}
+					<div style={{ marginBottom: 12 }}>
+						<label>{t('register.password', 'Пароль')}</label>
+						<Controller
+							name="password"
+							control={control}
+							render={({ field, fieldState }) => (
+								<>
+									<Input.Password
+										{...field}
+										placeholder={t('register.password', 'Пароль')}
+										status={fieldState.error ? 'error' : ''}
+									/>
+									{fieldState.error && (
+										<div style={{ color: 'red', fontSize: 12 }}>
+											{fieldState.error.message}
+										</div>
+									)}
+								</>
+							)}
+						/>
+					</div>
+
+					{/* confirm_password */}
+					<div style={{ marginBottom: 12 }}>
+						<label>{t('register.confirmPassword', 'Подтвердите пароль')}</label>
+						<Controller
+							name="confirm_password"
+							control={control}
+							render={({ field, fieldState }) => (
+								<>
+									<Input.Password
+										{...field}
+										placeholder={t('register.confirmPassword', 'Подтвердите пароль')}
+										status={fieldState.error ? 'error' : ''}
+									/>
+									{fieldState.error && (
+										<div style={{ color: 'red', fontSize: 12 }}>
+											{fieldState.error.message}
+										</div>
+									)}
+								</>
+							)}
+						/>
+					</div>
+
+					{/* Кнопка заблокирована, если форма не валидна или идёт сабмит */}
+					<Button
+						type="primary"
+						htmlType="submit"
+						loading={isSubmitting}
+						disabled={!isValid || isSubmitting}
+						block
 					>
-						<Input />
-					</Form.Item>
+						{t('register.submitBtn', 'Зарегистрироваться')}
+					</Button>
+				</form>
 
-					<Form.Item
-						name="email"
-						label={t('register.email', 'Email')}
-						rules={[
-							{ required: true, message: t('register.emailReq', 'Введите email') },
-							{ type: 'email', message: t('register.emailValid', 'Некорректный email') },
-						]}
-					>
-						<Input />
-					</Form.Item>
-
-					<Form.Item
-						name="password"
-						label={t('register.password', 'Пароль')}
-						rules={[{ required: true, message: t('register.passwordReq', 'Введите пароль') }]}
-					>
-						<Input.Password />
-					</Form.Item>
-
-					<Form.Item
-						name="confirm_password"
-						label={t('register.confirmPassword', 'Подтвердите пароль')}
-						rules={[{ required: true, message: t('register.confirmReq', 'Подтвердите пароль') }]}
-					>
-						<Input.Password />
-					</Form.Item>
-
-					<Form.Item>
-						<Button type="primary" htmlType="submit" loading={loading} block>
-							{t('register.submitBtn', 'Зарегистрироваться')}
-						</Button>
-					</Form.Item>
-				</Form>
-
-		{/* reCAPTCHA была бы здесь, но мы её закомментировали
-        <ReCAPTCHA
-          sitekey={RECAPTCHA_SITE_KEY}
-          size="invisible"
-          ref={recaptchaRef}
-        />
+				{/* reCAPTCHA (invisible) была бы здесь:
+          <ReCAPTCHA
+            sitekey={RECAPTCHA_SITE_KEY}
+            size="invisible"
+            ref={recaptchaRef}
+          />
         */}
 			</Card>
 		</div>

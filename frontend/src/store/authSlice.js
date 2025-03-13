@@ -15,17 +15,22 @@ const authSlice = createSlice({
 	initialState,
 	reducers: {
 		setAuthData: (state, action) => {
-			// action.payload = { username, role }
+			const { username, role } = action.payload
 			state.isLoggedIn = true;
-			state.username = action.payload.username || null;
-			state.role = action.payload.role || null;
+			state.username = username || null;
+			state.role = role || null;
+			localStorage.setItem('role', role);
+			if (username) {
+				localStorage.setItem('username', username);
+			}
 		},
 		logout: (state) => {
 			state.isLoggedIn = false;
 			state.username = null;
 			state.role = null;
+			localStorage.removeItem('role');
+			localStorage.removeItem('username');
 		},
-		// Восстановление из localStorage (опционально)
 		restoreAuth: (state, action) => {
 			const { username, role } = action.payload;
 			if (username) {

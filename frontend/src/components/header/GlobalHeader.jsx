@@ -51,8 +51,6 @@ export const GlobalHeader = () => {
 			console.error('Logout error:', err);
 		}
 		dispatch(logout());
-		localStorage.removeItem('role');
-		localStorage.removeItem('username');
 		navigate('/login');
 	};
 

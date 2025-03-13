@@ -1,61 +1,83 @@
-// src/pages/auth/Login.jsx
-import { useEffect, useState } from 'react';
-import { Form, Input, Button, Card, message } from 'antd';
+import React, { useEffect } from 'react';
+import { Card, Button, Input, message } from 'antd';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { loginRequest } from '../../api/auth.js';
-
 import { useDispatch, useSelector } from 'react-redux';
-import { setAuthData } from '../../store/authSlice.js';
+
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+
+import { loginRequest } from '../../api/auth';
+import { selectIsLoggedIn, selectUserRole, setAuthData } from '../../store/authSlice';
+
+const schema = yup.object().shape({
+	username: yup.string().required('Username is required'),
+	password: yup.string().required('Password is required'),
+});
 
 export function Login() {
-	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const { t } = useTranslation();
 	const dispatch = useDispatch();
 
-	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+	const isLoggedIn = useSelector(selectIsLoggedIn);
+	const role = useSelector(selectUserRole);
+
 	useEffect(() => {
 		if (isLoggedIn) {
-			const role = localStorage.getItem('role');
 			if (role && role.includes('client')) {
 				navigate('/client');
 			} else {
 				navigate('/admin');
 			}
 		}
-	}, [isLoggedIn, navigate]);
+	}, [isLoggedIn, role, navigate]);
 
-	const onFinish = async (values) => {
-		setLoading(true);
+	const {
+		control,
+		handleSubmit,
+		formState: { errors, isSubmitting },
+	} = useForm({
+		resolver: yupResolver(schema),
+	});
+
+	const onSubmit = async (values) => {
 		try {
 			const data = await loginRequest(values.username, values.password);
 
-			// Записать в Redux
 			dispatch(
 				setAuthData({
 					username: data.username,
 					role: data.role,
-				})
+				}),
 			);
 
-			// LocalStorage
-			localStorage.setItem('role', data.role);
-			if (data.username) {
-				localStorage.setItem('username', data.username);
-			}
-
-			// Редирект
 			if (data.role.includes('client')) {
 				navigate('/client');
 			} else {
 				navigate('/admin');
 			}
 		} catch (error) {
-			console.error(error);
-			message.error('Login failed');
-		} finally {
-			setLoading(false);
+			if (error.response) {
+				if (error.response.status === 400 || error.response.status === 401) {
+					const detail = error.response.data?.detail;
+					if (detail) {
+						message.error(detail);
+					} else {
+						message.error(
+							t(
+								'loginPage.invalidCredentials',
+								'Неверный логин или пароль',
+							),
+						);
+					}
+				} else {
+					message.error(t('loginPage.loginFailed', 'Login failed'));
+				}
+			} else {
+				message.error(t('errors.networkError', 'Ошибка сети'));
+			}
 		}
 	};
 
@@ -70,33 +92,66 @@ export function Login() {
 			}}
 		>
 			<Card style={{ width: 300 }}>
-				<h2>{t('common.login')}</h2>
-				<Form onFinish={onFinish}>
-					<Form.Item
-						name="username"
-						rules={[{ required: true, message: t('loginPage.username') }]}
-					>
-						<Input placeholder={t('loginPage.username')} />
-					</Form.Item>
-					<Form.Item
-						name="password"
-						rules={[{ required: true, message: t('loginPage.password') }]}
-					>
-						<Input.Password placeholder={t('loginPage.password')} />
-					</Form.Item>
+				<h2>{t('common.login', 'Login')}</h2>
 
-					<Button type="primary" htmlType="submit" loading={loading} block>
-						{t('loginPage.button')}
+				<form onSubmit={handleSubmit(onSubmit)}>
+					{/* Поле: username */}
+					<div style={{ marginBottom: 12 }}>
+						<label>{t('loginPage.username', 'Username')}</label>
+						<Controller
+							name="username"
+							control={control}
+							render={({ field, fieldState }) => (
+								<>
+									<Input
+										{...field}
+										placeholder={t('loginPage.username', 'Username')}
+										status={fieldState.error ? 'error' : ''}
+									/>
+									{fieldState.error && (
+										<div style={{ color: 'red', fontSize: 12 }}>
+											{fieldState.error.message}
+										</div>
+									)}
+								</>
+							)}
+						/>
+					</div>
+
+					{/* Поле: password */}
+					<div style={{ marginBottom: 12 }}>
+						<label>{t('loginPage.password', 'Password')}</label>
+						<Controller
+							name="password"
+							control={control}
+							render={({ field, fieldState }) => (
+								<>
+									<Input.Password
+										{...field}
+										placeholder={t('loginPage.password', 'Password')}
+										status={fieldState.error ? 'error' : ''}
+									/>
+									{fieldState.error && (
+										<div style={{ color: 'red', fontSize: 12 }}>
+											{fieldState.error.message}
+										</div>
+									)}
+								</>
+							)}
+						/>
+					</div>
+
+					<Button type="primary" htmlType="submit" loading={isSubmitting} block>
+						{t('loginPage.button', 'Login')}
 					</Button>
 
 					<div style={{ marginTop: 16, textAlign: 'center' }}>
-						{/* Ссылка на регистрацию */}
 						{t('loginPage.noAccount', 'Нет аккаунта?')}{' '}
 						<Link to="/register">
 							{t('loginPage.registerNow', 'Зарегистрируйтесь')}
 						</Link>
 					</div>
-				</Form>
+				</form>
 			</Card>
 		</div>
 	);
