@@ -1,11 +1,9 @@
-import React, { useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button, List, Space, Spin, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
-	fetchCartsAsync,
 	selectCartById,
 	updateCartItemAsync,
 	deleteCartItemAsync,
@@ -13,8 +11,7 @@ import {
 } from '../../store/cartSlice';
 
 import { selectUserRole } from '../../store/authSlice';
-import { transformLangToServer, getDashboardPath } from '../../utils';
-import { selectCurrentLang } from '../../store/langSlice.js';
+import { getDashboardPath } from '../../utils';
 import { LoadingWrapper } from '../../components';
 
 export function CartPage() {
@@ -23,17 +20,11 @@ export function CartPage() {
 	const { t } = useTranslation();
 	const dispatch = useDispatch();
 
-	const currentLang = useSelector(selectCurrentLang);
-	const serverLang = transformLangToServer(currentLang);
 	const role = useSelector(selectUserRole);
 	const dashboard = getDashboardPath(role);
 
 	const cartStatus = useSelector(selectCartStatus);
 	const cartError = useSelector(selectCartError);
-
-	useEffect(() => {
-		dispatch(fetchCartsAsync(serverLang));
-	}, [dispatch, serverLang]);
 
 	const cart = useSelector((state) => {
 		const cId = Number(cartId);

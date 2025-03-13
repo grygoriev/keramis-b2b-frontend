@@ -1,5 +1,5 @@
 // src/pages/client/CartListPage.jsx
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Input, List, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import {
-	fetchCartsAsync,
 	createCartAsync,
 	deleteCartAsync,
 	selectCarts,
@@ -15,8 +14,6 @@ import {
 	selectCartError,
 } from '../../store/cartSlice';
 
-import { selectCurrentLang } from '../../store/langSlice';
-import { transformLangToServer } from '../../utils';
 import { LoadingWrapper } from '../../components';
 
 export function CartListPage() {
@@ -24,20 +21,11 @@ export function CartListPage() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const currentLang = useSelector(selectCurrentLang);
-	const serverLang = transformLangToServer(currentLang);
-
 	const carts = useSelector(selectCarts);
 	const cartStatus = useSelector(selectCartStatus);
 	const cartError = useSelector(selectCartError);
 
 	const [cartName, setCartName] = useState('');
-
-	useEffect(() => {
-		if (cartStatus === 'idle' || cartStatus === 'failed') {
-			dispatch(fetchCartsAsync(serverLang));
-		}
-	}, [dispatch, serverLang, cartStatus]);
 
 	const handleCreateCart = () => {
 		if (!cartName) return;
