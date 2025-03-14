@@ -7,32 +7,39 @@ dayjs.extend(isBetween);
 import { useTranslation } from 'react-i18next';
 import { Filters, OrderList } from './components';
 
-import { useOrderList } from './hooks';
 import { LoadingWrapper } from '../../components';
 import { useSelector } from 'react-redux';
 import { selectCurrentLang } from '../../store/langSlice.js';
 import { transformLangToServer } from '../../utils/index.js';
 import { selectUserRole } from '../../store/authSlice.js';
 
+import { useGetOrdersQuery, useUpdateOrderStatusMutation } from '../../services';
+
 export function OrderListPage() {
 	const { t } = useTranslation();
 
 	const [dateRange, setDateRange] = useState([null, null]);
 	const [searchTerm, setSearchTerm] = useState('');
-	const [clientFilter, setClientFilter] = useState([]);
+	const [clientFilter, setClientFilter] = useState('');
 	const [expandedOrderIds, setExpandedOrderIds] = useState([]);
 
 	const currentLanguage = useSelector(selectCurrentLang);
 	const serverLang = transformLangToServer(currentLanguage);
-
 	const role = useSelector(selectUserRole);
 
+	// 1) Загружаем список заказов через RTK Query
 	const {
-		orders,
-		loading,
+		data: orders = [],
 		error,
-		updateOrderStatus,
-	} = useOrderList(serverLang, role, clientFilter);
+		isLoading,
+	} = useGetOrdersQuery({
+		lang: serverLang,
+		role,
+		clientFilter,
+	});
+
+	// 2) Мутация обновления статуса
+	const [doUpdateStatus] = useUpdateOrderStatusMutation();
 
 	const handleDateChange = (dates) => {
 		setDateRange(dates || [null, null]);
@@ -44,16 +51,28 @@ export function OrderListPage() {
 		setClientFilter(e.target.value);
 	};
 
+	// При смене статуса заказа
 	const handleUpdateStatus = async (orderId, newState) => {
-		await updateOrderStatus(orderId, newState);
+		try {
+			const result = await doUpdateStatus({ orderId, newState }).unwrap();
+			// RTK Query invalidatesTags -> getOrders будет рефетч
+			// Можно вывести message.success(...)
+			console.log('Updated order:', result);
+		} catch (err) {
+			console.error(err);
+			// Вывести message.error(...)
+		}
 	};
 
 	const toggleExpand = (orderId) => {
 		setExpandedOrderIds((prev) =>
-			prev.includes(orderId) ? prev.filter((id) => id !== orderId) : [...prev, orderId]
+			prev.includes(orderId)
+				? prev.filter((id) => id !== orderId)
+				: [...prev, orderId],
 		);
 	};
 
+	// Фильтрация по дате, searchTerm
 	const filteredOrders = orders.filter((order) => {
 		if (dateRange[0] && dateRange[1]) {
 			const orderDate = dayjs(order.create_datetime);
@@ -61,7 +80,8 @@ export function OrderListPage() {
 			const end = dayjs(dateRange[1]).endOf('day');
 			if (!orderDate.isBetween(start, end, null, '[]')) return false;
 		}
-		return !(searchTerm && !String(order.id).includes(searchTerm));
+		if (searchTerm && !String(order.id).includes(searchTerm)) return false;
+		return true;
 	});
 
 	return (
@@ -77,10 +97,17 @@ export function OrderListPage() {
 				showClientFilter={role === 'internal_manager'}
 			/>
 
-			<LoadingWrapper loading={loading} error={error} data={orders}>
+			<LoadingWrapper
+				loading={isLoading}
+				error={error ? String(error) : null}
+				data={orders}
+			>
 				{filteredOrders.length === 0 ? (
 					<p style={{ marginTop: 16 }}>
-						{t('orders.noOrdersFound', 'Заказы не найдены для заданных фильтров')}
+						{t(
+							'orders.noOrdersFound',
+							'Заказы не найдены для заданных фильтров',
+						)}
 					</p>
 				) : (
 					<OrderList
