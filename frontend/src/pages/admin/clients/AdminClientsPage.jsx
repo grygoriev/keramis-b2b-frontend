@@ -1,14 +1,19 @@
 // src/pages/admin/clients/AdminClientsPage.jsx
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Space, Input, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { ClientsTable } from './components';
-import { getClients, getClientGroups, updateClient } from '../../../api/clientsApi';
-import { LoadingWrapper } from '../../../components';
 import { selectCurrentLang } from '../../../store/langSlice';
 import { transformLangToServer } from '../../../utils';
+import { LoadingWrapper } from '../../../components';
+
+import {
+	useGetClientsQuery,
+	useGetClientGroupsQuery,
+	useUpdateClientMutation,
+} from '../../../services';
 
 const { Search } = Input;
 
@@ -17,47 +22,53 @@ export function AdminClientsPage() {
 	const currentLanguage = useSelector(selectCurrentLang);
 	const serverLang = transformLangToServer(currentLanguage);
 
-	const [clients, setClients] = useState([]);
-	const [clientGroups, setClientGroups] = useState([]);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
-
 	const [searchText, setSearchText] = useState('');
 
-	useEffect(() => {
-		fetchAllData();
-	}, [serverLang]);
+	const {
+		data: clients,
+		error: clientsError,
+		isLoading: isClientsLoading,
+		refetch: refetchClients,
+	} = useGetClientsQuery(serverLang);
 
-	const fetchAllData = async () => {
-		setLoading(true);
-		setError(null);
-		try {
-			const respClients = await getClients(serverLang);
-			setClients(respClients.data);
+	const {
+		data: clientGroups,
+		error: groupsError,
+		isLoading: isGroupsLoading,
+		refetch: refetchGroups,
+	} = useGetClientGroupsQuery();
 
-			const respGroups = await getClientGroups();
-			setClientGroups(respGroups.data);
-		} catch (err) {
-			console.error(err);
-			setError(t('clients.loadError', 'Не удалось загрузить данные клиентов/групп'));
-		} finally {
-			setLoading(false);
-		}
+	const [updateClient] = useUpdateClientMutation();
+
+	const loading = isClientsLoading || isGroupsLoading;
+	let combinedError = null;
+	if (clientsError) {
+		combinedError = t('clients.loadError', 'Не удалось загрузить клиентов');
+	} else if (groupsError) {
+		combinedError = t('clientsGroup.loadError', 'Не удалось загрузить группы');
+	}
+
+	const handleRefresh = () => {
+		refetchClients();
+		refetchGroups();
 	};
 
 	const handleUpdateClient = async (clientId, field, value) => {
 		try {
-			await updateClient(clientId, { [field]: value });
+			await updateClient({ clientId, payload: { [field]: value } }).unwrap();
 			message.success(t('clients.updateSuccess', 'Клиент обновлен'));
-			fetchAllData();
-		} catch (error) {
-			console.error(error);
+		} catch (err) {
+			console.error(err);
 			message.error(t('clients.updateError', 'Ошибка обновления клиента'));
 		}
 	};
 
 	return (
-		<LoadingWrapper loading={loading} error={error} data={clients}>
+		<LoadingWrapper
+			loading={loading}
+			error={combinedError}
+			data={clients}
+		>
 			<div style={{ padding: 16 }}>
 				<h2>{t('clients.title', 'Управление клиентами')}</h2>
 
@@ -68,14 +79,14 @@ export function AdminClientsPage() {
 						onChange={(e) => setSearchText(e.target.value)}
 						style={{ width: 300 }}
 					/>
-					<Button type="primary" onClick={fetchAllData}>
+					<Button type="primary" onClick={handleRefresh}>
 						{t('clients.refresh', 'Обновить')}
 					</Button>
 				</Space>
 
 				<ClientsTable
-					clients={clients}
-					clientGroups={clientGroups}
+					clients={clients || []}
+					clientGroups={clientGroups || []}
 					loading={loading}
 					onUpdateClient={handleUpdateClient}
 					searchText={searchText}
