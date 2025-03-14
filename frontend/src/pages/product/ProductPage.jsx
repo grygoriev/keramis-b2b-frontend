@@ -1,19 +1,11 @@
 // src/pages/product/ProductPage.jsx
-import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { AddToCartButton, BreadcrumbsBlock, LoadingWrapper, PriceBlock } from '../../components/index.js';
+import { useGetProductDetailQuery } from '../../services';
 import { useSelector } from 'react-redux';
-
-import { useProductDetail } from './hooks';
-
-import {
-	AddToCartButton,
-	PriceBlock,
-	BreadcrumbsBlock,
-	LoadingWrapper,
-} from '../../components';
-import { ProductGallery, StockInfo, ProductFeatures } from './components';
 import { selectCurrentLang } from '../../store/langSlice.js';
-import { transformLangToServer } from '../../utils';
+import { transformLangToServer } from '../../utils/index.js';
+import { useParams } from 'react-router-dom';
+import { ProductFeatures, ProductGallery, StockInfo } from './components/index.js';
 
 export function ProductPage() {
 	const { slug } = useParams();
@@ -21,10 +13,21 @@ export function ProductPage() {
 	const currentLanguage = useSelector(selectCurrentLang);
 	const serverLang = transformLangToServer(currentLanguage);
 
-	const { product, breadcrumbs, loading, error } = useProductDetail(slug, serverLang);
+	const { data, error, isLoading } = useGetProductDetailQuery({
+		slug,
+		lang: serverLang,
+	});
+
+	// data = { product, breadcrumbs }
+	const product = data?.product;
+	const breadcrumbs = data?.breadcrumbs || [];
 
 	return (
-		<LoadingWrapper loading={loading} error={error} data={product}>
+		<LoadingWrapper
+			loading={isLoading}
+			error={error ? String(error) : null}
+			data={product}
+		>
 			<div>
 				<BreadcrumbsBlock breadcrumbs={breadcrumbs} />
 
@@ -55,7 +58,10 @@ export function ProductPage() {
 							<AddToCartButton productId={product?.id} />
 						</div>
 
-						<StockInfo unit={product?.unit_of_measure} stocks={product?.stocks} />
+						<StockInfo
+							unit={product?.unit_of_measure}
+							stocks={product?.stocks}
+						/>
 						<ProductFeatures features={product?.features} />
 					</div>
 				</div>
