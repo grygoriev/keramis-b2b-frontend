@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout, selectIsLoggedIn, selectUsername, selectUserRole } from '../../store/authSlice';
 import { selectCurrentLang, setLang } from '../../store/langSlice';
 import { logoutRequest } from '../../api/auth';
-import { fetchCartsAsync } from '../../store/cartSlice';
+// -import { fetchCartsAsync } from '../../store/cartSlice'; // <-- убираем, если вся логика переехала
 
 import {
 	CartIcon,
@@ -31,18 +31,18 @@ export const GlobalHeader = () => {
 
 	const dashboard = getDashboardPath(role);
 
-	// Каждый раз при смене currentLanguage - меняем язык i18n
+	// Смена языка локально
 	useEffect(() => {
 		i18n.changeLanguage(currentLanguage);
 	}, [currentLanguage, i18n]);
 
-	// Грузим корзины, если залогинены
-	useEffect(() => {
-		if (isLoggedIn) {
-			const langParam = transformLangToServer(currentLanguage);
-			dispatch(fetchCartsAsync(langParam));
-		}
-	}, [isLoggedIn, currentLanguage, dispatch]);
+	// -  // Раньше грузили корзины
+	// 	-  useEffect(() => {
+	// 		-    if (isLoggedIn) {
+	// 			-      const langParam = transformLangToServer(currentLanguage);
+	// 			-      dispatch(fetchCartsAsync(langParam));
+	// 			-    }
+	// 		-  }, [isLoggedIn, currentLanguage, dispatch]);
 
 	const handleLogout = async () => {
 		try {
@@ -54,7 +54,6 @@ export const GlobalHeader = () => {
 		navigate('/login');
 	};
 
-	// Меняем язык через Redux
 	const handleChangeLanguage = (newLang) => {
 		dispatch(setLang(newLang));
 		i18n.changeLanguage(newLang);

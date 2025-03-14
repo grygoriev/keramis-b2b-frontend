@@ -1,56 +1,63 @@
 // src/components/AddToCartButton.jsx
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button, message } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { addItemToCartAsync } from '../store/cartSlice.js';
-import { CartModal } from './CartModal.jsx';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+
+import {
+	useGetCartsQuery,
+	useAddItemToCartMutation,
+} from '../services/cartApi';
+import { selectActiveCartId, setActiveCart } from '../store/cartUiSlice';
+import { CartModal } from './CartModal';
 
 export function AddToCartButton({ productId }) {
 	const { t } = useTranslation();
 	const dispatch = useDispatch();
 
-	// Берём информацию о логине из state.auth
 	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+	const activeCartId = useSelector(selectActiveCartId);
 
-	const { activeCartId, carts } = useSelector((state) => state.cart);
+	// Грузим списки корзин, если логин есть
+	const { data: carts } = useGetCartsQuery('ru', {
+		skip: !isLoggedIn,
+	});
+
+	// Мутация
+	const [addItemToCart] = useAddItemToCartMutation();
+
 	const [showCartModal, setShowCartModal] = useState(false);
 	const [pendingProductId, setPendingProductId] = useState(null);
 
 	const doAddItemToCart = async (cartId, productId) => {
 		try {
-			await dispatch(
-				addItemToCartAsync({ cartId, productId, quantity: 1 })
-			).unwrap();
-			message.success(t('common.productAdded'));
+			await addItemToCart({ cartId, productId, quantity: 1 }).unwrap();
+			message.success(t('common.productAdded', 'Товар добавлен'));
 		} catch (err) {
 			console.error(err);
-			message.error(t('common.productAddError'));
+			message.error(t('common.productAddError', 'Ошибка добавления товара'));
 		}
 	};
 
 	const handleAddToCart = (e) => {
 		e.stopPropagation();
-
-		// 1) Если пользователь НЕ залогинен — показываем предупреждение
 		if (!isLoggedIn) {
-			message.error(t('cart.authRequired', 'Необходимо авторизоваться или зарегистрироваться'));
+			message.error(t('cart.authRequired', 'Необходимо авторизоваться'));
 			return;
 		}
-
-		// 2) Если нет активной корзины или список корзин пуст – показать модалку выбора
-		if (!activeCartId || !carts || carts.length === 0) {
+		if (!carts || carts.length === 0) {
+			// Нет корзин – открываем модалку
 			setPendingProductId(productId);
 			setShowCartModal(true);
 			return;
 		}
-
-		// 3) Иначе добавляем в активную корзину
+		// Иначе добавляем в "активную" корзину
 		doAddItemToCart(activeCartId, productId);
 	};
 
 	const handleCartSelected = (cartId) => {
 		setShowCartModal(false);
+		dispatch(setActiveCart(cartId)); // Запомним "активная" в slice
 		if (pendingProductId) {
 			doAddItemToCart(cartId, pendingProductId);
 		}
@@ -65,7 +72,7 @@ export function AddToCartButton({ productId }) {
 	return (
 		<>
 			<Button type="primary" size="small" onClick={handleAddToCart}>
-				{t('common.addToCart')}
+				{t('common.addToCart', 'В корзину')}
 			</Button>
 			<CartModal
 				visible={showCartModal}

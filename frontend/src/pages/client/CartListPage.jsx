@@ -1,56 +1,57 @@
 // src/pages/client/CartListPage.jsx
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Input, List, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import {
-	createCartAsync,
-	deleteCartAsync,
-	selectCarts,
-	selectCartStatus,
-	selectCartError,
-} from '../../store/cartSlice';
-
+	useGetCartsQuery,
+	useCreateCartMutation,
+	useDeleteCartMutation,
+} from '../../services/cartApi';
 import { LoadingWrapper } from '../../components';
 
 export function CartListPage() {
 	const { t } = useTranslation();
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
-
-	const carts = useSelector(selectCarts);
-	const cartStatus = useSelector(selectCartStatus);
-	const cartError = useSelector(selectCartError);
 
 	const [cartName, setCartName] = useState('');
 
-	const handleCreateCart = () => {
+	// Загружаем список carts
+	const {
+		data: carts,
+		error,
+		isLoading,
+		refetch,
+	} = useGetCartsQuery('ru'); // язык, если нужно
+
+	// Мутации
+	const [createCart, { isLoading: isCreating }] = useCreateCartMutation();
+	const [deleteCart, { isLoading: isDeleting }] = useDeleteCartMutation();
+
+	const handleCreateCart = async () => {
 		if (!cartName) return;
-		dispatch(createCartAsync(cartName))
-			.unwrap()
-			.then(() => {
-				message.success(t('cartsPage.created', 'Cart created'));
-				setCartName('');
-			})
-			.catch(() => {
-				message.error(t('cartsPage.createFailed', 'Failed to create cart'));
-			});
+		try {
+			await createCart(cartName).unwrap();
+			message.success(t('cartsPage.created', 'Cart created'));
+			setCartName('');
+		} catch (err) {
+			console.error(err);
+			message.error(t('cartsPage.createFailed', 'Failed to create cart'));
+		}
 	};
 
-	const handleDeleteCart = (cartId, e) => {
+	const handleDeleteCart = async (cartId, e) => {
 		e.stopPropagation();
 		if (!window.confirm(t('cartsPage.deleteConfirm', 'Are you sure?'))) return;
-		dispatch(deleteCartAsync(cartId))
-			.unwrap()
-			.then(() => {
-				message.success(t('cartsPage.deleted', 'Cart deleted'));
-			})
-			.catch(() => {
-				message.error(t('cartsPage.deleteFailed', 'Failed to delete cart'));
-			});
+		try {
+			await deleteCart(cartId).unwrap();
+			message.success(t('cartsPage.deleted', 'Cart deleted'));
+		} catch (err) {
+			console.error(err);
+			message.error(t('cartsPage.deleteFailed', 'Failed to delete cart'));
+		}
 	};
 
 	function goToCart(cartId) {
@@ -58,7 +59,11 @@ export function CartListPage() {
 	}
 
 	return (
-		<LoadingWrapper loading={cartStatus === 'loading'} error={cartError} data={carts}>
+		<LoadingWrapper
+			loading={isLoading || isCreating || isDeleting}
+			error={error ? error.data || error : null}
+			data={carts}
+		>
 			<div style={{ padding: 16 }}>
 				<h2>{t('cartsPage.title', 'Your Carts')}</h2>
 
@@ -76,11 +81,14 @@ export function CartListPage() {
 					>
 						{t('cartsPage.create', 'Create')}
 					</Button>
+					<Button onClick={() => refetch()}>
+						{t('common.refresh', 'Refresh')}
+					</Button>
 				</div>
 
 				<List
 					itemLayout="horizontal"
-					dataSource={carts}
+					dataSource={carts || []}
 					renderItem={(cart, index) => (
 						<List.Item
 							key={cart.id}
