@@ -1,5 +1,5 @@
 // src/pages/catalog/CategoryPage.jsx
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { Row, Col } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,16 +7,14 @@ import { useTranslation } from 'react-i18next';
 
 import { selectCurrentLang } from '../../store/langSlice';
 import { transformLangToServer } from '../../utils';
-
-import { useCategoryOrSearch } from './hooks';
-
-import {
-	ProductCard,
-	BreadcrumbsBlock,
-	LoadingWrapper,
-} from '../../components';
+import { ProductCard, BreadcrumbsBlock, LoadingWrapper } from '../../components';
 
 import { CategoryFilters, CategoryPagination, SortSelect } from './components';
+
+import {
+	useGetCategoryDetailQuery,
+	useSearchProductsQuery,
+} from '../../services';
 
 export function CategoryPage() {
 	const { slug } = useParams();
@@ -24,72 +22,142 @@ export function CategoryPage() {
 	const dispatch = useDispatch();
 	const { t } = useTranslation();
 
-	// Язык из Redux + трансформ
 	const currentLanguage = useSelector(selectCurrentLang);
 	const serverLang = transformLangToServer(currentLanguage);
 
-	// Извлекаем query (например ?q=...)
+	// Извлекаем q (поиск)
 	const searchParams = new URLSearchParams(location.search);
 	const q = searchParams.get('q') || '';
 
+	// Определяем режим
+	const isCategoryMode = Boolean(slug);
+
 	// Фильтры
 	const [selectedFilters, setSelectedFilters] = useState({});
-
 	// Пагинация
 	const [page, setPage] = useState(1);
 	const [pageSize, setPageSize] = useState(12);
-
 	// Сортировка
 	const [sort, setSort] = useState('id_asc');
 
-	// Вызываем кастомный хук
-	const {
-		isCategoryMode,
-		loading,
-		error,
-		category,
-		breadcrumbs,
-		products,
-		facets,
-		totalCount,
-	} = useCategoryOrSearch({
-		slug,
-		q,
-		selectedFilters,
+	// Подготовим объект дополнительных params (page, page_size, sort, fv_...)
+	const extraParams = {
 		page,
-		pageSize,
+		page_size: pageSize,
 		sort,
-		serverLang,
+	};
+
+	// Переводим selectedFilters в fv_color=..., fv_surface=...
+	Object.entries(selectedFilters).forEach(([code, arr]) => {
+		if (arr.length) {
+			extraParams[`fv_${code}`] = arr.join(',');
+		}
 	});
 
-	// Коллбек изменения фильтров
-	const handleFiltersChange = (newSelected) => {
-		setSelectedFilters(newSelected);
-		setPage(1);
-	};
+	// Если это режим поиска и q есть
+	if (!isCategoryMode && q) {
+		extraParams.q = q;
+	}
 
-	// Коллбек пагинации
-	const handleChangePage = (newPage, newPageSize) => {
-		setPage(newPage);
-		setPageSize(newPageSize);
-	};
+	// ======= RTK QUERY =======
+	// 1) Запрос для категории (skip, если не isCategoryMode)
+	const {
+		data: catData,
+		error: catError,
+		isLoading: catLoading,
+	} = useGetCategoryDetailQuery(
+		{
+			slug,
+			lang: serverLang,
+			extraParams,
+		},
+		{
+			skip: !isCategoryMode, // пропустить запрос, если это не категория
+		},
+	);
+
+	// 2) Запрос для поиска (skip, если isCategoryMode)
+	const {
+		data: searchData,
+		error: searchError,
+		isLoading: searchLoading,
+	} = useSearchProductsQuery(
+		{
+			lang: serverLang,
+			extraParams,
+		},
+		{
+			skip: isCategoryMode, // пропустить запрос, если это категория
+		},
+	);
+
+	// Объединяем loading/error
+	const loading = catLoading || searchLoading;
+	const error = catError || searchError;
+
+	// Извлекаем данные (продукты, кол-во, facets, breadcrumbs) из catData или searchData
+	let category = null;
+	let breadcrumbs = [];
+	let products = [];
+	let facets = [];
+	let totalCount = 0;
+
+	if (isCategoryMode) {
+		// Данные из getCategoryDetail
+		category = catData?.category;
+		if (catData?.breadcrumbs) {
+			breadcrumbs = catData.breadcrumbs;
+		}
+		if (catData?.products) {
+			products = catData.products;
+		}
+		facets = catData?.facets || [];
+		totalCount = catData?.count || 0;
+	} else {
+		// Данные из searchProducts
+		if (searchData?.products) {
+			products = searchData.products;
+		}
+		facets = searchData?.facets || [];
+		totalCount = searchData?.count || 0;
+		// Поиск не отдаёт category/breadcrumbs
+	}
 
 	// Заголовок
 	const title = isCategoryMode
 		? category?.name
 		: t('search.resultsFor', 'Результаты поиска');
 
+	// ======= Обработчики =======
+	const handleFiltersChange = (newSelected) => {
+		setSelectedFilters(newSelected);
+		setPage(1);
+	};
+
+	const handleChangePage = (newPage, newPageSize) => {
+		setPage(newPage);
+		setPageSize(newPageSize);
+	};
+
+	// ======= РЕНДЕР =======
 	return (
-		<LoadingWrapper loading={loading} error={error} data={products}>
+		<LoadingWrapper
+			loading={loading}
+			error={error ? String(error) : null}
+			data={products}
+		>
 			<div>
+				{/* Хлебные крошки, если есть */}
 				<BreadcrumbsBlock breadcrumbs={breadcrumbs} />
 
-				<div style={{
-					marginBottom: 16,
-					display: 'flex',
-					justifyContent: 'space-between',
-					alignItems: 'center'
-				}}>
+				<div
+					style={{
+						marginBottom: 16,
+						display: 'flex',
+						justifyContent: 'space-between',
+						alignItems: 'center',
+					}}
+				>
 					<h2 style={{ margin: 0 }}>{title}</h2>
 
 					<SortSelect
@@ -101,12 +169,12 @@ export function CategoryPage() {
 					/>
 				</div>
 
-				{/* Если поиск, показываем info */}
+				{/* Если поиск, показываем "Найдено X товаров по запросу q" */}
 				{!isCategoryMode && q && (
 					<div style={{ marginBottom: 16, color: '#555' }}>
-						{t('search.foundItems', 'Найдено')} {totalCount}
-						{' '} {t('search.products', 'товаров')}
-						{' '} {t('search.forQuery', 'по запросу')} «{q}»
+						{t('search.foundItems', 'Найдено')} {totalCount}{' '}
+						{t('search.products', 'товаров')}{' '}
+						{t('search.forQuery', 'по запросу')} «{q}»
 					</div>
 				)}
 
