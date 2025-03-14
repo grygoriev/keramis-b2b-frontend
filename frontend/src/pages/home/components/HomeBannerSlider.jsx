@@ -1,41 +1,18 @@
 // src/pages/home/components/HomeBannerSlider.jsx
-import { useEffect, useState } from 'react';
-import { Carousel, message } from 'antd';
-import { fetchBanners } from '../../../api/catalogApi.js';
-import { LoadingWrapper } from '../../../components/index.js';
+import { Carousel } from 'antd';
+import { LoadingWrapper } from '../../../components';
+import { useGetBannersQuery } from '../../../services';
 
 export function HomeBannerSlider() {
-	const [banners, setBanners] = useState([]);
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
-
-	useEffect(() => {
-		loadBanners();
-	}, []);
-
-	async function loadBanners() {
-		setLoading(true);
-		try {
-			const data = await fetchBanners();
-			setBanners(data);
-		} catch (err) {
-			console.error(err);
-			const msg = 'Error loading banners';
-			setError(msg);
-			message.error(msg);
-		} finally {
-			setLoading(false);
-		}
-	}
-
-	if (!banners.length) {
+	const { data: banners, error, isLoading } = useGetBannersQuery();
+	if (banners && banners.length === 0) {
 		return null;
 	}
 
 	return (
-		<LoadingWrapper loading={loading} error={error} data={banners}>
+		<LoadingWrapper data={banners} loading={isLoading} error={error ? String(error) : null}>
 			<Carousel autoplay>
-				{banners.map((banner) => (
+				{(banners || []).map((banner) => (
 					<div key={banner.id}>
 						<div style={{ position: 'relative', textAlign: 'center' }}>
 							<a
