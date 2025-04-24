@@ -22,11 +22,13 @@ const { Option } = Select;
  *   onClose (func): закрыть модалку без действий
  *   onCartSelected (func): колбэк, получает выбранный/созданный cartId
  */
-export function CartModal({ visible, onClose, onCartSelected }) {
+export function CartModal({ visible, onClose, onCartSelected, isLoggedIn }) {
 	const { t } = useTranslation();
 
 	// 1) Грузим список корзин
-	const { data: carts, isLoading, error } = useGetCartsQuery('ru'); // или другой язык
+	const { data: carts, isLoading, error } = useGetCartsQuery('ru', {
+		skip: !isLoggedIn,
+	}); // или другой язык
 	// 2) Мутация для создания корзины
 	const [createCart, { isLoading: isCreating }] = useCreateCartMutation();
 

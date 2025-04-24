@@ -10,6 +10,7 @@ import {
 } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { selectUserRole } from '../store/authSlice.js';
 
 const { Sider, Content } = Layout;
 
@@ -17,7 +18,7 @@ export function ClientLayout() {
 	const { t } = useTranslation();
 	const [collapsed, setCollapsed] = useState(true);
 
-	const role = useSelector((state) => state.auth.role);
+	const role = useSelector(selectUserRole);
 	const isClientAdmin = role === 'client_admin';
 
 	const location = useLocation();

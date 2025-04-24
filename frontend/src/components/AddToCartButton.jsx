@@ -10,12 +10,13 @@ import {
 } from '../services/cartApi';
 import { selectActiveCartId, setActiveCart } from '../store/cartUiSlice';
 import { CartModal } from './CartModal';
+import { selectIsLoggedIn } from '../store/authSlice.js';
 
 export function AddToCartButton({ productId }) {
 	const { t } = useTranslation();
 	const dispatch = useDispatch();
 
-	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+	const isLoggedIn = useSelector(selectIsLoggedIn);
 	const activeCartId = useSelector(selectActiveCartId);
 
 	// Грузим списки корзин, если логин есть
@@ -78,6 +79,7 @@ export function AddToCartButton({ productId }) {
 				visible={showCartModal}
 				onClose={handleCloseModal}
 				onCartSelected={handleCartSelected}
+				isLoggedIn={isLoggedIn}
 			/>
 		</>
 	);
