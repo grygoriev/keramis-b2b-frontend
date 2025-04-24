@@ -9,7 +9,7 @@ import { selectCurrentLang } from '../../store/langSlice';
 import { transformLangToServer } from '../../utils';
 import { ProductCard, BreadcrumbsBlock, LoadingWrapper } from '../../components';
 
-import { CategoryFilters, CategoryPagination, SortSelect } from './components';
+import { CategoryFilters, CategoryPagination, SortSelect, SubcategoryList } from './components';
 
 import {
 	useGetCategoryDetailQuery,
@@ -100,6 +100,7 @@ export function CategoryPage() {
 	let breadcrumbs = [];
 	let products = [];
 	let facets = [];
+	let subcategories =[];
 	let totalCount = 0;
 
 	if (isCategoryMode) {
@@ -111,6 +112,7 @@ export function CategoryPage() {
 		if (catData?.products) {
 			products = catData.products;
 		}
+		subcategories = catData?.subcategories || [];
 		facets = catData?.facets || [];
 		totalCount = catData?.count || 0;
 	} else {
@@ -150,24 +152,8 @@ export function CategoryPage() {
 				{/* Хлебные крошки, если есть */}
 				<BreadcrumbsBlock breadcrumbs={breadcrumbs} />
 
-				<div
-					style={{
-						marginBottom: 16,
-						display: 'flex',
-						justifyContent: 'space-between',
-						alignItems: 'center',
-					}}
-				>
-					<h2 style={{ margin: 0 }}>{title}</h2>
-
-					<SortSelect
-						value={sort}
-						onChange={(val) => {
-							setSort(val);
-							setPage(1);
-						}}
-					/>
-				</div>
+				{/* Заголовок */}
+				<h2 style={{ margin: '0 0 12px 0' }}>{title}</h2>
 
 				{/* Если поиск, показываем "Найдено X товаров по запросу q" */}
 				{!isCategoryMode && q && (
@@ -187,6 +173,21 @@ export function CategoryPage() {
 						/>
 					</Col>
 					<Col xs={24} sm={24} md={16} lg={18} xl={19}>
+						  {/* --- ПОД-КАТЕГОРИИ --- */}
+						  {isCategoryMode && subcategories.length > 0 && (
+							<SubcategoryList subcats={subcategories} />
+						  )}
+
+						  {/* --- СОРТИРОВКА --- */}
+						  <div style={{ display:'flex', justifyContent:'flex-end', margin:'0 0 16px 0' }}>
+							<SortSelect
+							  value={sort}
+							  onChange={(val) => {
+								setSort(val);
+								setPage(1);
+							  }}
+							/>
+						  </div>
 						<div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
 							{products.map((prod) => (
 								<ProductCard key={prod.id} product={prod} />

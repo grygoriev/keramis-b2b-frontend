@@ -96,7 +96,10 @@ export const catalogApi = createApi({
 					...extraParams,
 				},
 			}),
-			// transformResponse: (response) => response,
+			transformResponse: (response /*, meta, arg */) =>
+				// если бекэнд уже вернул пагинационный объект – берём .products,
+				// иначе это старый формат (простой массив)
+				Array.isArray(response) ? response : (response.products ?? []),
 			// providesTags: ...
 		}),
 	}),

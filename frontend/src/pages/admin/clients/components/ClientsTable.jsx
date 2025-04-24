@@ -30,48 +30,47 @@ export function ClientsTable({
 	const filteredData = clients.filter((client) => {
 		const search = searchText.toLowerCase();
 		return (
-			client.username.toLowerCase().includes(search) ||
-			(client.first_name && client.first_name.toLowerCase().includes(search)) ||
-			(client.last_name && client.last_name.toLowerCase().includes(search))
+			client.name.toLowerCase().includes(search) ||
+			(client.code && client.code.toLowerCase().includes(search))
 		);
 	});
 
 	const columns = [
 		{
-			title: t('clients.username', 'Имя пользователя'),
-			dataIndex: 'username',
-			key: 'username',
-			sorter: (a, b) => a.username.localeCompare(b.username),
+			title: t('clients.name', 'Клиент'),
+			dataIndex: 'name',
+			key: 'name',
+			sorter: (a, b) => a.name.localeCompare(b.name),
 		},
 		{
-			title: t('clients.fullName', 'Полное имя'),
-			key: 'fullName',
-			render: (text, record) => `${record.first_name} ${record.last_name}`,
+			title: t('clients.code', 'Код клиента'),
+			key: 'code',
+			render: (text, record) => `${record.code}`,
 		},
-		{
-			title: t('clients.email', 'Email'),
-			dataIndex: 'email',
-			key: 'email',
-		},
-		{
-			title: t('clients.role', 'Роль'),
-			dataIndex: 'role',
-			key: 'role',
-			render: (currentRole, record) => (
-				<Select
-					style={{ width: 150 }}
-					value={currentRole}
-					onChange={(newRole) => {
-						if (newRole === 'internal_manager') {
-							message.error(t('clients.invalidRole', 'Неверная роль'));
-						} else {
-							onUpdateClient(record.id, 'role', newRole);
-						}
-					}}
-					options={ALLOWED_ROLES}
-				/>
-			),
-		},
+		// {
+		// 	title: t('clients.email', 'Email'),
+		// 	dataIndex: 'email',
+		// 	key: 'email',
+		// },
+		// {
+		// 	title: t('clients.role', 'Роль'),
+		// 	dataIndex: 'role',
+		// 	key: 'role',
+		// 	render: (currentRole, record) => (
+		// 		<Select
+		// 			style={{ width: 150 }}
+		// 			value={currentRole}
+		// 			onChange={(newRole) => {
+		// 				if (newRole === 'internal_manager') {
+		// 					message.error(t('clients.invalidRole', 'Неверная роль'));
+		// 				} else {
+		// 					onUpdateClient(record.id, 'role', newRole);
+		// 				}
+		// 			}}
+		// 			options={ALLOWED_ROLES}
+		// 		/>
+		// 	),
+		// },
 		{
 			title: t('clients.clientGroup', 'Группа клиента'),
 			dataIndex: 'client_group_name',

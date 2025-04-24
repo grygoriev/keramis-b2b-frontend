@@ -4,13 +4,14 @@ import { useSelector } from 'react-redux';
 import { transformLangToServer } from '../utils/index.js';
 import { LoadingWrapper } from './LoadingWrapper.jsx';
 import { useGetProductsQuery } from '../services';
+import { selectCurrentLang } from '../store/langSlice.js';
 
 export function ProductSection({ title, filter, limit = 4 }) {
-	const currentLang = useSelector((state) => state.lang.currentLang);
+	const currentLang = useSelector(selectCurrentLang);
 	const serverLang = transformLangToServer(currentLang);
 
 	const {
-		data: products,
+		data: productList = [],
 		error,
 		isLoading,
 	} = useGetProductsQuery({
@@ -20,7 +21,7 @@ export function ProductSection({ title, filter, limit = 4 }) {
 		},
 	});
 
-	const limitedProducts = (products || []).slice(0, limit);
+	const limitedProducts = productList.slice(0, limit);
 
 	return (
 		<LoadingWrapper

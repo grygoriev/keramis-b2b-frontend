@@ -4,6 +4,7 @@ import authReducer from './authSlice.js';
 // import cartReducer from './cartSlice.js';
 import cartUiReducer from './cartUiSlice';
 import langReducer from './langSlice.js';
+import currencyReducer from './currencySlice';
 import { adminApi, cartApi, catalogApi, ordersApi } from '../services';
 
 const store = configureStore({
@@ -11,6 +12,7 @@ const store = configureStore({
 		auth: authReducer,
 		// cart: cartReducer,
 		cartUi: cartUiReducer,
+		currency : currencyReducer,
 		lang: langReducer,
 		[adminApi.reducerPath]: adminApi.reducer,
 		[cartApi.reducerPath]: cartApi.reducer,

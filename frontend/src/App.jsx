@@ -6,6 +6,7 @@ import ukUA from 'antd/es/locale/uk_UA';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
 import { restoreAuth } from './store/authSlice.js';
+import { fetchCurrencyRates } from './store/currencySlice';
 
 
 export const App = () => {
@@ -21,6 +22,7 @@ export const App = () => {
 		if (role) {
 			dispatch(restoreAuth({ username, role }));
 		}
+		dispatch(fetchCurrencyRates());
 		setAppReady(true);
 	}, [dispatch]);
 

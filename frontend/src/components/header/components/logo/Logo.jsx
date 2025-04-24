@@ -13,7 +13,7 @@ export function Logo() {
 				style={{ fontWeight: 'bold', marginRight: 20, color: 'inherit' }}
 				alt="Logo"
 			>
-				PLATFORM B2B
+				KERAMIS B2B
 			</Link>
 		</Tooltip>
 	);
