@@ -63,13 +63,3 @@ body{ margin:0; overscroll-behavior-x:none; overflow-x:hidden; }
 		margin-left:auto;            /* прижимает к правому краю */
 	}
 }
-
-/* ───── верхний триггер сайд-бара ───── */
-.sider-top-trigger{
-	height:48px; display:flex;
-	align-items:center; justify-content:center;
-	cursor:pointer; user-select:none;
-	border-bottom:1px solid rgba(255,255,255,.25);
-	color:#fff; font-size:18px;
-}
-.sider-top-trigger svg{ font-size:22px; }

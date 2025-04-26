@@ -6,4 +6,4 @@ export * from './ProductCard.jsx';
 export * from './AddToCartButton.jsx';
 export * from './BreadcrumbsBlock.jsx';
 export * from './LoadingWrapper.jsx';
-export * from './SideMenu.jsx';
+export * from './sider/SideMenu.jsx';

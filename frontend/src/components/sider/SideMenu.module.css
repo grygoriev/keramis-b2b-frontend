@@ -1,0 +1,20 @@
+/* src/components/side-menu/SideMenu.module.css */
+
+/* верхняя «кнопка» (MenuFold / MenuUnfold) */
+.topTrigger {
+	height: 48px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	user-select: none;
+
+	border-bottom: 1px solid rgba(255, 255, 255, .25);
+	color: #fff;
+	font-size: 18px;
+}
+
+/* увеличиваем иконку внутри */
+.topTrigger :global(svg) {
+	font-size: 22px;
+}
