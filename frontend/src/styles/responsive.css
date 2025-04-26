@@ -1,0 +1,84 @@
+/* ───────── TOKENS ───────── */
+:root{
+	--gap-s:8px;  --gap-m:16px;  --gap-l:24px;
+}
+body{ margin:0; overscroll-behavior-x:none; overflow-x:hidden; }
+
+/* ───────── HEADER ───────── */
+.global-header{ border-bottom:1px solid #eee; background:#fff; }
+.header-flex{
+	display:flex; flex-direction:column;
+	row-gap:var(--gap-s); padding:var(--gap-s) var(--gap-m);
+}
+.global-header__top  { display:flex; align-items:center; justify-content:space-between; }
+.global-header__bottom{ display:flex; align-items:center; gap:var(--gap-m); }
+
+/* поиск */
+.global-search{ width:clamp(160px,40vw,340px); }
+
+/* служебные классы */
+.currency{ white-space:nowrap; }
+.mobile-only{ display:none; }       /* появится <992 px */
+
+/* ───────── HOME ───────── */
+.home-actions{ margin:var(--gap-m) 0; display:flex; flex-wrap:wrap;
+	gap:var(--gap-s); justify-content:center; }
+.product-section{ margin-bottom:var(--gap-l); }
+@media (max-width:575px){ .product-card{ flex:0 0 calc(50% - var(--gap-s)); }}
+
+/* ───────── CATEGORY ───────── */
+.mobile-filters-trigger{ position:absolute; top:0; right:0; z-index:2; }
+@media (min-width:992px){ .mobile-filters-trigger{ display:none; } }
+@media (max-width:991px){ .desktop-filters{ display:none; } }
+
+.subcategories{ display:flex; flex-wrap:wrap; gap:8px; }
+.subcategories a{ font-size:14px; white-space:nowrap; }
+@media (min-width:480px){  .subcategories a{ flex:0 0 calc(50% - 8px); } }
+@media (max-width:479px){
+	.subcategories{ gap:4px; }
+	.subcategories a::after{ content:" |"; color:#999; }
+	.subcategories a:last-child::after{ content:""; }
+}
+
+/* ───────── BREAKPOINTS ───────── */
+/* <992 px — мобильный/планшет */
+@media (max-width:991px){
+	.currency   { display:none; }
+	.mobile-only{ display:inline-flex; }
+	.global-header__bottom{ gap:var(--gap-s); }
+}
+/* <575 px — телефон */
+@media (max-width:575px){
+	.global-search   { width:100%; }
+	.ant-layout-sider{ display:none !important; }
+	h2{ font-size:20px; }
+}
+
+/* ≥992 px — десктоп */
+@media (min-width:992px){
+	/* 1) показываем валюты, прячем всё „mobile-only“ */
+	.currency   { display:inline; }
+	.mobile-only{ display:none !important; }
+
+	/* 2) возвращаем классическому flex-ряду “поиск → корзина → user” */
+	.global-search{
+		flex:0 0 340px;
+		margin:0;                     /* убираем auto-margin */
+		position:static !important;   /* отменяем прежнее absolute-центрирование */
+	}
+
+	.global-header__bottom .global-search{
+		flex:0 0 340px;
+		margin-left:auto;            /* прижимает к правому краю */
+	}
+}
+
+/* ───── верхний триггер сайд-бара ───── */
+.sider-top-trigger{
+	height:48px; display:flex;
+	align-items:center; justify-content:center;
+	cursor:pointer; user-select:none;
+	border-bottom:1px solid rgba(255,255,255,.25);
+	color:#fff; font-size:18px;
+}
+.sider-top-trigger svg{ font-size:22px; }

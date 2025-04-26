@@ -1,2 +1,2 @@
 export * from './HomeBannerSlider.jsx'
-export * from './HomeActions.jsx'
+export * from './home-actions/HomeActions.jsx'

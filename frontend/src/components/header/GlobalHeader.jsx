@@ -1,100 +1,79 @@
 // src/components/header/GlobalHeader.jsx
-import { useEffect } from 'react';
+import { useEffect }   from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { useSelector, useDispatch } from 'react-redux';
-
-import { logout, selectIsLoggedIn, selectUsername, selectUserRole } from '../../store/authSlice';
-import { selectCurrentLang, setLang } from '../../store/langSlice';
-import { logoutRequest } from '../../api/auth';
-// -import { fetchCartsAsync } from '../../store/cartSlice'; // <-- убираем, если вся логика переехала
+import { useTranslation } from 'react-i18next';
+import { Button, Space } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
 
 import {
-	CartIcon,
-	Currency,
-	GlobalSearch,
-	LanguageSwitcher,
-	Logo,
-	UserBlock,
-} from './components';
-import { getDashboardPath, transformLangToServer } from '../../utils';
+	logout, selectIsLoggedIn, selectUsername, selectUserRole,
+} from '../../store/authSlice';
+import { selectCurrentLang, setLang } from '../../store/langSlice';
+import { logoutRequest } from '../../api/auth';
 
-export const GlobalHeader = () => {
-	const navigate = useNavigate();
-	const { i18n, t } = useTranslation();
-	const dispatch = useDispatch();
+import { CartIcon, Currency, GlobalSearch,
+	LanguageSwitcher, Logo, UserBlock } from './components';
+import { getDashboardPath } from '../../utils';
+import { useSideMenu } from '../../contexts/SideMenuContext';
 
-	const currentLanguage = useSelector(selectCurrentLang);
-	const isLoggedIn = useSelector(selectIsLoggedIn);
-	const username = useSelector(selectUsername);
-	const role = useSelector(selectUserRole);
+export function GlobalHeader({ onBurgerClick = () => {} }) {
 
-	const dashboard = getDashboardPath(role);
+	/* — redux / i18n — */
+	const dispatch   = useDispatch();
+	const navigate   = useNavigate();
+	const { i18n }   = useTranslation();
 
-	// Смена языка локально
-	useEffect(() => {
-		i18n.changeLanguage(currentLanguage);
-	}, [currentLanguage, i18n]);
+	const lang       = useSelector(selectCurrentLang);
+	const loggedIn   = useSelector(selectIsLoggedIn);
+	const username   = useSelector(selectUsername);
+	const role       = useSelector(selectUserRole);
+	const dashboard  = getDashboardPath(role);
 
-	// -  // Раньше грузили корзины
-	// 	-  useEffect(() => {
-	// 		-    if (isLoggedIn) {
-	// 			-      const langParam = transformLangToServer(currentLanguage);
-	// 			-      dispatch(fetchCartsAsync(langParam));
-	// 			-    }
-	// 		-  }, [isLoggedIn, currentLanguage, dispatch]);
+	useEffect(() => { i18n.changeLanguage(lang); }, [lang, i18n]);
 
 	const handleLogout = async () => {
-		try {
-			await logoutRequest();
-		} catch (err) {
-			console.error('Logout error:', err);
-		}
+		try { await logoutRequest(); } catch {/* ignore */}
 		dispatch(logout());
 		navigate('/login');
 	};
+	const { toggleMenu } = useSideMenu();
+	const setLangHandler = l => dispatch(setLang(l));
 
-	const handleChangeLanguage = (newLang) => {
-		dispatch(setLang(newLang));
-		i18n.changeLanguage(newLang);
-	};
-
+	/* — render — */
 	return (
-		<div
-			style={{
-				background: '#fff',
-				height: 50,
-				padding: '0 16px',
-				display: 'flex',
-				justifyContent: 'space-between',
-				alignItems: 'center',
-			}}
-		>
-			{/* Левая часть */}
-			<div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-				<Logo />
-			</div>
+		<header className="global-header header-flex">
 
-			{/* Правая часть */}
-			<div style={{ display: 'flex', alignItems: 'center', gap: 15 }}>
-				<Currency />
-
-				<LanguageSwitcher
-					currentLanguage={currentLanguage}
-					onChangeLanguage={handleChangeLanguage}
+			{/* ─ Top row ─ */}
+			<div className="global-header__top">
+				{/* BURGER (появляется <992 px) */}
+				<Button
+					type="text"
+					icon={<MenuOutlined />}
+					onClick={toggleMenu}
+					className="mobile-only"
+					style={{ fontSize:20 }}
 				/>
 
-				<GlobalSearch />
+				<Logo />
 
-				<CartIcon />
+				<Space size="small" className="lang-currency">
+					<LanguageSwitcher currentLanguage={lang} onChangeLanguage={setLangHandler}/>
+					<Currency className="currency"/>
+				</Space>
+			</div>
 
+			{/* ─ Bottom row ─ */}
+			<div className="global-header__bottom">
+				<GlobalSearch/>
+				<CartIcon/>
 				<UserBlock
-					isLoggedIn={isLoggedIn}
+					isLoggedIn={loggedIn}
 					username={username}
 					dashboardPath={dashboard}
 					onLogout={handleLogout}
 				/>
 			</div>
-		</div>
+		</header>
 	);
-};
+}

@@ -9,7 +9,7 @@ import { selectCurrentLang } from '../../store/langSlice';
 import { transformLangToServer } from '../../utils';
 import { ProductCard, BreadcrumbsBlock, LoadingWrapper } from '../../components';
 
-import { CategoryFilters, CategoryPagination, SortSelect, SubcategoryList } from './components';
+import { CategoryFilters, CategoryPagination, SortSelect, SubcategoryList, MobileFilterButton } from './components';
 
 import {
 	useGetCategoryDetailQuery,
@@ -165,14 +165,22 @@ export function CategoryPage() {
 				)}
 
 				<Row gutter={[16, 16]}>
-					<Col xs={24} sm={24} md={8} lg={6} xl={5}>
+					{/* ─── DESKTOP ─── */}
+					<Col xs={24} sm={24} md={8} lg={6} xl={5} className="desktop-filters">
 						<CategoryFilters
 							facets={facets}
 							selected={selectedFilters}
 							onChange={handleFiltersChange}
 						/>
 					</Col>
-					<Col xs={24} sm={24} md={16} lg={18} xl={19}>
+					<Col xs={24} sm={24} md={16} lg={18} xl={19} style={{position:'relative'}}>
+						<div className="mobile-filters-trigger">
+							<MobileFilterButton
+								facets={facets}
+								selected={selectedFilters}
+								onChange={handleFiltersChange}
+							/>
+						</div>
 						  {/* --- ПОД-КАТЕГОРИИ --- */}
 						  {isCategoryMode && subcategories.length > 0 && (
 							<SubcategoryList subcats={subcategories} />

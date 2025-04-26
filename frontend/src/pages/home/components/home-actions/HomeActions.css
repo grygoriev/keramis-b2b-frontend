@@ -1,0 +1,13 @@
+/* src/pages/home/components/home-actions/HomeActions.css */
+.home-actions {
+	display: grid;
+	gap: 8px;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+/* чтобы кнопка на весь ряд при xs */
+@media (max-width: 480px) {
+	.home-actions {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}

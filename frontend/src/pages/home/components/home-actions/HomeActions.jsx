@@ -2,12 +2,13 @@
 import { Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import './HomeActions.css';
 
 export function HomeActions() {
 	const { t } = useTranslation();
 
 	return (
-		<div style={{ display: 'flex', gap: '16px', marginBottom: '16px', marginTop: '16px' }}>
+		<div className="home-actions">
 			<Link to="/certificates">
 				<Button>{t('homePage.certificates')}</Button>
 			</Link>

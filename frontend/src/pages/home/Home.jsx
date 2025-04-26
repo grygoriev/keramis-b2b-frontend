@@ -8,7 +8,7 @@ export function Home() {
 	const { t } = useTranslation();
 
 	return (
-		<div>
+		<div className="container">
 			{/* Слайдер баннеров */}
 			<HomeBannerSlider />
 

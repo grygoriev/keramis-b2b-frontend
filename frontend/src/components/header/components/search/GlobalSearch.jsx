@@ -104,9 +104,10 @@ export function GlobalSearch() {
 	};
 
 	return (
-		<div style={{ position: 'relative' }} ref={containerRef}>
+		<div style={{ position:'relative', flex:1 }} ref={containerRef}>
 			{/* Поле ввода с локализованным placeholder */}
 			<Input
+				className="global-search"
 				value={searchTerm}
 				onChange={handleChange}
 				onPressEnter={() => {
@@ -116,7 +117,7 @@ export function GlobalSearch() {
 					setShowDropdown(false);
 				}}
 				placeholder={t('search.placeholder', 'Поиск товаров...')}
-				style={{ width: 300 }}
+				style={{ width:'100%' }}
 				allowClear
 			/>
 
@@ -126,7 +127,7 @@ export function GlobalSearch() {
 						position: 'absolute',
 						top: 40,
 						left: 0,
-						width: 300,
+						width: '100%',
 						background: '#fff',
 						border: '1px solid #ccc',
 						borderRadius: 4,
