@@ -71,6 +71,7 @@ export function SideMenu({
 				</Sider>
 			)}
 
+			{/* MOBILE */}
 			<Drawer
 				placement="left"
 				open={!lgUp && open}
