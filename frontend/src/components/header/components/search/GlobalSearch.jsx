@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { fetchSearchAutocomplete } from '../../../../api/catalogApi.js';
 import debounce from 'lodash/debounce';
+import { transformLangToServer } from '../../../../utils/index.js';
+import { useSelector } from 'react-redux';
+import { selectCurrentLang } from '../../../../store/langSlice.js';
 
 const MIN_LENGTH = 3;
 
@@ -21,8 +24,7 @@ export function GlobalSearch() {
 	const containerRef = useRef(null);
 
 	// Язык
-	const storedLang = localStorage.getItem('lang') || 'ru';
-	const serverLang = storedLang === 'ua' ? 'uk' : storedLang;
+	const serverLang = transformLangToServer(useSelector(selectCurrentLang));
 
 	// Дебаунс
 	const doSearch = useCallback(
@@ -115,6 +117,7 @@ export function GlobalSearch() {
 					navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
 					// Скрываем автокомплит
 					setShowDropdown(false);
+					setSearchTerm('');
 				}}
 				placeholder={t('search.placeholder', 'Поиск товаров...')}
 				style={{ width:'100%' }}

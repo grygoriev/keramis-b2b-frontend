@@ -1,7 +1,7 @@
 // src/pages/category/components/SubcategoryList.jsx
 import { Card } from 'antd';
 import { Link } from 'react-router-dom';
-import './SubcategoryList.css';
+import s from './SubcategoryList.module.css';
 
 export function SubcategoryList({ subcats = [] }) {
 	if (!subcats.length) return null;
@@ -9,11 +9,11 @@ export function SubcategoryList({ subcats = [] }) {
 	/* ----- > 18 : текстовый вид ------- */
 	if (subcats.length > 18) {
 		return (
-			<div className="subcategory-inline">
+			<div className={s.inline}>
 				{subcats.map((sc, idx) => (
 					<span key={sc.id}>
             <Link to={`/category/${sc.slug}`}>{sc.name}</Link>
-						{idx !== subcats.length - 1 && <span className="divider"> | </span>}
+						{idx !== subcats.length - 1 && <span className={s.divider}> | </span>}
           </span>
 				))}
 			</div>
@@ -22,23 +22,23 @@ export function SubcategoryList({ subcats = [] }) {
 
 	/* ----- до 18 : карточки ------- */
 	return (
-		<div className="subcategory-grid">
+		<div className={s.grid}>
 			{subcats.map((sc) => (
-				<Link key={sc.id} to={`/category/${sc.slug}`} className="card-link">
+				<Link key={sc.id} to={`/category/${sc.slug}`} className={s.cardLink}>
 					<Card
 						hoverable
-						className="subcategory-card"
+						className={s.card}
 						cover={
 							sc.image_url && (
 								<img
 									src={sc.image_url}
 									alt={sc.name}
-									className="subcategory-img"
+									className={s.img}
 								/>
 							)
 						}
 					>
-						<span className="subcategory-title">{sc.name}</span>
+						<span className={s.title}>{sc.name}</span>
 					</Card>
 				</Link>
 			))}

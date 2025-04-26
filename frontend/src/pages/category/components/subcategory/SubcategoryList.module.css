@@ -1,0 +1,53 @@
+/* SubcategoryList.module.css */
+
+/* карточечный режим (≤ 18) */
+.grid{
+	display:flex;
+	flex-wrap:wrap;
+	gap:16px;
+	margin-bottom:24px;
+}
+.cardLink{               /* заменяет .card-link */
+	display:block;
+	width:160px;
+}
+.card{                   /* заменяет .subcategory-card */
+	width:160px;
+	height:68px;
+	display:flex;
+	flex-direction:column;
+}
+
+/*  👇  оставляем .ant-card-body неизменным  */
+.card :global(.ant-card-body){
+	padding:12px;
+	flex:1;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+}
+
+.img{                    /* заменяет .subcategory-img */
+	width:160px;
+	height:110px;
+	object-fit:cover;
+}
+.title{                  /* заменяет .subcategory-title */
+	text-align:center;
+	display:-webkit-box;
+	-webkit-line-clamp:2;
+	-webkit-box-orient:vertical;
+	overflow:hidden;
+	white-space:normal;
+	font-size:14px;
+	line-height:1.2;
+}
+
+/* текстовый режим (> 18) */
+.inline{
+	margin-bottom:24px;
+	font-size:14px;
+	line-height:1.6;
+}
+.divider{ color:#999; }
+.inline a{ white-space:nowrap; }

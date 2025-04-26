@@ -31,15 +31,6 @@ body{ margin:0; overscroll-behavior-x:none; overflow-x:hidden; }
 @media (min-width:992px){ .mobile-filters-trigger{ display:none; } }
 @media (max-width:991px){ .desktop-filters{ display:none; } }
 
-.subcategories{ display:flex; flex-wrap:wrap; gap:8px; }
-.subcategories a{ font-size:14px; white-space:nowrap; }
-@media (min-width:480px){  .subcategories a{ flex:0 0 calc(50% - 8px); } }
-@media (max-width:479px){
-	.subcategories{ gap:4px; }
-	.subcategories a::after{ content:" |"; color:#999; }
-	.subcategories a:last-child::after{ content:""; }
-}
-
 /* ───────── BREAKPOINTS ───────── */
 /* <992 px — мобильный/планшет */
 @media (max-width:991px){
