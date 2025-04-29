@@ -1,1 +1,1 @@
-export * from './ClientsTable.jsx'
+export * from './clients-table/ClientsTable.jsx'

@@ -1,0 +1,27 @@
+/* src/pages/admin/discounts/components/create-discount-modal/CreateDiscountModal.module.css */
+
+/* подписи полей */
+.label {
+	display: block;
+	margin: 12px 0 4px;
+	font-weight: 500;
+}
+
+/* сами инпуты / селекты / number */
+.field {
+	width: 100%;
+}
+
+/* футер-кнопки для мобильного Drawer’а */
+.drawerFooter {
+	position: sticky;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 8px 16px;
+	background: #fff;
+	border-top: 1px solid #eee;
+	display: flex;
+	gap: 8px;
+	z-index: 1000;       /* поверх содержимого Drawer’а */
+}

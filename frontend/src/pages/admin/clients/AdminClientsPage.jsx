@@ -79,9 +79,9 @@ export function AdminClientsPage() {
 						onChange={(e) => setSearchText(e.target.value)}
 						style={{ width: 300 }}
 					/>
-					<Button type="primary" onClick={handleRefresh}>
-						{t('clients.refresh', 'Обновить')}
-					</Button>
+					{/*<Button type="primary" onClick={handleRefresh}>*/}
+					{/*	{t('clients.refresh', 'Обновить')}*/}
+					{/*</Button>*/}
 				</Space>
 
 				<ClientsTable

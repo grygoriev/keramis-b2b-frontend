@@ -1,0 +1,34 @@
+/* src/pages/admin/discounts/AdminDiscountsPage.module.css */
+
+/* кнопка-текст (видна только ≥ 576 px) */
+.addDesktop {
+	/* без специальных стилей — главное, что класс есть */
+}
+
+/* кнопка-иконка (по-умолчанию скрыта) */
+.addMobile {
+	display: none;
+}
+
+/* ——— мобильный брейк-поинт ——— */
+@media (max-width: 575px) {
+	.addDesktop {             /* прячем «большую» кнопку */
+		display: none !important;
+	}
+
+	.addMobile {              /* показываем «плюс» */
+		display: inline-flex;
+		margin-left: auto;
+	}
+
+	/* опционально: «плавающая» иконка */
+	/*
+	.addMobile {
+	  position: fixed;
+	  right: 16px;
+	  bottom: 72px;
+	  z-index: 1000;
+	  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+	}
+	*/
+}

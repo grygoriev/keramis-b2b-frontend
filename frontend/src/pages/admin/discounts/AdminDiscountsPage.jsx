@@ -1,10 +1,11 @@
 // src/pages/admin/discounts/AdminDiscountsPage.jsx
 import { useState, useMemo } from 'react';
-import { Input, Button, Space, message } from 'antd';
+import { Input, Button, Space, message, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import { DiscountsTable, CreateDiscountModal} from './components';
 import { LoadingWrapper } from '../../../components';
+import s  from './AdminDiscountsPage.module.css';
 
 import {
 	useGetClientGroupsQuery,
@@ -14,6 +15,7 @@ import {
 	useCreateGroupDiscountMutation,
 	useDeleteGroupDiscountMutation,
 } from '../../../services/adminApi';
+import { PlusOutlined } from '@ant-design/icons';
 
 const { Search } = Input;
 
@@ -175,14 +177,28 @@ export function AdminDiscountsPage() {
 						placeholder={t('discounts.searchPlaceholder', 'Поиск по группам')}
 						value={searchText}
 						onChange={(e) => setSearchText(e.target.value)}
-						style={{ width: 300 }}
+						style={{ width: 250 }}
 					/>
-					<Button type="primary" onClick={handleRefresh}>
-						{t('common.refresh', 'Обновить')}
-					</Button>
-					<Button onClick={openCreateModal} disabled={noFreePairs}>
+					{/*<Button type="primary" onClick={handleRefresh}>*/}
+					{/*	{t('common.refresh', 'Обновить')}*/}
+					{/*</Button>*/}
+					<Button
+						onClick={openCreateModal}
+						disabled={noFreePairs}
+						className={s.addDesktop}
+					>
 						{t('discounts.createNew', 'Создать скидку')}
 					</Button>
+					{/* мобильная иконка-плюс */}
+					<Button
+						type="primary"
+						shape="circle"
+						size="large"
+						icon={<PlusOutlined />}
+						onClick={openCreateModal}
+						disabled={noFreePairs}
+						className={s.addMobile}
+					/>
 				</Space>
 
 				<DiscountsTable

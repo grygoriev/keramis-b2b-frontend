@@ -1,0 +1,5 @@
+/* components/SmartTable.module.css */
+.table :where(.ant-table-cell){ font-size:14px }
+@media (max-width:991px){
+	.table{ overflow-x:auto }
+}
