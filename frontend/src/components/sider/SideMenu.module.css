@@ -1,16 +1,20 @@
 /* src/components/sider/SideMenu.module.css */
 .topTrigger{
 	height:48px;
-	display:flex; align-items:center; justify-content:center;
-	cursor:pointer; user-select:none;
+	display:flex;
+	align-items:center;
+	justify-content:center;
 	border-bottom:1px solid rgba(255,255,255,.25);
 	color:#fff;
+	font-size:18px;
 }
-.topTrigger svg{ font-size:22px; }
+.topTrigger svg{font-size:22px}
 
-/* Divider — теперь реально виден */
-.ant-menu-dark .ant-menu-item-divider{
-	margin:6px 0;
-	height:1px;
-	background:rgba(255,255,255,.50);
+/* стрелка – только mobile (desktop её не получает из JSX) */
+.arrowMobile{
+	margin-left:auto;
+	width:18px;
+	display:inline-flex;
+	justify-content:center;
+	font-size:14px;
 }
