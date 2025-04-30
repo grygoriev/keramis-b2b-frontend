@@ -11,12 +11,14 @@ import './i18n.js';
 import 'antd/dist/reset.css';
 import { Provider } from 'react-redux';
 import store from './store/index.js';
-import { SideMenuProvider } from './contexts/SideMenuContext.jsx'; // ./store/index.js
+import { SideMenuProvider, MenuStackProvider } from './contexts';
 
 createRoot(document.getElementById('root')).render(
 	<Provider store={store}>
-		<SideMenuProvider>
-			<App />
-		</SideMenuProvider>
+		<MenuStackProvider>
+			<SideMenuProvider>
+				<App />
+			</SideMenuProvider>
+		</MenuStackProvider>
 	</Provider>,
 );

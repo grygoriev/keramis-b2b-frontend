@@ -15,7 +15,7 @@ import { logoutRequest } from '../../api/auth';
 import { CartIcon, Currency, GlobalSearch,
 	LanguageSwitcher, Logo, UserBlock } from './components';
 import { getDashboardPath } from '../../utils';
-import { useSideMenu } from '../../contexts/SideMenuContext';
+import { useSideMenu } from '../../contexts';
 
 export function GlobalHeader({ onBurgerClick = () => {} }) {
 

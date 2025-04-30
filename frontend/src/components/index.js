@@ -7,4 +7,6 @@ export * from './AddToCartButton.jsx';
 export * from './BreadcrumbsBlock.jsx';
 export * from './LoadingWrapper.jsx';
 export * from './sider/SideMenu.jsx';
+export * from './sider/commonItems.jsx';
+export * from './sider/mapCategoryItem.jsx';
 export * from './table/SmartTable.jsx';

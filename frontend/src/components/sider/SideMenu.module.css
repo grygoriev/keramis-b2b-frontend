@@ -1,20 +1,16 @@
-/* src/components/side-menu/SideMenu.module.css */
-
-/* верхняя «кнопка» (MenuFold / MenuUnfold) */
-.topTrigger {
-	height: 48px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	cursor: pointer;
-	user-select: none;
-
-	border-bottom: 1px solid rgba(255, 255, 255, .25);
-	color: #fff;
-	font-size: 18px;
+/* src/components/sider/SideMenu.module.css */
+.topTrigger{
+	height:48px;
+	display:flex; align-items:center; justify-content:center;
+	cursor:pointer; user-select:none;
+	border-bottom:1px solid rgba(255,255,255,.25);
+	color:#fff;
 }
+.topTrigger svg{ font-size:22px; }
 
-/* увеличиваем иконку внутри */
-.topTrigger :global(svg) {
-	font-size: 22px;
+/* Divider — теперь реально виден */
+.ant-menu-dark .ant-menu-item-divider{
+	margin:6px 0;
+	height:1px;
+	background:rgba(255,255,255,.50);
 }

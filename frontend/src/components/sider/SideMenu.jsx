@@ -1,89 +1,86 @@
-/* src/components/side-menu/SideMenu.jsx */
-import { useState, useMemo } from 'react';
+/* src/components/sider/SideMenu.jsx */
+import { useState, useEffect } from 'react';
 import { Layout, Drawer, Grid, Spin, Menu } from 'antd';
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { useSideMenu } from '../../contexts/SideMenuContext.jsx';
-import s from './SideMenu.module.css';                   //  ← модуль!
+import { MenuFoldOutlined, MenuUnfoldOutlined, LeftOutlined } from '@ant-design/icons';
+
+import { useSideMenu, useMenuStack } from '../../contexts';
+import s from './SideMenu.module.css';
 
 const { useBreakpoint } = Grid;
-const { Sider }        = Layout;
+const { Sider } = Layout;
 
 export function SideMenu({
 							 loader,
+							 catsLoader,
+							 mapRootItem,
+							 mapCatItem,
 							 children,
-							 width            = 250,
+							 width = 250,
 							 collapsedOnStart = false,
-							 mapItem,
 						 }) {
-	const screens         = useBreakpoint();
-	const lgUp            = screens.lg;               // ≥ 992 px
+	const desktop = useBreakpoint().lg;
+
 	const { open, closeMenu } = useSideMenu();
+	const { top, pop, reset } = useMenuStack();   // 'root' | 'cats'
 
-	/* desktop-state */
 	const [collapsed, setCollapsed] = useState(collapsedOnStart);
+	const [root, setRoot] = useState([]);
+	const [cats, setCats] = useState([]);
+	const [busy, setBusy] = useState(true);
 
-	/* menu-data */
-	const [data, setData] = useState([]);
-	const [busy, setBusy] = useState(false);
-
-	useMemo(() => {
+	/* ---- загрузка ---- */
+	useEffect(() => {
+		let ok = true;
 		(async () => {
 			setBusy(true);
-			try   {
-				const res = typeof loader === 'function' ? await loader() : loader;
-				setData(res ?? []);
-			} finally { setBusy(false); }
+			try{
+				const r = typeof loader     === 'function' ? await loader()     : loader;
+				const c = catsLoader
+					? (typeof catsLoader === 'function' ? await catsLoader() : catsLoader)
+					: [];
+				ok && (setRoot(r ?? []), setCats(c ?? []));
+			}finally{ ok && setBusy(false); }
 		})();
-	}, [loader]);
+		return () => { ok = false; };
+	}, [loader, catsLoader]);
 
-	const menuItems = (arr) => arr.map(mapItem);
+	/* пустой cats → авторесет (фикс «пустого меню») */
+	useEffect(() => { if (top==='cats' && !cats.length) reset(); }, [top, cats.length, reset]);
 
-	const menuJSX = busy
-		? <Spin style={{ margin: 16 }} />
-		: (
-			<Menu
-				theme="dark"
-				mode="vertical"
-				triggerSubMenuAction="hover"
-				items={menuItems(data)}
-				style={{ height: '100%' }}
-			/>
-		);
+	/* mapper + back */
+	const map = top==='cats' ? (mapCatItem ?? (x=>x)) : (mapRootItem ?? (x=>x));
+	const items = top==='cats'
+		? [{ key:'_back', icon:<LeftOutlined/>, label:'Back', onClick:pop },
+			...cats.map(map)]
+		: root.map(map);
+
+	const menu = busy
+		? <Spin style={{margin:16}}/>
+		: <Menu theme="dark" mode="inline" triggerSubMenuAction="hover"
+				items={items} style={{height:'100%'}}/>;
 
 	return (
 		<>
-			{/* DESKTOP */}
-			{lgUp && (
-				<Sider
-					width={width}
-					collapsible={false}            /* «лапка» снизу не рисуем */
-					collapsed={collapsed}
-					theme="dark"
-				>
-					{/* ─ top trigger — класс из модуля ─ */}
-					<div
-						className={s.topTrigger}
-						onClick={() => setCollapsed(!collapsed)}
-					>
-						{collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+			{desktop && (
+				<Sider width={width} collapsed={collapsed} collapsible={false} theme="dark">
+					<div className={s.topTrigger} onClick={()=>setCollapsed(!collapsed)}>
+						{collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}
 					</div>
-					{menuJSX}
+					{menu}
 				</Sider>
 			)}
 
-			{/* MOBILE */}
 			<Drawer
 				placement="left"
-				open={!lgUp && open}
-				onClose={closeMenu}
-				width={width + 10}
-				bodyStyle={{ padding:0 }}
+				open={!desktop && open}
+				onClose={()=>{ closeMenu(); reset(); }}
+				width={width+10}
+				styles={{ body:{padding:0} }}
 				className="mobile-only"
 			>
-				{menuJSX}
+				{menu}
 			</Drawer>
 
-			{/* контент страницы */}
 			{children}
 		</>
 	);

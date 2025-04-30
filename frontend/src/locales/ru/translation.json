@@ -1,6 +1,8 @@
 {
 	"common": {
+		"back": "Назад",
 		"headerTitle": "Главная",
+		"home": "Главная",
 		"login": "Войти",
 		"logout": "Выйти",
 		"categories": "Категории",
