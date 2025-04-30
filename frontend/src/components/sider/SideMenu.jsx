@@ -19,29 +19,22 @@ export function SideMenu({
 							 width = 250,
 							 collapsedOnStart = false,
 						 }) {
-	/* ——— breakpoint ——— */
-	const bp       = useBreakpoint();
-	const desktop  = bp.lg;                   // ≥ 992 px
+	const bp      = useBreakpoint();
+	const desktop = bp.lg;
 
-	/* ——— Drawer open/close ——— */
 	const { open, closeMenu } = useSideMenu();
-
-	/* ——— stack ——— */
-	const { top, pop, reset } = useMenuStack();     // 'root' | 'cats'
-
-	/* ——— collapse (desktop) ——— */
+	const { top, pop, reset } = useMenuStack();
 	const [collapsed, setCollapsed] = useState(collapsedOnStart);
 
-	/* ——— menu-data ——— */
 	const [root, setRoot] = useState([]);
 	const [cats, setCats] = useState([]);
 	const [busy, setBusy] = useState(true);
 
-	/* auto-reset стека - при смене маршрута «пустое меню» исчезает */
+	/* — сброс стека при смене маршрута (устранён «пустой» сайд-бар) — */
 	const { pathname } = useLocation();
 	useEffect(() => reset(), [pathname]);
 
-	/* однократная загрузка данных */
+	/* — однократная загрузка — */
 	useEffect(() => {
 		let alive = true;
 		(async () => {
@@ -57,27 +50,26 @@ export function SideMenu({
 		return () => { alive = false; };
 	}, [loader, catsLoader]);
 
-	/* ——— какой набор пунктов сейчас? ——— */
-	const data    = top === 'cats' ? cats : root;
-	const mapper  = top === 'cats'
-		? (mapCatItem  ?? ((x)=>x))
-		: (mapRootItem ?? ((x)=>x));
+	/* текущий слой */
+	const data   = top === 'cats' ? cats : root;
+	const mapper = top === 'cats'
+		? (mapCatItem  ?? (i=>i))
+		: (mapRootItem ?? (i=>i));
 
-	/* «Назад» для слоя категорий */
 	const items = top === 'cats'
 		? [{ key:'_back', icon:<LeftOutlined/>, label:'Back', onClick:pop }, ...data.map(mapper)]
 		: data.map(mapper);
 
-	/* Стрелка нужна ТОЛЬКО на mobile.  На desktop expand-control убираем. */
+	/* >>> mobile-only стрелка (desktop без стрелок) <<< */
 	const expandIcon = desktop
-		? undefined                  // стрелки отсутствуют
-		: ({ isOpen, onClick }) => (
+		? undefined
+		: ({ isOpen, onClick /* остальные пропсы нам не нужны */ }) => (
 			<span
+				role="button"
 				className={s.arrowMobile}
-				onClick={(e) => {        // остановили всплытие → не переходим по ссылке
-					e.stopPropagation();
-					onClick?.(e);
-				}}
+				/* 1) не всплываем --> нет перехода на категорию
+				   2) ***обязательно*** вызываем оригинальный onClick для раскрытия */
+				onClick={e => { e.preventDefault(); e.stopPropagation(); onClick?.(e); }}
 			>
           {isOpen ? '▼' : '▶'}
         </span>
@@ -88,7 +80,6 @@ export function SideMenu({
 	) : (
 		<Menu
 			theme="dark"
-			/* desktop: «vertical» + hover ;  mobile: «inline» + click */
 			mode={desktop ? 'vertical' : 'inline'}
 			triggerSubMenuAction={desktop ? 'hover' : 'click'}
 			items={items}
@@ -101,12 +92,7 @@ export function SideMenu({
 		<>
 			{/* —— DESKTOP —— */}
 			{desktop && (
-				<Sider
-					width={width}
-					collapsible={false}
-					collapsed={collapsed}
-					theme="dark"
-				>
+				<Sider width={width} collapsible={false} collapsed={collapsed} theme="dark">
 					<div className={s.topTrigger} onClick={()=>setCollapsed(!collapsed)}>
 						{collapsed ? <MenuUnfoldOutlined/> : <MenuFoldOutlined/>}
 					</div>
@@ -119,7 +105,7 @@ export function SideMenu({
 				placement="left"
 				open={!desktop && open}
 				onClose={() => { closeMenu(); reset(); }}
-				width={width + 10}
+				width={width+10}
 				styles={{ body:{ padding:0 } }}
 				className="mobile-only"
 			>
