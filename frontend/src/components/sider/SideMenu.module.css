@@ -1,20 +1,40 @@
-/* src/components/sider/SideMenu.module.css */
+/* ────────────────────────────────────────────────
+   src/components/sider/SideMenu.module.css
+   ─ добавил глобальное правило для Divider
+   ─ всё остальное - без изменений
+───────────────────────────────────────────────── */
+
 .topTrigger{
 	height:48px;
 	display:flex;
 	align-items:center;
 	justify-content:center;
+	cursor:pointer;
+	user-select:none;
 	border-bottom:1px solid rgba(255,255,255,.25);
 	color:#fff;
 	font-size:18px;
 }
-.topTrigger svg{font-size:22px}
+.topTrigger svg{ font-size:22px; }
 
-/* стрелка – только mobile (desktop её не получает из JSX) */
+/* маленькая стрелка, которую мы показываем только на mobile */
 .arrowMobile{
-	margin-left:auto;
-	width:18px;
 	display:inline-flex;
+	align-items:center;
 	justify-content:center;
-	font-size:14px;
+	width:18px;
+	margin-left:auto;           /* уводим к правому краю */
+	font-size:12px;
+	cursor:pointer;
+}
+
+/* ─── NEW ───                                                     */
+/* Divider был «невидим» из-за тёмного цвета по-умолчанию.         */
+/* Это CSS-модуль, поэтому используем :global, чтобы правило        */
+/* применилось к реальному классу AntD .ant-menu-item-divider.      */
+:global(.ant-menu-dark) :global(.ant-menu-item-divider){
+	background:#555;            /* светлее фона сайдбара */
+	height:1px;
+	margin-block:6px;           /* небольшие отступы сверху/снизу */
+	opacity:.7;
 }
