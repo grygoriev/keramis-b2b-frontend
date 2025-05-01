@@ -149,6 +149,8 @@
 		"main": "Главная клиента",
 		"orders": "Заказы",
 		"carts": "Корзины",
+		"priceControl": "Контроль цен",
+		"returns":      "Возврат товаров",
 		"integration": "Интеграция"
 	},
 	"adminLayout": {

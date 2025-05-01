@@ -149,6 +149,8 @@
 		"main": "Головна клієнта",
 		"orders": "Замовлення",
 		"carts": "Кошики",
+		"priceControl": "Контроль цін",
+		"returns": "Повернення товарів",
 		"integration": "Інтеграція"
 	},
 	"adminLayout": {

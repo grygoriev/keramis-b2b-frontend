@@ -4,6 +4,8 @@ import {
 	OrderListPage,
 	CartListPage,
 	CartPage,
+	PriceControlPage,
+	ReturnsPage,
 	ApiTokenPage,
 } from '../pages';
 
@@ -24,6 +26,14 @@ export const clientRoutes = [
 	{
 		path: 'carts/:cartId',
 		element: <CartPage />,
+	},
+	{
+		path: 'price-control',
+		element: <PriceControlPage />,
+	},
+	{
+		path: 'returns',
+		element: <ReturnsPage />,
 	},
 	{
 		path: 'api-token',
