@@ -2,7 +2,9 @@
 	"common": {
 		"back": "Назад",
 		"headerTitle": "Главная",
+		"cabinet": "Кабинет",
 		"home": "Главная",
+		"loadError": "Ошибка загрузки",
 		"login": "Войти",
 		"logout": "Выйти",
 		"categories": "Категории",

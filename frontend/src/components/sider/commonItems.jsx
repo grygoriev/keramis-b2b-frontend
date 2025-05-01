@@ -32,7 +32,7 @@ export function useCommonMenu({ publicRoot=false } = {}) {
 	/* ---------- «Кабинет» (только public+mobile, прячем на desktop) ---------- */
 	const cabHome =
 		role?.startsWith('client') ? '/client/dashboard'
-			: role==='admin'         ? '/admin/dashboard'
+			: role==='internal_manager'         ? '/admin/dashboard'
 				: null;
 
 	const cabinet = publicRoot && cabHome ? [{
@@ -71,6 +71,6 @@ export function useCommonMenu({ publicRoot=false } = {}) {
 			: publicRoot
 				? [...cabinet]             // в публичном root только «Кабинет» (и то – на mobile)
 				: [...cabinet, home, cats, div1],
-		tail : publicRoot ? [] : [div2, exit],
+		tail : publicRoot ? [div2] : [div2, exit],
 	};
 }

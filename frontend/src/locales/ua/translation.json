@@ -2,7 +2,9 @@
 	"common": {
 		"back": "Назад",
 		"headerTitle": "Головна",
+		"cabinet": "Кабінет",
 		"home": "Головна",
+		"loadError": "Помилка завантаження",
 		"login": "Увійти",
 		"logout": "Вийти",
 		"categories": "Категорії",

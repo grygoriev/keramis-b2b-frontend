@@ -5,25 +5,36 @@ import { getCategoryTree }   from '../api/catalogCache';
 import { useSelector }       from 'react-redux';
 import { selectCurrentLang } from '../store/langSlice';
 import { transformLangToServer } from '../utils';
-import { SideMenu, useCategoryMapItem } from '../components';
+import { SideMenu, useCategoryMapItem, useCommonMenu } from '../components';
 
 const { Content } = Layout;
 
 export function PublicLayout() {
 	/* язык + загрузка дерева */
 	const lang      = transformLangToServer(useSelector(selectCurrentLang));
-	const loader    = () => getCategoryTree(lang);
+	const loadCats    = () => getCategoryTree(lang);
 
 	/* один-единственный мэппер для root + children
 	   isPublic = true — включаем mobile-стрелку с stopPropagation */
-	const mapItem = useCategoryMapItem(true);
+	const mapCat = useCategoryMapItem(true);
+
+	/* head | tail + «Кабинет» (mobile-only) */
+	const { head, tail } = useCommonMenu({ publicRoot:true });
+
+	/* ---- root-loader = head + cats + tail ---- */
+	const loadRoot = async () => {
+		const cats = await loadCats();
+		/* cats ещё не «промаплены», поэтому сейчас применим mapCat */
+		return [...cats.map(mapCat), ...tail, ...head];
+	};
 
 	return (
 		<Layout>
 			<SideMenu
-				loader={loader}             /* root = дерево категорий */
-				mapRootItem={mapItem}
-				mapCatItem={mapItem}
+				loader      ={loadRoot}  /* слой 0  = head + cats + tail */
+				catsLoader  ={loadCats}  /* слой 1+ = только cats        */
+				mapRootItem ={item=>item}/* head|tail уже готовы         */
+				mapCatItem  ={mapCat}
 				collapsedOnStart
 			>
 				<Content style={{ padding:16 }}>
