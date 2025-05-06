@@ -19,15 +19,15 @@ export function OrderCard({
 		>
 			<div style={{ display: 'flex', justifyContent: 'space-between' }}>
 				<div>
-					<b>{t('orders.order', 'Заказ')} #{order.id}</b>
+					<b>{t('orders.order', 'Заказ')} #{order.external_order_code}</b>
 					<Divider type="vertical" />
 					{t('orders.date', 'Дата')}: {order.create_datetime?.slice(0, 10)}
 					<Divider type="vertical" />
 					{t('orders.total', 'Сумма')}: {order.total}
 					<Divider type="vertical" />
-					{t('orders.state', 'Статус')}: {order.state}
+					{t('orders.state', 'Статус')}: {order.state_display}
 					<Divider type="vertical" />
-					{t('orders.client', 'Клиент')}: {order.user}
+					{t('orders.client', 'Клиент')}: {order.client_name}
 				</div>
 				<Button size="small" onClick={() => onToggleExpand(order.id)}>
 					{expanded ? t('orders.collapse', 'Свернуть') : t('orders.expand', 'Развернуть')}

@@ -9,25 +9,45 @@ export const ordersApi = createApi({
 	endpoints: (builder) => ({
 		// 1) Получить список заказов
 		getOrders: builder.query({
-			query: ({ lang, role, clientFilter }) => {
-				// Формируем params
-				const params = { lang };
-				if (role === 'internal_manager' && clientFilter) {
-					params.client = clientFilter;
-				}
-				return {
-					url: '/orders/orders/',
-					method: 'GET',
-					params,
-				};
-			},
+			query: ({
+				lang,
+				role,
+				clientFilter,
+				page = 1,
+				pageSize = 20,
+				state,
+				extCode,	// external_order_code
+				after,	// YYYY-MM-DD
+				before,	// YYYY-MM-DD
+				client,	// client
+			}) => ({
+				url   : '/orders/orders/',
+				method: 'GET',
+				params: {
+					lang,
+					page,
+					page_size: pageSize,
+					...(state   ? { state } : {}),
+					...(extCode ? { external_order_code: extCode } : {}),
+					...(after   ? { create_datetime_after : after  } : {}),
+					...(before  ? { create_datetime_before: before } : {}),
+					...(client  ? { client } : {}),
+				},
+			}),
+
+			transformResponse: (resp) => ({
+				total: resp.count,
+				next: resp.next,
+				prev: resp.previous,
+				results: resp.results,
+			}),
 			// Для рефетча при обновлении
-			providesTags: (result) =>
-				result
+			providesTags: (resp) =>
+				resp?.results
 					? [
-						...result.map((order) => ({ type: 'Orders', id: order.id })),
-						{ type: 'Orders', id: 'LIST' },
-					]
+							...resp.results.map((o) => ({ type: 'Orders', id: o.id })),
+							{ type: 'Orders', id: 'LIST' },
+						]
 					: [{ type: 'Orders', id: 'LIST' }],
 		}),
 
@@ -46,7 +66,4 @@ export const ordersApi = createApi({
 	}),
 });
 
-export const {
-	useGetOrdersQuery,
-	useUpdateOrderStatusMutation,
-} = ordersApi;
+export const { useGetOrdersQuery, useUpdateOrderStatusMutation } = ordersApi;
