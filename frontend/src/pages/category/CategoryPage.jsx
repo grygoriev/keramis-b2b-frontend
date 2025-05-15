@@ -64,7 +64,7 @@ export function CategoryPage() {
 	const {
 		data: catData,
 		error: catError,
-		isLoading: catLoading,
+		isFetching: catLoading,
 	} = useGetCategoryDetailQuery(
 		{
 			slug,
@@ -80,7 +80,7 @@ export function CategoryPage() {
 	const {
 		data: searchData,
 		error: searchError,
-		isLoading: searchLoading,
+		isFetching: searchLoading,
 	} = useSearchProductsQuery(
 		{
 			lang: serverLang,
