@@ -5,7 +5,7 @@ import {
 	UserOutlined,
 	ShoppingCartOutlined,
 	SettingOutlined,
-	RollbackOutlined,
+	RollbackOutlined, MoneyCollectOutlined,
 } from '@ant-design/icons';
 import { Layout } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -49,6 +49,13 @@ export function AdminLayout() {
 			key: '/admin/discounts',
 			icon: <SettingOutlined />,
 			label: <Link to="/admin/discounts">{t('adminLayout.settings')}</Link>,
+		},
+		{
+			key: '/admin/price-control',
+			icon: <MoneyCollectOutlined />,
+			label: (
+				<Link to="/admin/price-control">{t('clientLayout.priceControl')}</Link>
+			),
 		},
 		...tail,
 	];

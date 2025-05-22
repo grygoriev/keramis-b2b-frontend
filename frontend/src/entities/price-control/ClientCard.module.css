@@ -1,0 +1,23 @@
+.card {
+	margin-bottom: 16px;
+	border: 1px solid #e8e8e8;
+}
+
+/* таблица товаров внутри панелей Collapse  */
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 13px;
+}
+
+.table th,
+.table td {
+	padding: 4px 6px;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.table th {
+	text-align: left;
+	white-space: nowrap;
+	font-weight: 600;
+}

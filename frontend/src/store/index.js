@@ -7,6 +7,7 @@ import langReducer from './langSlice.js';
 import currencyReducer from './currencySlice';
 import { adminApi, cartApi, catalogApi, ordersApi } from '../services';
 import { returnsApi } from '../features/returns/returnsApi';
+import { priceControlApi } from '../features/price-control/priceControlApi';
 
 const store = configureStore({
 	reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
 		[catalogApi.reducerPath]: catalogApi.reducer,
 		[ordersApi.reducerPath]: ordersApi.reducer,
 		[returnsApi.reducerPath]: returnsApi.reducer,
+		[priceControlApi.reducerPath]: priceControlApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware()
@@ -27,7 +29,8 @@ const store = configureStore({
 			.concat(cartApi.middleware)
 			.concat(catalogApi.middleware)
 			.concat(ordersApi.middleware)
-			.concat(returnsApi.middleware),
+			.concat(returnsApi.middleware)
+			.concat(priceControlApi.middleware),
 });
 
 export default store;

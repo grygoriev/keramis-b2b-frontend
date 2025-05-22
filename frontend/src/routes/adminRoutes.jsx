@@ -3,7 +3,7 @@ import {
 	AdminDashboard,
 	OrderListPage,
 	AdminClientsPage,
-	AdminDiscountsPage, ReturnsPage,
+	AdminDiscountsPage, ReturnsPage, PriceControlPage,
 } from '../pages';
 
 export const adminRoutes = [
@@ -27,5 +27,9 @@ export const adminRoutes = [
 	{
 		path: 'discounts',
 		element: <AdminDiscountsPage />,
+	},
+	{
+		path: 'price-control',
+		element: <PriceControlPage />,
 	},
 ];
