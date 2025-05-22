@@ -6,25 +6,28 @@ import cartUiReducer from './cartUiSlice';
 import langReducer from './langSlice.js';
 import currencyReducer from './currencySlice';
 import { adminApi, cartApi, catalogApi, ordersApi } from '../services';
+import { returnsApi } from '../features/returns/returnsApi';
 
 const store = configureStore({
 	reducer: {
 		auth: authReducer,
 		// cart: cartReducer,
 		cartUi: cartUiReducer,
-		currency : currencyReducer,
+		currency: currencyReducer,
 		lang: langReducer,
 		[adminApi.reducerPath]: adminApi.reducer,
 		[cartApi.reducerPath]: cartApi.reducer,
 		[catalogApi.reducerPath]: catalogApi.reducer,
 		[ordersApi.reducerPath]: ordersApi.reducer,
+		[returnsApi.reducerPath]: returnsApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware()
 			.concat(adminApi.middleware)
 			.concat(cartApi.middleware)
 			.concat(catalogApi.middleware)
-			.concat(ordersApi.middleware),
+			.concat(ordersApi.middleware)
+			.concat(returnsApi.middleware),
 });
 
 export default store;

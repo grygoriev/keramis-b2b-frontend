@@ -1,0 +1,12 @@
+.card {
+	margin-bottom: 16px;
+	border: 1px solid #e8e8e8;
+}
+.header {
+	display: flex;
+	justify-content: space-between;
+}
+.items {
+	margin-top: 12px;
+	padding-left: 12px;
+}
