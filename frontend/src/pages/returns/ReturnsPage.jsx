@@ -1,3 +1,4 @@
+// src/pages/returns/ReturnsPage.jsx
 import { useState } from 'react';
 import { Pagination } from 'antd';
 import dayjs from 'dayjs';
@@ -14,27 +15,31 @@ import { LoadingWrapper } from '../../shared/ui/LoadingWrapper';
 import { ReturnList } from '../../entities/return/ReturnList';
 import { Filters } from './Filters';
 
-/* ------------------------------------------------------------------ */
-
 export function ReturnsPage() {
 	const { t } = useTranslation();
 
-	/* ---------- local state ---------- */
+	/* -------- local state ---------- */
 	const [dateRange, setDateRange] = useState([null, null]);
-	const [search, setSearch] = useState('');
+	const [returnId, setReturnId] = useState('');
+	const [orderNumber, setOrderNumber] = useState('');
+	const [product, setProduct] = useState('');
 	const [client, setClient] = useState('');
+	const [manager, setManager] = useState('');
+
+	/* пагинация */
 	const [page, setPage] = useState(1);
 	const pageSize = 20;
 
+	/* раскрытие карточек */
 	const [expandedIds, setExpanded] = useState([]);
 	const toggle = (id) =>
 		setExpanded((prev) =>
 			prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
 		);
 
-	/* ---------- params ---------- */
-	const lang = transformLangToServer(useSelector(selectCurrentLang));
+	/* -------- query params ---------- */
 	const role = useSelector(selectUserRole);
+	const lang = transformLangToServer(useSelector(selectCurrentLang));
 
 	const [afterDate, beforeDate] = dateRange || [];
 	const after = afterDate ? dayjs(afterDate).format('YYYY-MM-DD') : undefined;
@@ -47,34 +52,59 @@ export function ReturnsPage() {
 	} = useGetReturnsQuery({
 		page,
 		pageSize,
-		returnId: search.trim() || undefined,
+		returnId: returnId.trim() || undefined,
+		orderNumber: orderNumber.trim() || undefined,
+		product: product.trim() || undefined,
 		after,
 		before,
 		client: role === 'internal_manager' ? client.trim() || undefined : undefined,
+		manager: role === 'internal_manager' ? manager.trim() || undefined : undefined,
 	});
 
-	/* ---------- render ---------- */
+	/* -------- render ---------- */
 	return (
 		<div style={{ padding: 16 }}>
 			<h2>{t('returns.title', 'Мои возвраты')}</h2>
 
 			<Filters
+				/* даты */
 				dateRange={dateRange}
 				onDateChange={(d) => {
 					setDateRange(d ?? [null, null]);
 					setPage(1);
 				}}
-				search={search}
-				onSearchChange={(e) => {
-					setSearch(e.target.value);
+				/* № возврата */
+				returnId={returnId}
+				onReturnIdChange={(e) => {
+					setReturnId(e.target.value);
 					setPage(1);
 				}}
+				/* № заказа */
+				orderNumber={orderNumber}
+				onOrderNumberChange={(e) => {
+					setOrderNumber(e.target.value);
+					setPage(1);
+				}}
+				/* товар */
+				product={product}
+				onProductChange={(e) => {
+					setProduct(e.target.value);
+					setPage(1);
+				}}
+				/* клиент */
 				client={client}
 				onClientChange={(e) => {
 					setClient(e.target.value);
 					setPage(1);
 				}}
 				showClient={role === 'internal_manager'}
+				/* менеджер */
+				manager={manager}
+				onManagerChange={(e) => {
+					setManager(e.target.value);
+					setPage(1);
+				}}
+				showManager={role === 'internal_manager'}
 			/>
 
 			<LoadingWrapper

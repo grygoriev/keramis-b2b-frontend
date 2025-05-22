@@ -1,3 +1,4 @@
+// src/entities/return/ReturnList.jsx
 import { ReturnCard } from './ReturnCard';
 
 export function ReturnList({ list, expandedIds, onToggle }) {

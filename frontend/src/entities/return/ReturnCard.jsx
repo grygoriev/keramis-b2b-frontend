@@ -1,3 +1,4 @@
+// src/entities/return/ReturnCard.jsx
 import { Card, Divider, Button } from 'antd';
 import { useTranslation } from 'react-i18next';
 import styles from './ReturnCard.module.css';
