@@ -1,9 +1,9 @@
 // src/layouts/ClientLayout.jsx
 import { Link, Outlet } from 'react-router-dom';
 import {
-	HomeOutlined,
-	HistoryOutlined,
-	HeartOutlined,
+	UserOutlined,
+	InboxOutlined,
+	ShoppingCartOutlined,
 	DownloadOutlined,
 	MoneyCollectOutlined,
 	RollbackOutlined,
@@ -30,17 +30,17 @@ export function ClientLayout() {
 		...head,
 		{
 			key: '/client/dashboard',
-			icon: <HomeOutlined />,
+			icon: <UserOutlined />,
 			label: <Link to="/client/dashboard">{t('clientLayout.main')}</Link>,
 		},
 		{
 			key: '/client/my-orders',
-			icon: <HistoryOutlined />,
+			icon: <InboxOutlined />,
 			label: <Link to="/client/my-orders">{t('clientLayout.orders')}</Link>,
 		},
 		{
 			key: '/client/carts',
-			icon: <HeartOutlined />,
+			icon: <ShoppingCartOutlined />,
 			label: <Link to="/client/carts">{t('clientLayout.carts')}</Link>,
 		},
 		{

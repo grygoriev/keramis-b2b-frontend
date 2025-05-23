@@ -1,9 +1,9 @@
 // src/layouts/AdminLayout.jsx
 import { Link, Outlet } from 'react-router-dom';
 import {
-	HomeOutlined,
 	UserOutlined,
-	ShoppingCartOutlined,
+	TeamOutlined,
+	InboxOutlined,
 	SettingOutlined,
 	RollbackOutlined, MoneyCollectOutlined,
 } from '@ant-design/icons';
@@ -27,17 +27,17 @@ export function AdminLayout() {
 		...head,
 		{
 			key: '/admin/dashboard',
-			icon: <HomeOutlined />,
+			icon: <UserOutlined />,
 			label: <Link to="/admin/dashboard">{t('adminLayout.main')}</Link>,
 		},
 		{
 			key: '/admin/clients',
-			icon: <UserOutlined />,
+			icon: <TeamOutlined />,
 			label: <Link to="/admin/clients">{t('adminLayout.clients')}</Link>,
 		},
 		{
 			key: '/admin/my-orders',
-			icon: <ShoppingCartOutlined />,
+			icon: <InboxOutlined />,
 			label: <Link to="/admin/my-orders">{t('adminLayout.orders')}</Link>,
 		},
 		{

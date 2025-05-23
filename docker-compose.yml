@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: b2b_frontend_app
+    # наружу порт не пробрасываем — отдавать будет nginx
+    expose:
+      - "3001"
+    networks: [web]
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: b2b_nginx
+    depends_on: [app]
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d    # виртуальные хосты
+      - certbot-certs:/etc/letsencrypt      # ключи + цепочки
+      - certbot-web:/var/www/certbot        # web-root для challenge
+      - certbot-logs:/var/log/letsencrypt
+    networks: [web]
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: b2b_certbot
+    volumes:
+      - certbot-certs:/etc/letsencrypt
+      - certbot-web:/var/www/certbot
+      - certbot-logs:/var/log/letsencrypt
+    entrypoint: >
+      sh -c "trap exit TERM;
+             while :; do
+               certbot renew --webroot -w /var/www/certbot --quiet;
+               sleep 12h;
+             done"
+    networks: [web]
+
+volumes:
+  certbot-certs:
+  certbot-web:
+  certbot-logs:
+
+networks:
+  web:
