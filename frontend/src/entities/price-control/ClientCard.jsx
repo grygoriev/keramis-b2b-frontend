@@ -22,7 +22,7 @@ export function ClientCard({ data }) {
 				<tbody>
 					{v.products.map((p) => (
 						<tr key={p.name}>
-							<td>{p.name}</td>
+							<td><a href={p.url}>{p.name}</a></td>
 							<td>{p.our_price}</td>
 							<td>{p.competitor_price}</td>
 							<td>{p.diff_percent.toFixed(1)}</td>
