@@ -11,7 +11,7 @@ export const clientsApi = createApi({
 
 		/* ───  CLIENTS (зависит от lang)  ─────────────────────────────── */
 		getClients : builder.query({
-			query : (lang) => ({ url : '/api/auth/clients/', params:{ lang } }),
+			query : (lang) => ({ url : '/api/auth/clients/', params:{ lang, ordering: 'name'  } }),
 			providesTags : (res)=>
 				res
 					? [
