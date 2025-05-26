@@ -1,0 +1,17 @@
+.block {
+	margin: 24px 0;
+}
+.title {
+	margin: 0 0 12px 0;
+}
+.list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.list li {
+	display: flex;
+	justify-content: space-between;
+	padding: 4px 0;
+	border-bottom: 1px dashed #e5e5e5;
+}

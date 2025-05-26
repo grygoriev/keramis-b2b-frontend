@@ -1,0 +1,27 @@
+.container {
+	padding: 16px;
+}
+.headerRow {
+	margin: 4px 0;
+}
+.label {
+	font-weight: 600;
+	margin-right: 4px;
+}
+
+.block {
+	margin: 32px 0;
+}
+.blockTitle {
+	margin: 0 0 12px 0;
+}
+
+.table {
+	width: 100%;
+	border-collapse: collapse;
+}
+.table th,
+.table td {
+	padding: 6px 8px;
+	border-bottom: 1px solid #eee;
+}

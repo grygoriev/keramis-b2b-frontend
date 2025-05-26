@@ -137,12 +137,12 @@
 		"fullName": "Повне ім'я",
 		"email": "Email",
 		"role": "Роль",
-		"clientGroup": "Група клієнта",
-		"searchPlaceholder": "Пошук на ім'я клієнта",
+		"group": "Група",
+		"search": "Пошук…",
 		"refresh": "Оновити",
 		"loadError": "Не вдалося завантажити клієнтів",
-		"updateSuccess": "Клієнт оновлено",
-		"updateError": "Помилка оновлення клієнта",
+		"updated": "Оновлено",
+		"errUpdate": "Помилка оновлення",
 		"invalidRole": "Неправильна роль"
 	},
 	"clientLayout": {
@@ -159,8 +159,13 @@
 		"user": "Користувач",
 		"discounts": "Поточні знижки",
 		"priceGroup": "Цінова група",
-		"%": "Знижка %",
-		"balance": "Баланс взаєморозрахунків"
+		"%": "Знижка %"
+	},
+	"clientPage": {
+		"back": "Назад до списку"
+	},
+	"balance": {
+		"title": "Баланс взаєморозрахунків"
 	},
 	"adminDashboard": {
 		"title": "Адмін дашборд",

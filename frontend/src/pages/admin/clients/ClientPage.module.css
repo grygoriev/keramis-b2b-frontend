@@ -1,0 +1,20 @@
+/* ─── src/pages/admin/clients/ClientPage.module.css ─── */
+.wrapper {
+	max-width: 720px;
+}
+.back {
+	padding-left: 0;
+} /* убираем горизонтальный отступ у кнопки-ссылки */
+
+.card {
+	margin-top: 8px;
+}
+
+.row {
+	margin: 8px 0;
+	font-size: 15px;
+}
+.label {
+	font-weight: 600;
+	margin-right: 4px;
+}

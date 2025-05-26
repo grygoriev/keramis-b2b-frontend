@@ -1,0 +1,16 @@
+/* src/entities/client/ui/ClientsTable/ClientsTable.module.css */
+.sel {
+	width: 180px;
+}
+.mobCard {
+	padding: 8px;
+	font-size: 13px;
+}
+
+.link {
+	color: inherit; /* выглядим как обычный текст */
+	text-decoration: none;
+}
+.link:hover {
+	text-decoration: underline; /* подчёркивание только при hover */
+}

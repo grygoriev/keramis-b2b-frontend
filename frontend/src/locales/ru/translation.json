@@ -137,12 +137,12 @@
 		"fullName": "Полное имя",
 		"email": "Email",
 		"role": "Роль",
-		"clientGroup": "Группа клиента",
-		"searchPlaceholder": "Поиск по имени клиента",
+		"group": "Группа",
+		"search": "Поиск…",
 		"refresh": "Обновить",
 		"loadError": "Не удалось загрузить клиентов",
-		"updateSuccess": "Клиент обновлен",
-		"updateError": "Ошибка обновления клиента",
+		"updated": "Обновлено",
+		"errUpdate": "Ошибка обновления",
 		"invalidRole": "Неверная роль"
 	},
 	"clientLayout": {
@@ -159,8 +159,13 @@
 		"user": "Пользователь",
 		"discounts": "Текущие скидки",
 		"priceGroup": "Ценовая группа",
-		"percent": "Скидка %",
-		"balance": "Баланс взаиморасчётов"
+		"percent": "Скидка %"
+	},
+	"clientPage": {
+		"back": "Назад к списку"
+	},
+	"balance": {
+		"title": "Баланс взаиморасчётов"
 	},
 	"adminDashboard": {
 		"title": "Админ дашборд",
