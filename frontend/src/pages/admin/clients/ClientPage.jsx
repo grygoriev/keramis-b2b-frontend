@@ -8,45 +8,40 @@ import { selectCurrentLang } from '../../../store/langSlice';
 import { transformLangToServer } from '../../../utils';
 
 import {
-	useGetClientsQuery,
+	useGetClientDetailQuery,
 	useGetGroupsQuery,
 	usePatchClientMutation,
-	useGetClientBalanceQuery,
 } from '../../../features/clients/clientsApi';
 
 import { BalanceList } from '../../../shared/ui/BalanceList/BalanceList';
 import css from './ClientPage.module.css';
 
 export function ClientPage() {
-	const { id } = useParams(); // numeric id
+	const { id } = useParams(); // numeric
 	const { t } = useTranslation();
 
-	/* — текущий язык (как в списке) — */
+	/* текущий интерфейс-язык (передаём на сервер, если нужно перевести name) */
 	const lang = transformLangToServer(useSelector(selectCurrentLang));
 
-	/* — клиенты и группы — */
-	const { data: clients = [], isFetching: loadC } = useGetClientsQuery(lang);
-	const { data: groups = [], isFetching: loadG } = useGetGroupsQuery();
-	const client = clients.find((c) => String(c.id) === id);
+	/* ─── данные клиента (один запрос) ─────────────────────────────── */
+	const {
+		data: client,
+		isFetching: loadClient,
+		error: errClient,
+	} = useGetClientDetailQuery({ id, lang });
 
-	/* — баланс — */
-	const { data: balance = [], isFetching: loadB } = useGetClientBalanceQuery(
-		client?.code,
-		{ skip: !client },
-	);
+	/* ─── список групп ─────────────────────────────────────────────── */
+	const { data: groups = [], isFetching: loadGroups } = useGetGroupsQuery();
 
 	const [patchClient] = usePatchClientMutation();
 
-	if (loadC || loadG || !client) return <Spin style={{ margin: 40 }} />;
+	if (loadClient || loadGroups) return <Spin style={{ margin: 40 }} />;
+	if (errClient || !client) return <p style={{ margin: 40 }}>Error</p>;
 
-	/* — смена группы — */
+	/* смена группы */
 	const handleGroup = async (val) => {
 		try {
-			await patchClient({
-				id: client.id,
-				payload: { client_group: val },
-				lang,
-			}).unwrap();
+			await patchClient({ id: client.id, payload: { client_group: val } }).unwrap();
 			message.success(t('clients.updated', 'Обновлено'));
 		} catch {
 			message.error(t('clients.errUpdate', 'Ошибка'));
@@ -62,11 +57,11 @@ export function ClientPage() {
 			<Card className={css.card}>
 				<h2>{client.name}</h2>
 
-				<p>
+				<div>
 					<b>{t('clients.code', 'Код')}:</b> {client.code}
-				</p>
+				</div>
 
-				<p>
+				<div>
 					<b>{t('clients.group', 'Группа')}:</b>{' '}
 					<Select
 						size="small"
@@ -80,9 +75,10 @@ export function ClientPage() {
 							</Select.Option>
 						))}
 					</Select>
-				</p>
+				</div>
 
-				{loadB ? <Spin /> : <BalanceList balance={balance} />}
+				{/* баланс из detail */}
+				{client.balances && <BalanceList balance={client.balances} />}
 			</Card>
 		</div>
 	);

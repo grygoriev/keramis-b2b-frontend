@@ -1,17 +1,20 @@
-/* ── src/features/clients/clientsApi.js ── */
+/* src/features/clients/clientsApi.js */
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from '../../services/axiosBaseQuery';
 
 export const clientsApi = createApi({
 	reducerPath : 'clientsApi',
 	baseQuery   : axiosBaseQuery(),
-	tagTypes    : ['Clients', 'Groups'],
+	tagTypes    : ['Clients', 'ClientDetail', 'Groups'],
 
 	endpoints : (builder) => ({
 
-		/* ───  CLIENTS (зависит от lang)  ─────────────────────────────── */
+		/* ——— список (lang) ——— */
 		getClients : builder.query({
-			query : (lang) => ({ url : '/api/auth/clients/', params:{ lang, ordering: 'name'  } }),
+			query : (lang) => ({
+				url   : '/api/auth/clients/',
+				params: { lang, ordering:'name' },
+			}),
 			providesTags : (res)=>
 				res
 					? [
@@ -21,7 +24,25 @@ export const clientsApi = createApi({
 					: [{ type:'Clients', id:'LIST' }],
 		}),
 
-		/* ───  GROUPS  ────────────────────────────────────────────────── */
+		/* ——— detail по id ——— */
+		getClientDetail : builder.query({
+			query : ({ id, lang }) => ({
+				url   : `/api/auth/clients/${id}/detail/`,
+				params: lang ? { lang } : undefined,
+			}),
+			providesTags : (_r,_e,{ id }) => [
+				{ type:'ClientDetail', id },
+				{ type:'Clients',      id },
+			],
+		}),
+
+		/* ——— detail «моего» клиента (для кабинета) ——— */
+		getMyClientDetail : builder.query({
+			query : () => ({ url:'/api/auth/clients/my/detail/' }),
+			providesTags : [{ type:'ClientDetail', id:'ME' }],
+		}),
+
+		/* ——— группы ——— */
 		getGroups : builder.query({
 			query : () => ({ url:'/api/auth/client-groups/' }),
 			providesTags : (res)=>
@@ -33,57 +54,60 @@ export const clientsApi = createApi({
 					: [{ type:'Groups', id:'LIST' }],
 		}),
 
-		/* ───  PATCH CLIENT  ──────────────────────────────────────────── */
+		/* ——— PATCH клиента ——— */
 		patchClient : builder.mutation({
-			/* arg: { id, payload }  - lang не нужен: патчим ВСЕ кэши */
 			query : ({ id, payload }) => ({
 				url   : `/api/auth/clients/${id}/`,
 				method: 'PATCH',
 				data  : payload,
 			}),
-
-			/* ⬇️ оптимистически патчим все кеш-запросы getClients */
 			async onQueryStarted({ id, payload }, { dispatch, getState, queryFulfilled }) {
-				/* найдём ВСЕ сохранённые вызовы getClients (любые args — ‘lang’ ) */
-				const state   = getState();
 				const patches = [];
 
-				Object.values(state.clientsApi.queries).forEach((q) => {
+				/* списки */
+				Object.values(getState().clientsApi.queries).forEach(q=>{
 					if (q?.endpointName === 'getClients') {
-						const langArg = q.originalArgs;   // это тот ‘lang’, с которым кеш
-						const p = dispatch(
-							clientsApi.util.updateQueryData('getClients', langArg, draft => {
-								const client = draft.find(c => c.id === id);
-								if (client) Object.assign(client, payload);
-							}),
+						patches.push(
+							dispatch(
+								clientsApi.util.updateQueryData('getClients', q.originalArgs, d=>{
+									const c = d.find(x=>x.id===id);
+									if (c) c.client_group = payload.client_group;
+								}),
+							),
 						);
-						patches.push(p);
 					}
 				});
 
-				try {
-					await queryFulfilled;          // ← сервер ответил OK – ничего не делаем
-				} catch {
-					/* откатить ВСЕ оптимистические патчи */
-					patches.forEach(p => p.undo && p.undo());
-				}
+				/* все detail-кеши этого id + «ME» */
+				Object.values(getState().clientsApi.queries).forEach(q=>{
+					const ep = q?.endpointName;
+					if (
+						(ep==='getClientDetail'   && q.originalArgs?.id===id) ||
+						(ep==='getMyClientDetail' && id==='ME')
+					){
+						patches.push(
+							dispatch(
+								clientsApi.util.updateQueryData(ep, q.originalArgs, d=>{
+									d.client_group = payload.client_group;
+								}),
+							),
+						);
+					}
+				});
+
+				try { await queryFulfilled; } catch { patches.forEach(p=>p.undo?.()); }
 			},
-
-			/* кэш уже поправили →  ничего дополнительно не инвалидируем  */
-			invalidatesTags : () => [],
+			invalidatesTags : (_r,_e,{ id }) => [
+				{ type:'ClientDetail', id },
+			],
 		}),
-
-		/* ───  BALANCE BY CODE  ──────────────────────────────────────── */
-		getClientBalance : builder.query({
-			query : (code) => ({ url:`/api/auth/client-balance/${code}/` }),
-		}),
-
 	}),
 });
 
 export const {
 	useGetClientsQuery,
+	useGetClientDetailQuery,
+	useGetMyClientDetailQuery,
 	useGetGroupsQuery,
 	usePatchClientMutation,
-	useGetClientBalanceQuery,
 } = clientsApi;

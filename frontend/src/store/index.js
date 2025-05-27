@@ -9,7 +9,6 @@ import { adminApi, cartApi, catalogApi, ordersApi } from '../services';
 import { returnsApi } from '../features/returns/returnsApi';
 import { priceControlApi } from '../features/price-control/priceControlApi';
 import { clientsApi }   from '../features/clients/clientsApi';
-import { dashboardApi } from '../features/clientDashboard/dashboardApi';
 
 const store = configureStore({
 	reducer: {
@@ -25,7 +24,6 @@ const store = configureStore({
 		[returnsApi.reducerPath]: returnsApi.reducer,
 		[priceControlApi.reducerPath]: priceControlApi.reducer,
 		[clientsApi.reducerPath]:  clientsApi.reducer,
-		[dashboardApi.reducerPath]:dashboardApi.reducer,
 	},
 	middleware: (getDefaultMiddleware) =>
 		getDefaultMiddleware()
@@ -35,8 +33,7 @@ const store = configureStore({
 			.concat(ordersApi.middleware)
 			.concat(returnsApi.middleware)
 			.concat(priceControlApi.middleware)
-			.concat(clientsApi.middleware)
-			.concat(dashboardApi.middleware),
+			.concat(clientsApi.middleware),
 });
 
 export default store;

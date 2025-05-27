@@ -1,22 +1,24 @@
-// src/pages/client/dashboard/ClientDashboard.jsx
+/* src/pages/client/dashboard/ClientDashboard.jsx */
 import { Spin, Alert } from 'antd';
 import { useTranslation } from 'react-i18next';
 
-import {
-	useMyDiscountsQuery,
-	useMyBalanceQuery,
-} from '../../../features/clientDashboard/dashboardApi';
+import { useGetMyClientDetailQuery } from '../../../features/clients/clientsApi';
 
 import { BalanceList } from '../../../shared/ui/BalanceList/BalanceList';
 import css from './ClientDashboard.module.css';
+import { useSelector } from 'react-redux';
+import { selectUsername } from '../../../store/authSlice.js';
 
 export function ClientDashboard() {
 	const { t } = useTranslation();
-	const { data: disc, isFetching: loadD, error: errD } = useMyDiscountsQuery();
-	const { data: bal, isFetching: loadB, error: errB } = useMyBalanceQuery();
 
-	if (loadD || loadB) return <Spin style={{ margin: 40 }} />;
-	if (errD || errB)
+	const currentUsername = useSelector(selectUsername);
+
+	/* один запрос вместо двух: balances, discounts, client, user */
+	const { data, isFetching, error } = useGetMyClientDetailQuery();
+
+	if (isFetching) return <Spin style={{ margin: 40 }} />;
+	if (error || !data)
 		return (
 			<Alert
 				type="error"
@@ -25,8 +27,9 @@ export function ClientDashboard() {
 			/>
 		);
 
-	const { client, user, discounts } = disc;
-
+	const { name, code, users = [], balances = [], price_groups: discounts = [] } = data;
+	/* берём первого привязанного пользователя для ФИО */
+	const user = users.find((usr) => usr.username === currentUsername) || {};
 	const fullName =
 		`${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username;
 
@@ -37,7 +40,7 @@ export function ClientDashboard() {
 			<div className={css.headerRow}>
 				<span className={css.label}>{t('clientDash.client', 'Клиент')}:</span>
 				<span>
-					{client.name} ({client.code})
+					{name} ({code})
 				</span>
 			</div>
 
@@ -46,8 +49,8 @@ export function ClientDashboard() {
 				<span>{fullName}</span>
 			</div>
 
-			{/* скидки */}
-			{discounts?.length > 0 && (
+			{/* ─── скидки ─── */}
+			{discounts.length > 0 && (
 				<div className={css.block}>
 					<h3 className={css.blockTitle}>
 						{t('clientDash.discounts', 'Текущие скидки')}
@@ -60,11 +63,11 @@ export function ClientDashboard() {
 							</tr>
 						</thead>
 						<tbody>
-							{discounts.map((d) => (
-								<tr key={d.price_group}>
-									<td>{d.price_group_name}</td>
+							{discounts.map((pg) => (
+								<tr key={pg.price_group}>
+									<td>{pg.price_group_name}</td>
 									<td style={{ textAlign: 'right' }}>
-										{d.discount_percent}
+										{pg.discount_percent}
 									</td>
 								</tr>
 							))}
@@ -73,8 +76,8 @@ export function ClientDashboard() {
 				</div>
 			)}
 
-			{/* баланс */}
-			<BalanceList balance={bal} />
+			{/* ─── баланс ─── */}
+			<BalanceList balance={balances} />
 		</div>
 	);
 }
