@@ -1,4 +1,4 @@
-/* ─── src/pages/admin/clients/ClientPage.jsx ─── */
+/* ── src/pages/admin/clients/ClientPage.jsx ── */
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -11,42 +11,40 @@ import {
 	useGetClientDetailQuery,
 	useGetGroupsQuery,
 	usePatchClientMutation,
+	usePatchUserClientMutation,
 } from '../../../features/clients/clientsApi';
 
 import { BalanceList } from '../../../shared/ui/BalanceList/BalanceList';
+import { ClientUsers } from '../../../entities/client/ui/ClientUsers/ClientUsers';
 import css from './ClientPage.module.css';
 
 export function ClientPage() {
-	const { id } = useParams(); // numeric
+	const { id } = useParams();
 	const { t } = useTranslation();
-
-	/* текущий интерфейс-язык (передаём на сервер, если нужно перевести name) */
 	const lang = transformLangToServer(useSelector(selectCurrentLang));
 
-	/* ─── данные клиента (один запрос) ─────────────────────────────── */
-	const {
-		data: client,
-		isFetching: loadClient,
-		error: errClient,
-	} = useGetClientDetailQuery({ id, lang });
-
-	/* ─── список групп ─────────────────────────────────────────────── */
-	const { data: groups = [], isFetching: loadGroups } = useGetGroupsQuery();
-
+	const { data: client, isFetching: lC } = useGetClientDetailQuery({ id, lang });
+	const { data: groups = [], isFetching: lG } = useGetGroupsQuery();
 	const [patchClient] = usePatchClientMutation();
+	const [patchUserClient] = usePatchUserClientMutation();
 
-	if (loadClient || loadGroups) return <Spin style={{ margin: 40 }} />;
-	if (errClient || !client) return <p style={{ margin: 40 }}>Error</p>;
+	if (lC || lG) return <Spin style={{ margin: 40 }} />;
+	if (!client) return <p style={{ margin: 40 }}>Error</p>;
 
-	/* смена группы */
-	const handleGroup = async (val) => {
+	const handleGroup = async (v) => {
 		try {
-			await patchClient({ id: client.id, payload: { client_group: val } }).unwrap();
+			await patchClient({ id: client.id, payload: { client_group: v } }).unwrap();
 			message.success(t('clients.updated', 'Обновлено'));
 		} catch {
 			message.error(t('clients.errUpdate', 'Ошибка'));
 		}
 	};
+
+	const unlinkUser = (userId) =>
+		patchUserClient({ userId, clientId: null, clientDetailId: client.id });
+
+	const linkUser = (u) =>
+		patchUserClient({ userId: u.id, clientId: client.id, clientDetailId: client.id });
 
 	return (
 		<div className={css.wrapper}>
@@ -77,8 +75,15 @@ export function ClientPage() {
 					</Select>
 				</div>
 
-				{/* баланс из detail */}
+				{/* баланс */}
 				{client.balances && <BalanceList balance={client.balances} />}
+
+				{/* пользователи */}
+				<ClientUsers
+					users={client.users || []}
+					onUnlink={unlinkUser}
+					onLink={linkUser}
+				/>
 			</Card>
 		</div>
 	);

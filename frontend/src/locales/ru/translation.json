@@ -47,7 +47,9 @@
 		"goToCartList": "Перейти в список корзин",
 		"dashboard": "Личный кабинет",
 		"refresh": "Обновить",
-		"currency": "грн"
+		"currency": "грн",
+		"yes": "Да",
+		"no": "Нет"
 	},
 	"search": {
 		"placeholder": "Поиск товаров...",
@@ -144,6 +146,17 @@
 		"updated": "Обновлено",
 		"errUpdate": "Ошибка обновления",
 		"invalidRole": "Неверная роль"
+	},
+	"users": {
+		"title": "Пользователи",
+		"add": "Добавить",
+		"addUser": "Добавить пользователя",
+		"search": "Поиск (min 2 символа)…",
+		"notFound": "Не найдено",
+		"username": "Логин",
+		"name": "Имя",
+		"email": "E-mail",
+		"unlink": "Отвязать пользователя?"
 	},
 	"clientLayout": {
 		"main": "Главная клиента",

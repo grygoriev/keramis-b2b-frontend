@@ -1,0 +1,21 @@
+/* ── src/entities/client/ui/ClientUsers/ClientUsers.module.css ── */
+
+/* контейнер блока */
+.block {
+	margin-top: 24px;
+}
+
+/* заголовок + кнопка «Добавить» в одной строке */
+.titleRow {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* h3 внутри .titleRow */
+.title {
+	margin: 0 0 12px 0;
+	font-weight: 600;
+}
+
+/* таблица готового antd-Table – ничего кастомного, оставил на будущее  */
