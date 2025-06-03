@@ -33,11 +33,27 @@ axiosInstance.interceptors.request.use(
 );
 
 // -- Ответ interceptor, чтобы поймать 401 Unauthorized
+// axiosInstance.interceptors.response.use(
+// 	(response) => response,
+// 	(error) => {
+// 		if (error.response && error.response.status === 401) {
+// 			store.dispatch(logout());
+// 		}
+// 		return Promise.reject(error);
+// 	}
+// );
+
+// -- Ответ interceptor, чтобы поймать 401 Unauthorized
 axiosInstance.interceptors.response.use(
-	(response) => response,
-	(error) => {
-		if (error.response && error.response.status === 401) {
-			store.dispatch(logout());
+	resp => resp,
+	async error => {
+		const { config, response } = error;
+		if (response?.status === 401 && !config._retried) {
+			try {
+				await axiosInstance.post('/api/auth/refresh/');
+				config._retried = true;          // чтобы не зациклиться
+				return axiosInstance(config);     // повторяем исходный запрос
+			} catch { store.dispatch(logout()); }
 		}
 		return Promise.reject(error);
 	}
